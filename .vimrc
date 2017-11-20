@@ -1,0 +1,471 @@
+" Fisa-vim-config
+
+" ============================================================================
+" Vim-plug initialization
+" Avoid modify this section, unless you are very sure of what you are doing
+let mapleader=","
+
+"""初次安装vim插件管理工具,以及从git上下载插件<<<
+let vim_plug_just_installed = 0
+let vim_plug_path = expand('~/.vim/autoload/plug.vim')
+if !filereadable(vim_plug_path)
+    echo "Installing Vim-plug..."
+    echo ""
+    silent !mkdir -p ~/.vim/autoload
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    let vim_plug_just_installed = 1
+endif
+
+" manually load vim-plug the first time
+if vim_plug_just_installed
+    :execute 'source '.fnameescape(vim_plug_path)
+endif
+
+" Obscure hacks done, you can now modify the rest of the .vimrc as you wish :)
+
+" ============================================================================
+" Active plugins
+" You can disable or add new ones here:
+
+" this needs to be here, so vim-plug knows we are declaring the plugins we
+" want to use
+if filereadable(vim_plug_path)
+call plug#begin('~/.vim/plugged')
+" Plugins from github repos:
+" Code commenter
+Plug 'scrooloose/nerdcommenter'
+"Plug 'ervandew/supertab'
+" Better autocompletion
+Plug 'Shougo/neocomplcache.vim'
+" Code and files fuzzy finder
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'kien/tabman.vim'
+Plug 'mattn/emmet-vim'
+Plug 'https://github.com/tpope/vim-fugitive.git'
+Plug 'altercation/vim-colors-solarized'
+Plug 'dkprice/vim-easygrep'
+" Surround
+Plug 'tpope/vim-surround'
+" Autoclose
+Plug 'vim-scripts/AutoClose'
+"Plug 'Townk/vim-autoclose'
+Plug 'fholgado/minibufexpl.vim'
+" vimsql
+"Plug 'jason-heo/Vimsql'
+Plug 'junegunn/vim-easy-align'
+Plug 'terryma/vim-expand-region'
+Plug 'mileszs/ack.vim'
+"snippets
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+Plug 'honza/vim-snippets'
+Plug 'vim-scripts/taglist.vim'
+"Plug 'vim-scripts/taglist.vim'
+"Plug 'vim-php/phpctags'
+"Plug 'vim-php/tagbar-phpctags.vim'
+"Plug 'majutsushi/tagbar'
+Plug 'triglav/vim-visual-increment'
+" Python and other languages code checker
+Plug 'scrooloose/syntastic'
+" vim-multiple-cursors  edit
+Plug 'https://github.com/terryma/vim-multiple-cursors.git'
+" Tab list panel
+" Tell vim-plug we finished declaring plugins, so it can load them
+call plug#end()
+endif
+
+" ============================================================================
+" Install plugins the first time vim runs
+
+if vim_plug_just_installed
+    echo "Installing Bundles, please ignore key map error messages"
+    :PlugInstall
+endif
+
+" ============================================================================
+"""初次安装vim插件管理工具,以及从git上下载插件
+
+"""支持鼠标
+if has('mouse')
+  set mouse=a
+endif
+"""
+set nocompatible "vi兼容模式
+set backspace=indent,eol,start "解决vi兼容模式下, insert mode无法删除
+set expandtab "有关tab的操作转成空格
+set tabstop=4 "读取时,1*tab=4*space
+set shiftwidth=4 "输入时,1*tab=4*space
+set softtabstop=4 "删除时,1*tab=4*space
+
+"""根据文件类型做不同设置<<<
+filetype plugin on
+filetype indent on
+autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
+autocmd BufWritePost *.py setlocal et autoindent
+autocmd BufWritePost *.lisp setlocal et autoindent
+au BufNewFile,BufRead *.tpl set filetype=html
+au BufNewFile,BufRead *.js set filetype=javascript
+au BufNewFile,BufRead *.php set filetype=php
+au BufNewFile,BufRead *.py set filetype=python
+"""根据文件类型做不同设置
+
+"""<<<
+nnoremap <Leader>tb :TagbarToggle<CR>
+let g:tagbar_ctags_bin='/usr/bin/ctags'
+let g:tagbar_width=30
+autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()
+"""
+
+
+"""打开代码折叠<<<
+if has('fdm')
+  set fdm=indent
+  set foldlevel=99
+endif
+"""打开代码折叠
+
+""" html标签首尾跳转<<<
+runtime macros/matchit.vim
+let b:match_words='\<begin\>:\<end\>'
+""" html标签首尾跳转
+
+se wildmenu " 打开文件时搜索提示
+set noswapfile "不产生备份文件
+set cursorline " 选中行高亮 
+set hlsearch "高亮搜索
+syntax on "显示语法错误
+set nu "显示行号
+set nowrap "不换行
+set so=3 "离屏幕边缘还有3行开始滚屏
+
+"""关闭当前标签左/右的所有标签
+function! TabCloseRight(bang)
+    let cur=tabpagenr()
+    while cur < tabpagenr('$')
+        exe 'tabclose' . a:bang . ' ' . (cur + 1)
+    endwhile
+endfunction
+
+function! TabCloseLeft(bang)
+    while tabpagenr() > 1
+        exe 'tabclose' . a:bang . ' 1'
+    endwhile
+endfunction
+
+command! -bang Tabcloseright call TabCloseRight('<bang>')
+command! -bang Tabcloseleft call TabCloseLeft('<bang>')
+"""
+
+"""python相关配置
+let g:syntastic_python_flake8_args = '--ignore=E501,E401' ",F821' \"忽略pep8每行超过79个字符的错误提示
+"""
+
+"""标签操作<<<
+
+"""切换到第几个标签<<<
+map t1 1gt
+map t2 2gt
+map t3 3gt
+map t4 4gt
+map t5 5gt
+map t6 6gt
+map t7 7gt
+map t8 8gt
+map t9 9gt
+map t0 :tablast<CR>
+"""切换到第几个标签
+
+map tp :tab split<CR> " 复制标签
+map tj :set paste!<CR><Left> " 切换粘贴模式
+map tL :Tabcloseleft<CR> " 关闭右侧标签
+map tR :Tabcloseright<CR> " 关闭左边标签
+map tc :tabc<CR> :tabp<CR> " 关闭当前tab
+map ts :tabs<CR> " 查看打开的tabs列表
+map tG :tabdo TMToggle<CR> "tab树
+" 移动当前tab到输入序号的位置
+map tm :tabm 
+" 新标签
+map tw :tabnew 
+map <C-J> :tabp<CR> " 左边标签
+map <C-K> :tabn<CR> " 右边标签
+
+"""返回上一个标签<<<
+auto tableave * let g:pre_tabpagenr=tabpagenr()
+nnoremap <silent> tt :exe "tabn ".g:pre_tabpagenr<CR>
+"""返回上一个标签
+
+"""标签操作
+
+"数字自增快捷键与screen切换窗口快捷键冲突,换成ctrl+s
+nnoremap <C-S-C> <C-S-A><Left>
+
+"""normal模式的缩进操作
+vnoremap > >gv
+vnoremap < <gv
+"""normal模式的缩进操作
+
+"下边执行文件的注释不能放到行后,否则执行结果闪消
+"快捷执行当前php文件
+map gp :!clear;php %<CR>
+"快捷执行当前python文件
+map gy :!clear;python %<CR>
+"快捷执行当前node文件
+map gn :!clear;node %<CR>
+"快捷执行当前bash文件
+map gb :!clear;bash %<CR>
+"快捷执行当前lisp文件
+map gl :!clear;clisp %<CR>
+
+xnoremap ga <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign)
+nnoremap ,, :w<CR> "快速保存改动
+nnoremap tu :set nu!<CR> "切换行号显示
+nnoremap ,3 :b#<CR> "上一个buffer
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source ~/.vimrc<CR>
+nnoremap <C-L> :se wrap!<CR> "切换是否换行
+nnoremap th :set hlsearch!<CR> "切换高亮显示
+vnoremap // y/<C-R>"<CR> "向后搜索当前的选择
+vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
+vnoremap do yoliu(<c-r>");<esc>
+vnoremap dO yOliu(<c-r>");<esc>
+vnoremap co yoliu(<c-r>",on);<esc>
+vnoremap cO yOliu(<c-r>",on);<esc>
+inoremap <C-L> <C-O>x
+let g:surround_indent = 0
+let g:EasyGrepCommand=1
+let g:EasyGrepPerlStyle=1
+
+"""分割窗口相关操作<<<
+nnoremap w= :resize +3<CR>
+nnoremap w- :resize -3<CR>
+nnoremap w, :vertical resize -3<CR>
+nnoremap w. :vertical resize +3<CR>
+"nmap <S-W> <C-W><C-W>
+nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
+"""分割窗口相关操作
+
+"""状态栏配置<<<
+
+"""检测粘贴模式函数<<<
+function! PasteForStatusline()
+    let paste_status = &paste
+    if paste_status == 1
+        return " [paste] "
+    else
+        return ""
+    endif
+endfunction
+"""检测粘贴模式函数
+
+set laststatus=2
+highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue
+" 获取当前路径，将$HOME转化为~
+function! CurDir()
+	let curdir = substitute(getcwd(), $HOME, "~", "g")
+	return curdir
+endfunction
+set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %{CurDir()}\ \|\ %{PasteForStatusline()}\ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%{((&fenc==\"\")?\"\":\"\ \|\ \".&fenc)}\ \|\ %{$USER}\ @\ %{hostname()}\
+"""状态栏配置
+
+"""项目文件快捷打开,模糊匹配<<<
+" file finder mapping
+let g:ctrlp_map = ',e'
+" tags (symbols) in current file finder mapping
+nnoremap ,b :CtrlPBuffer<CR>
+nnoremap ,g :CtrlPBufTag<CR>
+" tags (symbols) in all files finder mapping
+nnoremap ,G :CtrlPBufTagAll<CR>
+" general code finder in all files mapping
+nnoremap ,f :CtrlPLine<CR>
+" recent files finder mapping
+nnoremap ,m :CtrlPMRUFiles<CR>
+function! CtrlPWithSearchText(search_text, ctrlp_command_end)
+    execute ':CtrlP' . a:ctrlp_command_end
+    call feedkeys(a:search_text)
+endfunction
+" same as previous mappings, but calling with current word as default text
+nnoremap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
+nnoremap ,wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
+nnoremap ,wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
+nnoremap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
+nnoremap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
+nnoremap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
+nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
+" don't change working directory
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
+    \ 'file': '\.pyc$\|\.pyo|\.meta$',
+\}
+"""项目文件快捷打开,模糊匹配
+
+" 新的自动补全的配置, 暂时可用, 以后再整理
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+" Enable heavy features.
+" Use camel case completion.
+"let g:neocomplcache_enable_camel_case_completion = 1
+" Use underbar completion.
+"let g:neocomplcache_enable_underbar_completion = 1
+
+" Define dictionary.
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+"inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplcache#smart_close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+
+" For cursor moving in insert mode(Not recommended)
+"inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
+"inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+"inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+"inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+" Or set this.
+"let g:neocomplcache_enable_cursor_hold_i = 1
+" Or set this.
+"let g:neocomplcache_enable_insert_char_pre = 1
+
+" AutoComplPop like behavior.
+"let g:neocomplcache_enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplcache_enable_auto_select = 1
+"let g:neocomplcache_disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_force_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" 新的自动补全的配置, 暂时可用, 以后再整理
+
+"""代码跳转配置<<<
+if has("cscope")
+    set csprg=/usr/bin/cscope
+    set csto=0
+    set cst
+    set nocsverb
+    " add any database in current directory
+    if filereadable("cscope.out")
+        cs add cscope.out
+        " else add database pointed to by environment
+    elseif filereadable("/tmp/cscope.out")
+        cs add /tmp/cscope.out
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+    set csverb
+endif
+nnoremap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nnoremap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nnoremap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nnoremap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nnoremap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nnoremap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nnoremap <C-_>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
+nnoremap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+vnoremap css y:cs find s <C-R>"<CR><CR>
+vnoremap csg y:cs find g <C-R>"<CR><CR>
+vnoremap csc y:cs find c <C-R>"<CR><CR>
+vnoremap cst y:cs find t <C-R>"<CR><CR>
+vnoremap cse y:cs find e <C-R>"<CR><CR>
+vnoremap csf y:cs find f <C-R>"<CR><CR>
+vnoremap csi y:cs find i <C-R>"<CR><CR>
+vnoremap csd y:cs find d <C-R>"<CR><CR>
+"""代码跳转配置
+
+"""debugger.py断点调试相关<<<
+nnoremap dn :Dn<CR>
+nnoremap du :Up<CR>
+nnoremap td :Bp<CR>
+let g:debuggerPort = 9010
+let g:debuggerMaxDepth = 20
+"""debugger.py断点调试相关
+
+
+
+"""自定义的函数
+nnoremap <Leader>ct :call CscopeToTmp(0)
+function! CscopeToTmp(opt, ...)
+    if a:0 > 0
+        let _name = "-name '*." . a:1 . "'"
+    else
+        let _name = "-name '*." . &filetype . "'"
+    end
+    exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
+endfunction
+
+
+func! Run()
+    let type = b:current_syntax
+    echom type
+    if type == "c" || type == "cpp"
+        exec "!./%<"
+    elseif type == "php"
+        exec "!clear;php %"
+    elseif type == "javascript"
+        exec "!clear;node %"
+    endif
+endfunc
+
+map <Leader>r :call Run()<CR>
+
+"""自定义abbr
+iabbr liu liu(1);
