@@ -31,95 +31,106 @@ endif
 " want to use
 if filereadable(vim_plug_path)
 call plug#begin('~/.vim/plugged')
-" Plugins from github repos:
-" Code commenter
-Plug 'scrooloose/nerdcommenter'
+" 待使用的git插件
+" tpope/vim-unimpaired " 交换上下行
+" python-mode/python-mode " 写python必用插件
+
+
+" git上的插件地址
+Plug 'scrooloose/nerdcommenter' " 代码注释插件
 "Plug 'ervandew/supertab'
-" Better autocompletion
-Plug 'Shougo/neocomplcache.vim'
-" Code and files fuzzy finder
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'kien/tabman.vim'
-Plug 'mattn/emmet-vim'
-Plug 'https://github.com/tpope/vim-fugitive.git'
-Plug 'altercation/vim-colors-solarized'
-Plug 'dkprice/vim-easygrep'
-" Surround
-Plug 'tpope/vim-surround'
-" Autoclose
-Plug 'vim-scripts/AutoClose'
+
+Plug 'Shougo/neocomplcache.vim' " Better autocompletion
+
+Plug 'ctrlpvim/ctrlp.vim' " Code and files fuzzy finder
+
+Plug 'mattn/emmet-vim' " html,css的插件
+Plug 'maksimr/vim-jsbeautify' " html,js,css美化
+
+Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
+
+Plug 'dkprice/vim-easygrep' " 全局搜索
+Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
+
+Plug 'scrooloose/nerdtree' " 文件目录树
+
+Plug 'tpope/vim-surround' " 增删改包围
+
+Plug 'vim-scripts/AutoClose' " )]}等自动闭合
 "Plug 'Townk/vim-autoclose'
-Plug 'fholgado/minibufexpl.vim'
-" vimsql
-"Plug 'jason-heo/Vimsql'
-Plug 'junegunn/vim-easy-align'
-Plug 'terryma/vim-expand-region'
-Plug 'mileszs/ack.vim'
+
+Plug 'fholgado/minibufexpl.vim' " buffer插件
+
+Plug 'PotHix/Vimpress' " vim写wordpress博客
+
+Plug 'plasticboy/vim-markdown' " markdown语法高亮
+Plug 'mzlogin/vim-markdown-toc' " markdown生成文章目录
+Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
+
+Plug 'terryma/vim-expand-region' " visual扩张到上一层
+
 "snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
-Plug 'vim-scripts/taglist.vim'
+
+Plug 'vim-scripts/taglist.vim' " tag窗口,方便查看源码结构
 "Plug 'vim-scripts/taglist.vim'
 "Plug 'vim-php/phpctags'
 "Plug 'vim-php/tagbar-phpctags.vim'
-"Plug 'majutsushi/tagbar'
-Plug 'triglav/vim-visual-increment'
-" Python and other languages code checker
-Plug 'scrooloose/syntastic'
-" vim-multiple-cursors  edit
-Plug 'https://github.com/terryma/vim-multiple-cursors.git'
-" Tab list panel
-" Tell vim-plug we finished declaring plugins, so it can load them
+
+Plug 'vim-scripts/dbext.vim' " vim里运行sql语句
+
+Plug 'triglav/vim-visual-increment' " 数字列增长
+
+Plug 'scrooloose/syntastic' " 语法错误检查
+
+Plug 'https://github.com/terryma/vim-multiple-cursors.git' " vim多点编辑
+
+Plug 'junegunn/vim-easy-align' " =号对齐
+
 call plug#end()
 endif
 
-" ============================================================================
-" Install plugins the first time vim runs
-
+"""初次打开vim,自动安装Plug列表的插件
 if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
     :PlugInstall
 endif
 
-" ============================================================================
-"""初次安装vim插件管理工具,以及从git上下载插件
-
 """支持鼠标
 if has('mouse')
   set mouse=a
 endif
-"""
-set nocompatible "vi兼容模式
+ 
+set nocompatible "不用vi兼容模式
 set backspace=indent,eol,start "解决vi兼容模式下, insert mode无法删除
 set expandtab "有关tab的操作转成空格
 set tabstop=4 "读取时,1*tab=4*space
 set shiftwidth=4 "输入时,1*tab=4*space
 set softtabstop=4 "删除时,1*tab=4*space
+set hidden "切换buffer时,原来的buffer撤销记录不清空
+set encoding=utf-8  
+set nobomb "去掉bom 
 
 """根据文件类型做不同设置<<<
 filetype plugin on
 filetype indent on
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall,php
 autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
 autocmd BufWritePost *.py setlocal et autoindent
 autocmd BufWritePost *.lisp setlocal et autoindent
-au BufNewFile,BufRead *.tpl set filetype=html
+au BufNewFile,BufRead *.{tpl,htm} set filetype=html
 au BufNewFile,BufRead *.js set filetype=javascript
 au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
+au BufNewFile,BufRead *.conf set filetype=conf
 """根据文件类型做不同设置
-
-"""<<<
-nnoremap <Leader>tb :TagbarToggle<CR>
-let g:tagbar_ctags_bin='/usr/bin/ctags'
-let g:tagbar_width=30
-autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()
-"""
-
 
 """打开代码折叠<<<
 if has('fdm')
@@ -133,12 +144,13 @@ runtime macros/matchit.vim
 let b:match_words='\<begin\>:\<end\>'
 """ html标签首尾跳转
 
-se wildmenu " 打开文件时搜索提示
+set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
 set cursorline " 选中行高亮 
 set hlsearch "高亮搜索
 syntax on "显示语法错误
-set nu "显示行号
+set number "显示行号
+" set relativenumber
 set nowrap "不换行
 set so=3 "离屏幕边缘还有3行开始滚屏
 
@@ -190,8 +202,10 @@ map tG :tabdo TMToggle<CR> "tab树
 map tm :tabm 
 " 新标签
 map tw :tabnew 
-map <C-J> :tabp<CR> " 左边标签
-map <C-K> :tabn<CR> " 右边标签
+map <C-H> :bp<CR> " 左边buffer
+map <C-L> :bn<CR> " 右边buffer
+map <C-K> :tabp<CR> " 右边标签
+map <C-J> :tabn<CR> " 右边标签
 
 """返回上一个标签<<<
 auto tableave * let g:pre_tabpagenr=tabpagenr()
@@ -199,9 +213,6 @@ nnoremap <silent> tt :exe "tabn ".g:pre_tabpagenr<CR>
 """返回上一个标签
 
 """标签操作
-
-"数字自增快捷键与screen切换窗口快捷键冲突,换成ctrl+s
-nnoremap <C-S-C> <C-S-A><Left>
 
 """normal模式的缩进操作
 vnoremap > >gv
@@ -220,25 +231,56 @@ map gb :!clear;bash %<CR>
 "快捷执行当前lisp文件
 map gl :!clear;clisp %<CR>
 
-xnoremap ga <Plug>(EasyAlign)
-nnoremap ga <Plug>(EasyAlign)
-nnoremap ,, :w<CR> "快速保存改动
+" common config<<<
+" 取消bell提示音
+set vb t_vb=
+let &termencoding=&encoding
+set fileencodings=utf-8,gbk,ucs-bom,cp936
+set tags=.tags
+" 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
+let g:snipMate = {} 
+let g:snipMate.no_default_aliases=1
+let g:snipMate.scope_aliases = {}
+let g:snipMate.scope_aliases['html'] = 'html,php'
+let g:NERDSpaceDelims=1 " 注释符后加一个空格
+" 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的
+nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>t :Tlist<cr> " 切换taglist
+let Tlist_Use_Right_Window =1 " taglist 右侧显示
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+nnoremap <space> :w<CR> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source ~/.vimrc<CR>
-nnoremap <C-L> :se wrap!<CR> "切换是否换行
+nnoremap <leader>ev :vsplit $MYVIMRC<cr> "编辑.vimrc
+nnoremap <leader>sv :source ~/.vimrc<CR> "重新加载.vimrc
+nnoremap <leader>l :se wrap!<CR> "切换是否换行
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 vnoremap // y/<C-R>"<CR> "向后搜索当前的选择
 vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
+" 快捷liu调试函数<<<
+vnoremap gl yovar_dump(<c-r>");<esc>
+vnoremap gL yOvar_dump(<c-r>");<esc>
 vnoremap do yoliu(<c-r>");<esc>
 vnoremap dO yOliu(<c-r>");<esc>
+vnoremap dl yo{php liu(<c-r>");}<esc>
+vnoremap dL yO{php liu(<c-r>");}<esc>
 vnoremap co yoliu(<c-r>",on);<esc>
 vnoremap cO yOliu(<c-r>",on);<esc>
+" vnoremap cl yo{php liu(<c-r>",on);}<esc>
+" vnoremap cL yO{php liu(<c-r>",on);}<esc>
+" 快捷liu调试函数
+" 查看所选单词的帮助
+vnoremap <leader>hh y:h <c-r>"<cr>
+" 查看当前光标处的单词的帮助
+nnoremap <leader>hh :h <c-r>=expand("<cword>")<CR><CR>
 inoremap <C-L> <C-O>x
+" inoremap <C-J> <C-O>h
+" inoremap <C-K> <C-O>l
 let g:surround_indent = 0
 let g:EasyGrepCommand=1
-let g:EasyGrepPerlStyle=1
+let g:EasyGrepPerlStyle=1"}}}
+" common config
 
 """分割窗口相关操作<<<
 nnoremap w= :resize +3<CR>
@@ -269,7 +311,7 @@ function! CurDir()
 	let curdir = substitute(getcwd(), $HOME, "~", "g")
 	return curdir
 endfunction
-set statusline=[%n]\ %f%m%r%h\ \|\ \ pwd:\ %{CurDir()}\ \|\ %{PasteForStatusline()}\ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%{((&fenc==\"\")?\"\":\"\ \|\ \".&fenc)}\ \|\ %{$USER}\ @\ %{hostname()}\
+set statusline=[%n]\ %f%m%r%h\ \|\ %{PasteForStatusline()}\  
 """状态栏配置
 
 """项目文件快捷打开,模糊匹配<<<
@@ -299,7 +341,7 @@ nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
+    \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
     \ 'file': '\.pyc$\|\.pyo|\.meta$',
 \}
 """项目文件快捷打开,模糊匹配
@@ -315,6 +357,8 @@ let g:neocomplcache_enable_smart_case = 1
 " Set minimum syntax keyword length.
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+let g:neocomplcache_fuzzy_completion_start_length = 2
+let g:neocomplcache_enable_fuzzy_completion = 1
 
 " Enable heavy features.
 " Use camel case completion.
@@ -348,7 +392,7 @@ function! s:my_cr_function()
   "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 endfunction
 " <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
@@ -458,8 +502,12 @@ func! Run()
     echom type
     if type == "c" || type == "cpp"
         exec "!./%<"
+    elseif type == "bash"
+        exec "!clear;/bin/bash %"
+    elseif type == "python"
+        exec "!clear;$(which python) %"
     elseif type == "php"
-        exec "!clear;php %"
+        exec "!clear;$(which php) %"
     elseif type == "javascript"
         exec "!clear;node %"
     endif
@@ -467,5 +515,23 @@ endfunc
 
 map <Leader>r :call Run()<CR>
 
-"""自定义abbr
+"""自定义abbr<<<
 iabbr liu liu(1);
+hi Comment ctermfg=darkgray
+"""自定义abbr
+
+" MySQL
+let g:dbext_default_profile_mysql_local = 'type=MYSQL:user=root:passwd=123456:dbname=laravel'
+
+" html,css,js 美化快捷键
+map tf :call JsBeautify()<cr>
+autocmd FileType javascript noremap <buffer>  tf :call JsBeautify()<cr>
+autocmd FileType json noremap <buffer> tf :call JsonBeautify()<cr>
+autocmd FileType jsx noremap <buffer> tf :call JsxBeautify()<cr>
+autocmd FileType html noremap <buffer> tf :call HtmlBeautify()<cr>
+autocmd FileType css noremap <buffer> tf :call CSSBeautify()<cr>
+autocmd FileType javascript vnoremap <buffer>  tf :call RangeJsBeautify()<cr>
+autocmd FileType json vnoremap <buffer> tf :call RangeJsonBeautify()<cr>
+autocmd FileType jsx vnoremap <buffer> tf :call RangeJsxBeautify()<cr>
+autocmd FileType html vnoremap <buffer> tf :call RangeHtmlBeautify()<cr>
+autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
