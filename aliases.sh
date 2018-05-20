@@ -16,6 +16,8 @@ alias gpu='git push'
 alias gre='git rebase'
 alias grh='git reset HEAD'
 alias gst='git status'
+alias gsw='git update-index --skip-worktree'
+alias gnsw='git update-index --no-skip-worktree'
 
 # docker aliases
 alias dcm="docker-compose"
