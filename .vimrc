@@ -118,7 +118,7 @@ set nobomb "去掉bom
 filetype plugin on
 filetype indent on
 let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall,php
+autocmd FileType html,css EmmetInstall
 autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
@@ -204,8 +204,8 @@ map tm :tabm
 map tw :tabnew 
 map <C-H> :bp<CR> " 左边buffer
 map <C-L> :bn<CR> " 右边buffer
-map <C-K> :tabp<CR> " 右边标签
-map <C-J> :tabn<CR> " 右边标签
+map <C-U> :tabp<CR> " 右边标签
+map <C-I> :tabn<CR> " 右边标签
 
 """返回上一个标签<<<
 auto tableave * let g:pre_tabpagenr=tabpagenr()
@@ -232,8 +232,6 @@ map gb :!clear;bash %<CR>
 map gl :!clear;clisp %<CR>
 
 " common config<<<
-" 取消bell提示音
-set vb t_vb=
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
@@ -275,8 +273,8 @@ vnoremap <leader>hh y:h <c-r>"<cr>
 " 查看当前光标处的单词的帮助
 nnoremap <leader>hh :h <c-r>=expand("<cword>")<CR><CR>
 inoremap <C-L> <C-O>x
-" inoremap <C-J> <C-O>h
-" inoremap <C-K> <C-O>l
+inoremap <C-J> <C-O>h
+inoremap <C-K> <C-O>l
 let g:surround_indent = 0
 let g:EasyGrepCommand=1
 let g:EasyGrepPerlStyle=1"}}}
@@ -521,7 +519,7 @@ hi Comment ctermfg=darkgray
 """自定义abbr
 
 " MySQL
-let g:dbext_default_profile_mysql_local = 'type=MYSQL:user=root:passwd=123456:dbname=laravel'
+let g:dbext_default_profile_mysql_local = 'type=MYSQL:user=root:passwd=mysql272jp@:dbname=mysql'
 
 " html,css,js 美化快捷键
 map tf :call JsBeautify()<cr>
