@@ -32,6 +32,7 @@ alias dps='docker ps'
 alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi'
 alias dstp='docker stop $(docker ps -aq)'
+alias dtp='docker top' 
 
 
 function dlog() {

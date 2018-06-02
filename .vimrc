@@ -261,12 +261,7 @@ vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
-vnoremap do yoliu(<c-r>");<esc>
-vnoremap dO yOliu(<c-r>");<esc>
-vnoremap dl yo{php liu(<c-r>");}<esc>
-vnoremap dL yO{php liu(<c-r>");}<esc>
-vnoremap co yoliu(<c-r>",on);<esc>
-vnoremap cO yOliu(<c-r>",on);<esc>
+vnoremap pc dO"""<esc>PO"""<esc>
 " vnoremap cl yo{php liu(<c-r>",on);}<esc>
 " vnoremap cL yO{php liu(<c-r>",on);}<esc>
 " 快捷liu调试函数
