@@ -4,6 +4,10 @@ alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 
+alias d='dirs -v'
+alias pu='pushd'
+alias po='popd'
+
 # git aliases
 alias gad='git add'
 alias gbr='git branch'
