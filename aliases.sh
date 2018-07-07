@@ -97,6 +97,14 @@ function composer_china() {
     composer config -g repo.packagist composer https://packagist.phpcomposer.com
 }
 
+function su_without_password() {
+    target_user=$1
+    from_user=$2
+    sudo cat <<EOT >>/etc/pam.d/su
+auth       [success=ignore default=1] pam_succeed_if.so user = $target_user
+auth       sufficient   pam_succeed_if.so use_uid user = $from_user
+EOT
+}
 
 # vim +python switch 
 # install if not 
