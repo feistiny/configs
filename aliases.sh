@@ -33,6 +33,7 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 alias gad='git add'
 alias gbr='git branch'
 alias gci='git commit'
+alias gcii='git -c user.name="liuzhanfei" -c user.email="liuzhanfei166@126.com" commit'
 alias gco='git checkout'
 alias gcf='git config'
 alias gcl='git clean'
