@@ -93,6 +93,10 @@ function grepkill() {
         awk '{print $2}' | xargs -i kill -9 {}
 }
 
+function composer_china() {
+    composer config -g repo.packagist composer https://packagist.phpcomposer.com
+}
+
 
 # vim +python switch 
 # install if not 
