@@ -5,6 +5,9 @@ alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 
+# autojump
+alias jj='j -s'
+
 # 重新加载aliases.sh
 alias rea='source ~/configs/aliases.sh && echo "加载成功"'
 
