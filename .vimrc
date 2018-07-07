@@ -204,8 +204,8 @@ map tm :tabm
 map tw :tabnew 
 map <C-H> :bp<CR> " 左边buffer
 map <C-L> :bn<CR> " 右边buffer
-map <C-U> :tabp<CR> " 右边标签
-map <C-I> :tabn<CR> " 右边标签
+map <C-J> :tabp<CR> " 左边标签
+map <C-K> :tabn<CR> " 右边标签
 
 """返回上一个标签<<<
 auto tableave * let g:pre_tabpagenr=tabpagenr()
