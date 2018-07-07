@@ -1,5 +1,6 @@
 # 列出文件或目录
 alias la='ls -a'
+alias lla='ll -a'
 alias lsd='ls -l | grep ^d'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
