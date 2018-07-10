@@ -118,13 +118,12 @@ EOT
 function get_snippets() {
   case $1 in
     'fiddler_raw')
-      echo 'type in QuickExec';
+      echo 'type in QuickExec'
       read -d '' OUT <<EOT
 PREFS SET fiddler.ui.inspectors.${2:-request}.alwaysuse RAW
 EOT
       echo $OUT
-
-    ;;;
+    ;;
   esac
 }
 
@@ -156,15 +155,15 @@ EOT
       fi
       shift
       shift
-    ;;;
+    ;;
     -vv)
       debug=1
       shift
-    ;;;
+    ;;
     *)
       pre_opts+="$key "
       shift
-    ;;;
+    ;;
   esac
   done
   command="git ls-tree --name-only $pre_opts"
