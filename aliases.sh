@@ -5,6 +5,7 @@ alias lsd='ls -l | grep ^d'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
+alias vimu='vim -u ~/configs/.vimrc'
 
 # autojump
 alias jj='j -s'
