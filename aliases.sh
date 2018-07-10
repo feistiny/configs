@@ -16,7 +16,6 @@ alias rea='source ~/configs/aliases.sh && echo "加载成功"'
 alias d='dirs -v'
 alias pu='pushd'
 alias po='popd'
-alias po='popd'
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -76,121 +75,121 @@ alias dtp='docker top'
 
 
 function dlog() {
-    docker logs laradock_${1}_1
+  docker logs laradock_${1}_1
 }
 
 function dfstp() {
-    docker stop $(docker ps | grep $1 | awk '{print $1}') 2>/dev/null
+  docker stop $(docker ps | grep $1 | awk '{print $1}') 2>/dev/null
 }
 
 function dfrm() {
-    docker rm $(docker ps | grep $1 | awk '{print $1}') 2>/dev/null
+  docker rm $(docker ps | grep $1 | awk '{print $1}') 2>/dev/null
 }
 
 function dexec() {
-    docker exec -it $1 bash
+  docker exec -it $1 bash
 }
 
 function dexla() {
-    docker exec -it laradock_${1}_1 bash
+  docker exec -it laradock_${1}_1 bash
 }
 
 function grepkill() {
-    # TODO reuse the grep results 
-    ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep
-    read -p '确定杀死这些进程？'
-    ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep | \
-        awk '{print $2}' | xargs -i kill -9 {}
+  # TODO reuse the grep results 
+  ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep
+  read -p '确定杀死这些进程？'
+  ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep | \
+    awk '{print $2}' | xargs -i kill -9 {}
 }
 
 function composer_china() {
-    composer config -g repo.packagist composer https://packagist.phpcomposer.com
+  composer config -g repo.packagist composer https://packagist.phpcomposer.com
 }
 
 function su_without_password() {
-    target_user=$1
-    from_user=$2
-    sudo cat <<EOT >>/etc/pam.d/su
+  target_user=$1
+  from_user=$2
+  sudo cat <<EOT >>/etc/pam.d/su
 auth       [success=ignore default=1] pam_succeed_if.so user = $target_user
 auth       sufficient   pam_succeed_if.so use_uid user = $from_user
 EOT
 }
 
 function get_snippets() {
-    case $1 in
-        'fiddler_raw')
-            echo 'type in QuickExec';
-            read -d '' OUT <<EOT
+  case $1 in
+    'fiddler_raw')
+      echo 'type in QuickExec';
+      read -d '' OUT <<EOT
 PREFS SET fiddler.ui.inspectors.${2:-request}.alwaysuse RAW
 EOT
-            echo $OUT
+      echo $OUT
 
-        ;;;
-    esac
+    ;;;
+  esac
 }
 
 function gls() {
-	read -d '' USAGE <<EOT
+  read -d '' USAGE <<EOT
 USAGE:
-	-r   recurse   recursive
-	-d             only directory
-	-L   level     Descend only level directories deep.
+  -r   recurse   recursive
+  -d             only directory
+  -L   level     Descend only level directories deep.
 EOT
-	# USAGE="Usage: command -ihv args"
-	if [ "$#" = 0 ] ; then
-		echo $USAGE
-		return
-	fi
-	pre_opts=''
-	while [ $# -gt 0 ] 
-	do
-	key="$1"
-	case $key in
-		-L)
-			# $2 not a number
-			if [ "$2" -eq "$2" ] 2>/dev/null
-			then
-				level=$2
-			else
-				echo 'level is not a valid number'
-				return
-			fi
-			shift
-			shift
-		;;;
-		-vv)
-			debug=1
-			shift
-		;;;
-		*)
-			pre_opts+="$key "
-			shift
-		;;;
-	esac
-	done
-	command="git ls-tree --name-only $pre_opts"
-	if [ -z "${debug+x}" ] 
-	then
-		command+=' 2>/dev/null'
-	fi
-	eval $command |
-	if [ -z ${level+x} ] 
-	then
-		cat
-	else
-		level=${level:-1}
-		cat | awk '$1~/^[^/]*(\/[^/]+){'"${level/-/,}"'}$/{print $1}'
-	fi
-	# echo $command
+  # USAGE="Usage: command -ihv args"
+  if [ "$#" = 0 ] ; then
+    echo $USAGE
+    return
+  fi
+  pre_opts=''
+  while [ $# -gt 0 ] 
+  do
+  key="$1"
+  case $key in
+    -L)
+      # $2 not a number
+      if [ "$2" -eq "$2" ] 2>/dev/null
+      then
+        level=$2
+      else
+        echo 'level is not a valid number'
+        return
+      fi
+      shift
+      shift
+    ;;;
+    -vv)
+      debug=1
+      shift
+    ;;;
+    *)
+      pre_opts+="$key "
+      shift
+    ;;;
+  esac
+  done
+  command="git ls-tree --name-only $pre_opts"
+  if [ -z "${debug+x}" ] 
+  then
+    command+=' 2>/dev/null'
+  fi
+  eval $command |
+  if [ -z ${level+x} ] 
+  then
+    cat
+  else
+    level=${level:-1}
+    cat | awk '$1~/^[^/]*(\/[^/]+){'"${level/-/,}"'}$/{print $1}'
+  fi
+  # echo $command
 }
 
 
 # vim +python switch 
 # install if not 
 [ -z "$(apt list --installed 2>/dev/null | grep vim-nox-py2)" ] && {
-    apt-get install vim-nox-py2 -y >/dev/null || {
-        echo 'vim的+python切换工具安装失败'
-    }
+  apt-get install vim-nox-py2 -y >/dev/null || {
+    echo 'vim的+python切换工具安装失败'
+  }
 }
 # vim-python-version-switch
 alias vpvs='sudo update-alternatives --config vim'
