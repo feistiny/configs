@@ -23,10 +23,12 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # laravel artisan命令
-alias cdump='composer dumpautoload'
+alias cmpdp='composer dumpautoload'
 php_artisan='php artisan'
 alias cmp='composer'
 alias art=${php_artisan}
+alias art.mct="${php_artisan} make:controller"
+alias art.mm="${php_artisan} make:model"
 alias artmg="${php_artisan} make:migration"
 alias artm="${php_artisan} migrate"
 alias artms="${php_artisan} migrate:status"
@@ -44,6 +46,7 @@ alias gco='git checkout'
 alias gcf='git config'
 alias gcl='git clean'
 alias gdf='git diff'
+alias gdfc='git diff --cached'
 alias gfe='git fetch'
 alias gl='git log --oneline'
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
@@ -112,6 +115,75 @@ auth       [success=ignore default=1] pam_succeed_if.so user = $target_user
 auth       sufficient   pam_succeed_if.so use_uid user = $from_user
 EOT
 }
+
+function get_snippets() {
+    case $1 in
+        'fiddler_raw')
+            echo 'type in QuickExec';
+            read -d '' OUT <<EOT
+PREFS SET fiddler.ui.inspectors.${2:-request}.alwaysuse RAW
+EOT
+            echo $OUT
+
+        ;;;
+    esac
+}
+
+function gls() {
+	read -d '' USAGE <<EOT
+USAGE:
+	-r   recurse   recursive
+	-d             only directory
+	-L   level     Descend only level directories deep.
+EOT
+	# USAGE="Usage: command -ihv args"
+	if [ "$#" = 0 ] ; then
+		echo $USAGE
+		return
+	fi
+	pre_opts=''
+	while [ $# -gt 0 ] 
+	do
+	key="$1"
+	case $key in
+		-L)
+			# $2 not a number
+			if [ "$2" -eq "$2" ] 2>/dev/null
+			then
+				level=$2
+			else
+				echo 'level is not a valid number'
+				return
+			fi
+			shift
+			shift
+		;;;
+		-vv)
+			debug=1
+			shift
+		;;;
+		*)
+			pre_opts+="$key "
+			shift
+		;;;
+	esac
+	done
+	command="git ls-tree --name-only $pre_opts"
+	if [ -z "${debug+x}" ] 
+	then
+		command+=' 2>/dev/null'
+	fi
+	eval $command |
+	if [ -z ${level+x} ] 
+	then
+		cat
+	else
+		level=${level:-1}
+		cat | awk '$1~/^[^/]*(\/[^/]+){'"${level/-/,}"'}$/{print $1}'
+	fi
+	# echo $command
+}
+
 
 # vim +python switch 
 # install if not 
