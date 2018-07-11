@@ -113,6 +113,10 @@ function composer_china() {
 }
 
 function su_without_password() {
+if [ -z "${1+x}"]
+then
+  echo '$1 target_user $2 from_user'
+fi
   target_user=$1
   from_user=$2
   sudo cat <<EOT >>/etc/pam.d/su
