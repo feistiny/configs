@@ -12,7 +12,7 @@ alias vimu='vim -u ~/configs/.vimrc'
 alias jj='j -s'
 
 # 重新加载aliases.sh
-alias rea='source ~/configs/aliases.sh && echo "加载成功"'
+alias rea='source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.con ..'
 
 # 方便切换目录
 alias d='dirs -v'
