@@ -23,9 +23,9 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # laravel artisan命令
-alias cmpdp='composer dumpautoload'
+alias cmp='composer --no-plugins --no-scripts'
+alias cmpdp="$cmp dumpautoload"
 php_artisan='php artisan'
-alias cmp='composer'
 alias art=${php_artisan}
 alias art.mct="${php_artisan} make:controller"
 alias art.mm="${php_artisan} make:model"
@@ -41,7 +41,8 @@ alias gbr='git branch'
 alias gci='git commit'
 alias gciam='git commit -am'
 alias gcim='git commit -m'
-alias gcii='git -c user.name="liuzhanfei" -c user.email="liuzhanfei166@126.com" commit'
+alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
+alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gco='git checkout'
 alias gcf='git config'
 alias gcl='git clean'
@@ -58,6 +59,10 @@ alias grh='git reset HEAD'
 alias grm='git remove'
 alias grs='git reset'
 alias grt='git remote'
+function grtad() {
+  git remote add $1 $2
+  git remote set-url all --add $2
+}
 alias gst='git status'
 alias gsw='git update-index --skip-worktree'
 alias gnsw='git update-index --no-skip-worktree'
@@ -117,15 +122,40 @@ EOT
 }
 
 function get_snippets() {
-  case $1 in
-    'fiddler_raw')
-      echo 'type in QuickExec'
-      read -d '' OUT <<EOT
+declare -A snippets_array
+
+	read -d '' OUT <<EOT
+type in QuickExec:
 PREFS SET fiddler.ui.inspectors.${2:-request}.alwaysuse RAW
 EOT
-      echo $OUT
-    ;;
-  esac
+snippets_array[fiddler_raw]=$OUT
+
+  read -d '' OUT << EOF
+export HISTIGNORE='ls -l:pwd:date:'
+export HISTCONTROL=ignoredups
+export HISTIGNORE="history*:l[ls]:[ \t]*:"
+EOF
+snippets_array[history_export]=$OUT
+
+  read -d '' OUT << EOF
+wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+EOF
+snippets_array[install_zsh]=$OUT
+
+if [ -z "${1+x}" ]
+then
+	# $1 is empty, list all keys 
+	echo ${(@k)snippets_array} | xargs -n1 | sort
+else
+  for key v in ${(kv)snippets_array}
+	do
+if [ "$key" = "$1" ]
+then
+		echo "$snippets_array[$key]"
+fi
+	done
+fi
+
 }
 
 function gls() {
