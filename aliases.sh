@@ -1,3 +1,4 @@
+#!/bin/basn
 # 列出文件或目录
 alias la='ls -a'
 alias lla='ll -a'
@@ -146,18 +147,11 @@ wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - 
 EOF
 snippets_array[install_zsh]=$OUT
 
-if [ -z "${1+x}" ]
+if [[ "$SHELL" = *"zsh"* ]]
 then
-	# $1 is empty, list all keys 
-	echo ${(@k)snippets_array} | xargs -n1 | sort
+  source ~/configs/get_snippets_zsh
 else
-  for key v in ${(kv)snippets_array}
-	do
-if [ "$key" = "$1" ]
-then
-		echo "$snippets_array[$key]"
-fi
-	done
+  source ~/configs/get_snippets_bash
 fi
 
 }
