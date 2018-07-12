@@ -1,4 +1,6 @@
 #!/bin/basn
+shell_dir=$( cd "$( dirname $0  )" && pwd )
+
 # 列出文件或目录
 alias la='ls -a'
 alias lla='ll -a'
@@ -12,7 +14,7 @@ alias vimu='vim -u ~/configs/.vimrc'
 alias jj='j -s'
 
 # 重新加载aliases.sh
-alias rea='source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.con ..'
+alias rea='source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.conf ~/.tmux.conf'
 
 # 方便切换目录
 alias d='dirs -v'
@@ -126,34 +128,44 @@ auth       sufficient   pam_succeed_if.so use_uid user = $from_user
 EOT
 }
 
+snippets_dir="${shell_dir}/snippets"
+alias gets='get_snippets'
 function get_snippets() {
 declare -A snippets_array
-
-	read -d '' OUT <<EOT
-type in QuickExec:
-PREFS SET fiddler.ui.inspectors.${2:-request}.alwaysuse RAW
-EOT
-snippets_array[fiddler_raw]=$OUT
-
-  read -d '' OUT << EOF
-export HISTIGNORE='ls -l:pwd:date:'
-export HISTCONTROL=ignoredups
-export HISTIGNORE="history*:l[ls]:[ \t]*:"
-EOF
-snippets_array[history_export]=$OUT
-
-  read -d '' OUT << EOF
-wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
-EOF
-snippets_array[install_zsh]=$OUT
-
-if [[ "$SHELL" = *"zsh"* ]]
+if [ -z "${1+x}" ]
 then
-  source ~/configs/get_snippets_zsh
+  # command argv is empty, list all avaiable argvs(aka:snippets key name)
+  find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'
 else
-  source ~/configs/get_snippets_bash
+  for i in $shell_dir/snippets/*
+  do
+    if [ "$( basename $i )" = "$1" ]
+    then
+      if [ -L "$i" ]
+      then
+        cat $(readlink $i)
+      else
+        cat $i
+      fi
+    fi
+  done
+  unset i
 fi
 
+}
+
+alias sets='set_snippets'
+function set_snippets() {
+  echo $2 > "${snippets_dir}/$1"
+}
+alias setsd='set_snippets_heredoc'
+function set_snippets_heredoc() {
+  read -d '' heredoc
+  echo $heredoc > "${snippets_dir}/$1"
+}
+alias dels='delete_snippets_heredoc'
+function delete_snippets_heredoc() {
+  rm "${snippets_dir}/$1"
 }
 
 function gls() {
@@ -221,3 +233,9 @@ EOT
 }
 # vim-python-version-switch
 alias vpvs='sudo update-alternatives --config vim'
+
+# test script; like python's __main__
+if [ "$exec_in_vim" = 1 ]
+then
+    get_snippets test
+fi

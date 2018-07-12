@@ -1,0 +1,3 @@
+export HISTIGNORE='ls -l:pwd:date:'
+export HISTCONTROL=ignoredups
+export HISTIGNORE="history*:l[ls]:[ t]*:"
