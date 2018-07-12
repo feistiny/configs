@@ -154,6 +154,10 @@ fi
 
 }
 
+alias edits='edit_snippets'
+function edit_snippets() {
+  vim "${snippets_dir}/$1" 
+}
 alias sets='set_snippets'
 function set_snippets() {
   echo $2 > "${snippets_dir}/$1"
@@ -163,8 +167,8 @@ function set_snippets_heredoc() {
   read -d '' heredoc
   echo $heredoc > "${snippets_dir}/$1"
 }
-alias dels='delete_snippets_heredoc'
-function delete_snippets_heredoc() {
+alias dels='delete_snippets'
+function delete_snippets() {
   rm "${snippets_dir}/$1"
 }
 
@@ -237,5 +241,5 @@ alias vpvs='sudo update-alternatives --config vim'
 # test script; like python's __main__
 if [ "$exec_in_vim" = 1 ]
 then
-    get_snippets test
+    # get_snippets test
 fi

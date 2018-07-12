@@ -1,1 +1,6 @@
 _gets_comp() { _files -W ~/configs/snippets; }
+compdef _gets_comp get_snippets
+compdef _gets_comp set_snippets
+compdef _gets_comp set_snippets_heredoc
+compdef _gets_comp delete_snippets
+compdef _gets_comp edit_snippets
