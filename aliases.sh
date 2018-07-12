@@ -241,5 +241,6 @@ alias vpvs='sudo update-alternatives --config vim'
 # test script; like python's __main__
 if [ "$exec_in_vim" = 1 ]
 then
+  :
     # get_snippets test
 fi
