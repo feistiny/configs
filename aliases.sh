@@ -119,7 +119,7 @@ function composer_china() {
 }
 
 function su_without_password() {
-if [ -z "${1+x}"]
+if [ -z "${1+x}" ]
 then
   echo '$1 target_user $2 from_user'
 fi

@@ -1,0 +1,6 @@
+apt update
+apt install -y zsh autojump
+chsh -s $(which zsh)
+wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+sed -i '/^\s*git\s*$/aautujump' ~/.zshrc
+sed -i '$asource ~/configs/aliases.sh' ~/.zshrc
