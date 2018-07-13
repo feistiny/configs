@@ -14,7 +14,7 @@ alias vimu='vim -u ~/configs/.vimrc'
 alias jj='j -s'
 
 # 重新加载aliases.sh
-alias rea='source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.conf ~/.tmux.conf'
+alias rea='gplr && source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.conf ~/.tmux.conf'
 
 # 方便切换目录
 alias d='dirs -v'
@@ -57,6 +57,7 @@ alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset 
 alias gme='git merge'
 alias gps='git push'
 alias gpl='git pull'
+alias gplr='git pull --rebase'
 alias grb='git rebase'
 alias grh='git reset HEAD'
 alias grm='git remove'
