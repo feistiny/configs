@@ -65,8 +65,13 @@ alias grmc='git rm --cached'
 alias grs='git reset'
 alias grt='git remote'
 function grtad() {
-  git remote add $1 $2
-  git remote set-url all --add $2
+  url=$2
+  url_in_remote=$(git remote get-url $2 2>/dev/null)
+  [ -n "${url_in_remote}" ] && url=$url_in_remote
+  git remote add $1 $url 2>/dev/null
+  git remote set-url all --add $url 2>/dev/null || \
+    git remote add all $url
+  unset url url_in_remote
 }
 alias gdfd='gdfl diff'
 function gdfl() {
