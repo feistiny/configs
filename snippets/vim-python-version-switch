@@ -1,0 +1,9 @@
+# vim +python switch
+# install if not
+[ -z "$(apt list --installed 2>/dev/null | grep vim-nox-py2)" ] && {
+  apt-get install vim-nox-py2 -y >/dev/null || {
+    echo 'vim的+python切换工具安装失败'
+  }
+}
+# vim-python-version-switch
+alias vpvs='sudo update-alternatives --config vim'

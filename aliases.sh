@@ -14,7 +14,7 @@ alias vimu='vim -u ~/configs/.vimrc'
 alias jj='j -s'
 
 # 重新加载aliases.sh
-alias rea='gplr && source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.conf ~/.tmux.conf'
+alias rea='source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.conf ~/.tmux.conf'
 
 # 方便切换目录
 alias d='dirs -v'
@@ -161,7 +161,7 @@ function edit_snippets() {
 }
 alias sets='set_snippets'
 function set_snippets() {
-  echo $2 > "${snippets_dir}/$1"
+  echo ${@:2} > "${snippets_dir}/$1"
 }
 alias setsd='set_snippets_heredoc'
 function set_snippets_heredoc() {
@@ -255,17 +255,6 @@ EOT
   fi
   # echo $command
 }
-
-
-# vim +python switch 
-# install if not 
-[ -z "$(apt list --installed 2>/dev/null | grep vim-nox-py2)" ] && {
-  apt-get install vim-nox-py2 -y >/dev/null || {
-    echo 'vim的+python切换工具安装失败'
-  }
-}
-# vim-python-version-switch
-alias vpvs='sudo update-alternatives --config vim'
 
 # test script; like python's __main__
 if [ "$exec_in_vim" = 1 ]
