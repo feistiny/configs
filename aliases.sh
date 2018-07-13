@@ -172,6 +172,34 @@ function delete_snippets() {
   rm "${snippets_dir}/$1"
 }
 
+source <(gets autoc_for_gets)
+source <(gets history_export)
+
+alias gdr='git_dir_worktree'
+function git_dir_worktree() {
+  if [ -z "${1+x}" ]
+  then
+    gets current_git_dir 2>/dev/null
+  else
+    if [ "$1" = "del" ]
+    then
+      dels current_git_dir 2>/dev/null && echo deleted || echo not set
+    else
+      if [ "$1" = "." ]
+      then
+        1=$(pwd)
+      fi
+      sets current_git_dir $1
+      git_dir=$(gets current_git_dir | nocolor)
+      alias git="git --git-dir=${git_dir}/.git --work-tree=${git_dir}"
+    fi
+  fi
+}
+
+function nocolor() {
+  sed 's/\x1b\[[0-9;]*m//g'
+}
+
 function gls() {
   read -d '' USAGE <<EOT
 USAGE:
