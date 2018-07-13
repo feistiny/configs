@@ -68,6 +68,17 @@ function grtad() {
   git remote add $1 $2
   git remote set-url all --add $2
 }
+alias gdfd='gdfl diff'
+function gdfl() {
+  command='log'
+  args='--stat'
+  [ "$1" = 'diff' ] && { command='diff'; shift; }
+  [ -n "$(echo ${@:1}|sed 's/ //g')" ] && { args=${@:1}; }
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream})
+  git ${command} ${args} $upstream..$current_branch
+  unset command args
+}
 alias gst='git status'
 alias gsb='git subtree'
 alias gsw='git update-index --skip-worktree'
@@ -129,6 +140,7 @@ fi
 auth       [success=ignore default=1] pam_succeed_if.so user = $target_user
 auth       sufficient   pam_succeed_if.so use_uid user = $from_user
 EOT
+unset target_user from_user
 }
 
 snippets_dir="${shell_dir}/snippets"
@@ -256,6 +268,7 @@ EOT
     cat | awk '$1~/^[^/]*(\/[^/]+){'"${level/-/,}"'}$/{print $1}'
   fi
   # echo $command
+  unset pre_opts debug key level
 }
 
 # test script; like python's __main__
