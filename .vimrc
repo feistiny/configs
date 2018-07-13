@@ -118,18 +118,21 @@ set nobomb "去掉bom
 filetype plugin on
 filetype indent on
 let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
-autocmd BufWritePost *.py setlocal et autoindent
-autocmd BufWritePost *.lisp setlocal et autoindent
 au BufNewFile,BufRead *.{tpl,htm} set filetype=html
 au BufNewFile,BufRead *.js set filetype=javascript
 au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
 au BufNewFile,BufRead *.conf set filetype=conf
+au BufNewFile,BufRead *.yml set filetype=yaml
+autocmd FileType html,css EmmetInstall
+autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
+autocmd FileType sh,zsh setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+autocmd BufWritePost *.py setlocal et autoindent
+autocmd BufWritePost *.lisp setlocal et autoindent
 """根据文件类型做不同设置
 
 """打开代码折叠<<<
@@ -221,20 +224,21 @@ vnoremap < <gv
 
 "下边执行文件的注释不能放到行后,否则执行结果闪消
 "快捷执行当前php文件
-map gp :!clear;php %<CR>
+map gp :!clear;echo ;php %<CR>
 "快捷执行当前python文件
-map gy :!clear;python %<CR>
+map gy :!clear;echo ;python %<CR>
 "快捷执行当前node文件
-map gn :!clear;node %<CR>
+map gn :!clear;echo ;node %<CR>
 "快捷执行当前bash文件
-map gb :!clear;bash %<CR>
+map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset $exec_in_vim<CR>
 "快捷执行当前lisp文件
-map gl :!clear;clisp %<CR>
+map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
+set term=ansi
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {} 
 let g:snipMate.no_default_aliases=1
