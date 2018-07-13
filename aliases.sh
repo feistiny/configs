@@ -60,7 +60,8 @@ alias gpl='git pull'
 alias gplr='git pull --rebase'
 alias grb='git rebase'
 alias grh='git reset HEAD'
-alias grm='git remove'
+alias grm='git rm'
+alias grmc='git rm --cached'
 alias grs='git reset'
 alias grt='git remote'
 function grtad() {
@@ -68,6 +69,7 @@ function grtad() {
   git remote set-url all --add $2
 }
 alias gst='git status'
+alias gsb='git subtree'
 alias gsw='git update-index --skip-worktree'
 alias gnsw='git update-index --no-skip-worktree'
 
