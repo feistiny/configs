@@ -2,6 +2,7 @@
 shell_dir=$( cd "$( dirname $0  )" && pwd )
 
 # 列出文件或目录
+alias l='ls -al'
 alias la='ls -a'
 alias lla='ll -a'
 alias lsd='ls -l | grep ^d'
