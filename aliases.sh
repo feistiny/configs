@@ -42,29 +42,37 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 # git
 alias gad='git add'
 alias gbr='git branch'
-alias gci='git commit'
-alias gciam='git commit -am'
-alias gcim='git commit -m'
-alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
-alias gco='git checkout'
 alias gcf='git config'
+alias gciam='git commit -am'
+alias gci='git commit'
+alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
+alias gcim='git commit -m'
 alias gcl='git clean'
-alias gdf='git diff'
+alias gco='git checkout'
 alias gdfc='git diff --cached'
+alias gdf='git diff'
 alias gfe='git fetch'
 alias gl='git log --oneline'
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
-alias gps='git push'
+alias gnsw='git update-index --no-skip-worktree'
 alias gpl='git pull'
 alias gplr='git pull --rebase'
+alias gps='git push'
 alias grb='git rebase'
 alias grh='git reset HEAD'
-alias grm='git rm'
 alias grmc='git rm --cached'
+alias grm='git rm'
 alias grs='git reset'
 alias grt='git remote'
+alias gsa='git stash apply'
+alias gsb='git subtree'
+alias gsh='git stash'
+alias gsl='git stash list'
+alias gsp='git stash pop'
+alias gst='git status'
+alias gsw='git update-index --skip-worktree'
 function grtad() {
   url=$2
   url_in_remote=$(git remote get-url $2 2>/dev/null)
@@ -85,14 +93,6 @@ function gdfl() {
   git ${command} ${args} $upstream..$current_branch
   unset command args
 }
-alias gst='git status'
-alias gsb='git subtree'
-alias gsh='git stash'
-alias gsl='git stash list'
-alias gsp='git stash pop'
-alias gsa='git stash apply'
-alias gsw='git update-index --skip-worktree'
-alias gnsw='git update-index --no-skip-worktree'
 
 # docker
 alias dcm="docker-compose"
