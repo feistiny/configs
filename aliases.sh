@@ -86,6 +86,10 @@ function gdfl() {
 }
 alias gst='git status'
 alias gsb='git subtree'
+alias gsh='git stash'
+alias gsl='git stash list'
+alias gsp='git stash pop'
+alias gsa='git stash apply'
 alias gsw='git update-index --skip-worktree'
 alias gnsw='git update-index --no-skip-worktree'
 
