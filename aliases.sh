@@ -156,7 +156,7 @@ unset target_user from_user
 
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
-complete -W "$(eval "ls ${snippets_dir}")" gets
+complete -W "$(eval "ls ${snippets_dir}")" gets sets dels edits
 function get_snippets() {
 declare -A snippets_array
 if [ -z "${1+x}" ]
