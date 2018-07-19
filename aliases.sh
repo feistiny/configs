@@ -40,7 +40,6 @@ alias artmr="${php_artisan} migrate:rollback"
 alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git
-alias gad='git add'
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
@@ -74,6 +73,11 @@ alias gsl='git stash list'
 alias gsp='git stash pop'
 alias gst='git status'
 alias gsw='git update-index --skip-worktree'
+function gad() {
+  to_add='.'
+  if [ -n "${1}" ]; then to_add=$1; fi
+  git add $to_add ${@:2}
+}
 function grtad() {
   url=$2
   url_in_remote=$(git remote get-url $2 2>/dev/null)
@@ -200,6 +204,10 @@ function delete_snippets() {
 
 source <(gets history_export)
 
+function nocolor() {
+  sed 's/\x1b\[[0-9;]*m//g'
+}
+
 alias gdr='git_dir_worktree'
 function git_dir_worktree() {
   if [ -z "${1+x}" ]
@@ -220,10 +228,8 @@ function git_dir_worktree() {
     fi
   fi
 }
+if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
 
-function nocolor() {
-  sed 's/\x1b\[[0-9;]*m//g'
-}
 
 function gls() {
   read -d '' USAGE <<EOT
