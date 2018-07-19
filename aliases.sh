@@ -1,6 +1,5 @@
 #!/bin/basn
-shell_dir=$( cd "$( dirname $0  )" && pwd )
-
+shell_dir='~/configs'
 # 列出文件或目录
 alias l='ls -al'
 alias la='ls -a'
@@ -157,22 +156,22 @@ unset target_user from_user
 
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
+complete -W "$(eval "ls ${snippets_dir}")" gets
 function get_snippets() {
 declare -A snippets_array
 if [ -z "${1+x}" ]
 then
-  # command argv is empty, list all avaiable argvs(aka:snippets key name)
-  find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'
+  eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'"
 else
-  for i in $shell_dir/snippets/*
+  for i in $(eval "ls ${snippets_dir}")
   do
     if [ "$( basename $i )" = "$1" ]
     then
-      if [ -L "$i" ]
+      if [ -L $i ]
       then
-        cat $(readlink $i)
+        eval "cat ${snippets_dir}/$(readlink $i)"
       else
-        cat $i
+        eval "cat ${snippets_dir}/$i"
       fi
     fi
   done
@@ -183,23 +182,22 @@ fi
 
 alias edits='edit_snippets'
 function edit_snippets() {
-  vim "${snippets_dir}/$1" 
+  eval "vimu ${snippets_dir}/$1" 
 }
 alias sets='set_snippets'
 function set_snippets() {
-  echo ${@:2} > "${snippets_dir}/$1"
+  eval "echo ${@:2} > ${snippets_dir}/$1"
 }
 alias setsd='set_snippets_heredoc'
 function set_snippets_heredoc() {
   read -d '' heredoc
-  echo $heredoc > "${snippets_dir}/$1"
+  eval "echo $heredoc > ${snippets_dir}/$1"
 }
 alias dels='delete_snippets'
 function delete_snippets() {
-  rm "${snippets_dir}/$1"
+  eval "rm ${snippets_dir}/$1"
 }
 
-source <(gets autoc_for_gets)
 source <(gets history_export)
 
 alias gdr='git_dir_worktree'
