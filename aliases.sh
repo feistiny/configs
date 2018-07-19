@@ -27,13 +27,14 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # laravel artisan命令
-alias cmp='composer --no-plugins --no-scripts'
-alias cmpdp="$cmp dumpautoload"
+alias cmp='composer --no-plugins'
+alias cmpdp="cmp dumpautoload"
 php_artisan='php artisan'
 alias art=${php_artisan}
-alias art.mct="${php_artisan} make:controller"
-alias art.mm="${php_artisan} make:model"
-alias artmg="${php_artisan} make:migration"
+alias art.cont="${php_artisan} make:controller"
+alias art.model="${php_artisan} make:model"
+alias art.mig="${php_artisan} make:migration"
+alias art.mid="${php_artisan} make:middleware"
 alias artm="${php_artisan} migrate"
 alias artms="${php_artisan} migrate:status"
 alias artmr="${php_artisan} migrate:rollback"
@@ -44,6 +45,7 @@ alias gad='git add'
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
+alias gcia='git commit --amend -C HEAD'
 alias gciam='git commit -am'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'

@@ -1,0 +1,4 @@
+swapoff /var/_swap_/swapfile
+rm -rf /var/_swap_/swapfile
+sed -i '/_swap_\/swapfile/d' /etc/fstab
+free -m
