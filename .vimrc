@@ -52,6 +52,8 @@ Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
 Plug 'dkprice/vim-easygrep' " 全局搜索
 Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
 
+Plug 'tpope/vim-repeat'
+
 Plug 'scrooloose/nerdtree' " 文件目录树
 
 Plug 'tpope/vim-surround' " 增删改包围
