@@ -272,10 +272,10 @@ function git_dir_worktree() {
       sys_git=$(which -a git | awk 'NR==2 {print}')
       function git() {
         if [ -d .git ]; then
-          $sys_git $*
+          $sys_git "$@"
         else
           # echo "this is not a git dir, git executes in ${git_dir} :"
-          $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} $*
+          $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} "$@"
         fi
       }
     fi
