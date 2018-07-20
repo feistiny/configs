@@ -66,6 +66,7 @@ alias grmc='git rm --cached'
 alias grm='git rm'
 alias grs='git reset'
 alias grt='git remote'
+alias grp='git rev-parse'
 alias gsa='git stash apply'
 alias gsb='git subtree'
 alias gsh='git stash'
@@ -77,6 +78,7 @@ function gad() {
   to_add='.'
   if [ -n "${1}" ]; then to_add=$1; fi
   git add $to_add ${@:2}
+  unset to_add
 }
 function grtad() {
   url=$2
@@ -86,6 +88,47 @@ function grtad() {
   git remote set-url all --add $url 2>/dev/null || \
     git remote add all $url
   unset url url_in_remote
+}
+function gsbcf() {
+  prefix=$1
+  remote=$2
+  branch=$3
+  git ls-remote --exit-code ${remote} &>/dev/null
+  if test $? != 0
+  then
+    echo 'remote not exists'
+  fi
+  git config remote.${remote}.prefix ${prefix} 
+  git config remote.${remote}.branch ${branch} 
+  unset prefix remote branch
+}
+function gsbps() {
+  pull_push='push'
+  gsbpl $1
+}
+function gsbpl() {
+  pull_push=${pull_push:-pull}
+  remote=$1
+  gdr=$(gdr)
+  
+  # check if remote exists
+  git ls-remote --exit-code ${remote} &>/dev/null
+  if test $? != 0
+  then
+    echo 'remote not exists'
+  elif test -n ${gdr} 
+  then
+    cd_to=1
+    cd ${gdr}
+  fi
+   
+  prefix=$(git config --get "remote.${remote}.prefix")
+  if [ -z "${prefix}" ] ; then echo 'subtree prefix not found';return; fi
+  branch=$(git config --get "remote.${remote}.branch")
+  if [ -z "${branch}" ] ; then echo 'subtree branch not found';return; fi
+  git subtree ${pull_push} --prefix=${prefix} ${remote} ${branch} ${@:2}
+  if test $cd_to = 1; then cd - >/dev/null; fi
+  unset prefix remote branch cd_to pull_push gdr
 }
 alias gdfd='gdfl diff'
 function gdfl() {
@@ -208,6 +251,7 @@ function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
+complete -W 'del .' gdr
 alias gdr='git_dir_worktree'
 function git_dir_worktree() {
   if [ -z "${1+x}" ]
@@ -220,11 +264,20 @@ function git_dir_worktree() {
     else
       if [ "$1" = "." ]
       then
-        1=$(pwd)
+        set -- "$(pwd)" ${@:2}
+        pwd
       fi
       sets current_git_dir $1
       git_dir=$(gets current_git_dir | nocolor)
-      alias git="git --git-dir=${git_dir}/.git --work-tree=${git_dir}"
+      sys_git=$(which -a git | awk 'NR==2 {print}')
+      function git() {
+        if [ -d .git ]; then
+          $sys_git $*
+        else
+          # echo "this is not a git dir, git executes in ${git_dir} :"
+          $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} $*
+        fi
+      }
     fi
   fi
 }
