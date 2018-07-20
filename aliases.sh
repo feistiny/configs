@@ -1,6 +1,9 @@
 #!/bin/basn
 shell_dir='~/configs'
-# ls aliases
+
+# git clone in the root(~) dir #
+
+# ls aliases #
 alias l='ls -al'
 alias la='ls -a'
 alias lla='ll -a'
@@ -10,13 +13,13 @@ alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias vimu='vim -u ~/configs/.vimrc'
 
-# autojump
+# autojump #
 alias jj='j -s'
 
-# reaload aliases.sh
+# reaload aliases.sh #
 alias rea='source ~/configs/aliases.sh && echo "reloaded" && cp ~/configs/.tmux.conf ~/.tmux.conf'
 
-# easy to change directory
+# easy to change directory #
 alias d='dirs -v'
 alias pu='pushd'
 alias po='popd'
@@ -25,7 +28,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# laravel artisan
+# laravel artisan #
 alias cmp='composer --no-plugins'
 alias cmpdp="cmp dumpautoload"
 php_artisan='php artisan'
@@ -39,7 +42,7 @@ alias artms="${php_artisan} migrate:status"
 alias artmr="${php_artisan} migrate:rollback"
 alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
-# git
+# git #
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
@@ -142,7 +145,7 @@ function gdfl() {
   unset command args
 }
 
-# docker
+# docker #
 alias dcm="docker-compose"
 alias dex='docker exec -it'
 alias dim="docker images"
