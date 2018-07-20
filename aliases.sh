@@ -284,7 +284,7 @@ function git_dir_worktree() {
     fi
   fi
 }
-if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
+# if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
 
 
 function gls() {
