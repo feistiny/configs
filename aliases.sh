@@ -29,7 +29,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # laravel artisan #
-alias cmp='composer --no-plugins'
+alias cmp='composer'
 alias cmpdp="cmp dumpautoload"
 php_artisan='php artisan'
 alias art=${php_artisan}
