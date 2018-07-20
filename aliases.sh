@@ -103,6 +103,7 @@ function gsbcf() {
   fi
   git config remote.${remote}.prefix ${prefix} 
   git config remote.${remote}.branch ${branch} 
+  git config --get-regexp remote.${remote}
   unset prefix remote branch
 }
 function gsbps() {
@@ -119,7 +120,7 @@ function gsbpl() {
   if test $? != 0
   then
     echo 'remote not exists'
-  elif test -n ${gdr} 
+  elif test -n "${gdr}"
   then
     cd_to=1
     cd ${gdr}
@@ -129,8 +130,8 @@ function gsbpl() {
   if [ -z "${prefix}" ] ; then echo 'subtree prefix not found';return; fi
   branch=$(git config --get "remote.${remote}.branch")
   if [ -z "${branch}" ] ; then echo 'subtree branch not found';return; fi
-  git subtree ${pull_push} --prefix=${prefix} ${remote} ${branch} ${@:2}
-  if test $cd_to = 1; then cd - >/dev/null; fi
+  git subtree "${pull_push}" --prefix="${prefix}" "${remote}" "${branch}" "${@:2}"
+  if test "$?" = 0 && test "$cd_to" = 1; then echo 'return';cd - >/dev/null; fi
   unset prefix remote branch cd_to pull_push gdr
 }
 alias gdfd='gdfl diff'
