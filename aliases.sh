@@ -206,7 +206,10 @@ unset target_user from_user
 
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
-complete -W "$(eval "ls ${snippets_dir}")" gets sets dels edits
+function update_complete_for_snippets() {
+  complete -W "$(eval "ls ${snippets_dir}")" gets sets dels edits
+}
+update_complete_for_snippets
 function get_snippets() {
 declare -A snippets_array
 if [ -z "${1+x}" ]
@@ -233,19 +236,23 @@ fi
 alias edits='edit_snippets'
 function edit_snippets() {
   eval "vimu ${snippets_dir}/$1" 
+  update_complete_for_snippets
 }
 alias sets='set_snippets'
 function set_snippets() {
   eval "echo ${@:2} > ${snippets_dir}/$1"
+  update_complete_for_snippets
 }
 alias setsd='set_snippets_heredoc'
 function set_snippets_heredoc() {
   read -d '' heredoc
   eval "echo $heredoc > ${snippets_dir}/$1"
+  update_complete_for_snippets
 }
 alias dels='delete_snippets'
 function delete_snippets() {
   eval "rm ${snippets_dir}/$1"
+  update_complete_for_snippets
 }
 
 source <(gets history_export)

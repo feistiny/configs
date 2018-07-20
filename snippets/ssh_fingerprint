@@ -1,0 +1,2 @@
+ssh-keygen -lf ~/.ssh/id_rsa.pub
+ssh-keygen -E md5 -lf ~/.ssh/id_rsa.pub
