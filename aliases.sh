@@ -251,7 +251,7 @@ function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
-complete -W 'del .' gdr
+complete -o default -W 'del .' gdr
 alias gdr='git_dir_worktree'
 function git_dir_worktree() {
   if [ -z "${1+x}" ]
