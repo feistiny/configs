@@ -1,6 +1,6 @@
 #!/bin/basn
 shell_dir='~/configs'
-# 列出文件或目录
+# ls aliases
 alias l='ls -al'
 alias la='ls -a'
 alias lla='ll -a'
@@ -13,10 +13,10 @@ alias vimu='vim -u ~/configs/.vimrc'
 # autojump
 alias jj='j -s'
 
-# 重新加载aliases.sh
-alias rea='source ~/configs/aliases.sh && echo "加载成功" && cp ~/configs/.tmux.conf ~/.tmux.conf'
+# reaload aliases.sh
+alias rea='source ~/configs/aliases.sh && echo "reloaded" && cp ~/configs/.tmux.conf ~/.tmux.conf'
 
-# 方便切换目录
+# easy to change directory
 alias d='dirs -v'
 alias pu='pushd'
 alias po='popd'
@@ -25,7 +25,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# laravel artisan命令
+# laravel artisan
 alias cmp='composer --no-plugins'
 alias cmpdp="cmp dumpautoload"
 php_artisan='php artisan'
