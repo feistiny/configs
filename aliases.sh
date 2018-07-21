@@ -44,7 +44,6 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git #
 alias gbr='git branch'
-__git_complete gbr _git_branch
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
 alias gcia='git commit --amend -C HEAD'
@@ -54,11 +53,9 @@ alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gcim='git commit -m'
 alias gcl='git clean'
 alias gco='git checkout'
-__git_complete gco _git_checkout
 alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
-__git_complete gfe _git_fetch
 alias gl='git log --oneline'
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
@@ -93,6 +90,10 @@ function grtad() {
   git remote set-url all --add $url 2>/dev/null || \
     git remote add all $url
   unset url url_in_remote
+}
+function gciamp() {
+  msg=${1:-+++}
+  git commit -am "$msg" && git push
 }
 function grh() {
  git reset HEAD "'"$1"'"
@@ -150,6 +151,18 @@ function gdfl() {
   git ${command} ${args} $upstream..$current_branch
   unset command args
 }
+
+#git alias autocomplete
+[ -f /usr/share/bash-completion/completions/git ] && . /usr/share/bash-completion/completions/git
+while read line
+do
+  __git_complete ${line%%:*} ${line##*:}
+done < <(cat <<EOF
+gbr:_git_branch
+gco:_git_checkout
+EOF
+)
+
 
 # docker #
 alias dcm="docker-compose"
@@ -213,7 +226,7 @@ unset target_user from_user
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(eval "ls ${snippets_dir}")" gets sets dels edits
+  complete -W "$(eval "ls ${snippets_dir} | xargs")" gets sets dels edits
 }
 update_complete_for_snippets
 function get_snippets() {
