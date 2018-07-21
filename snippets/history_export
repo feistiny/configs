@@ -1,3 +1,3 @@
 export HISTTIMEFORMAT="%F %T `whoami` "
 export HISTCONTROL=ignoredups
-export HISTIGNORE="history*:l[ls]*:[ \t]*:g*:l:cd:pu:d:po:[gs]ets:edits:dels:"
+export HISTIGNORE="history*:l[ls]*:rea:[ \t]*:g*:l:cd:pu:d:po:[gs]ets:edits:dels:.*:"

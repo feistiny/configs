@@ -46,7 +46,8 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
-alias gcia='git commit --amend -C HEAD'
+alias gcia='git commit --amend -C HEAD && git push'
+alias gciaa='git commit -a --amend -C HEAD && git push'
 alias gciam='git commit -am'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
@@ -160,6 +161,8 @@ do
 done < <(cat <<EOF
 gbr:_git_branch
 gco:_git_checkout
+gdf:_git_diff
+gdfc:_git_diff
 EOF
 )
 
@@ -340,6 +343,7 @@ EOT
   unset pre_opts debug key level
 }
 
+eval "source ${snippets_dir}/history_export"
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>
