@@ -44,6 +44,7 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git #
 alias gbr='git branch'
+__git_complete gbr _git_branch
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
 alias gcia='git commit --amend -C HEAD'
@@ -53,9 +54,11 @@ alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gcim='git commit -m'
 alias gcl='git clean'
 alias gco='git checkout'
+__git_complete gco _git_checkout
 alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
+__git_complete gfe _git_fetch
 alias gl='git log --oneline'
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
@@ -302,15 +305,20 @@ function nocolor() {
 
 
 function gls() {
-  read -d '' USAGE <<EOT
+  USAGE=$(cat << EOT
 USAGE:
   -r   recurse   recursive
   -d             only directory
+  -t             both files and directory
   -L   level     Descend only level directories deep.
+                 e.g.
+                 2 show repository equal 2 dir depth
+                 -2 show repository less than 2 dir depth
 EOT
+)
   # USAGE="Usage: command -ihv args"
-  if [ "$#" = 0 ] ; then
-    echo $USAGE
+  if test "$#" = 1 && [[ "$1" =~ (-h|--help) ]] ; then
+    echo "$USAGE"
     return
   fi
   pre_opts=''
@@ -340,17 +348,18 @@ EOT
     ;;
   esac
   done
-  command="git ls-tree --name-only $pre_opts"
+  command="git ls-tree --name-only $pre_opts HEAD"
   if [ -z "${debug+x}" ] 
   then
     command+=' 2>/dev/null'
   fi
-  eval $command |
+  eval "$command" |
   if [ -z ${level+x} ] 
   then
     cat
   else
     level=${level:-1}
+    ((level=level>0?level-1:level+1))
     cat | awk '$1~/^[^/]*(\/[^/]+){'"${level/-/,}"'}$/{print $1}'
   fi
   # echo $command
