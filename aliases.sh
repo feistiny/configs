@@ -57,8 +57,8 @@ alias gco='git checkout'
 alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
-alias gl='git log --oneline'
-alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gl='git log --oneline | less'
+alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit | less"
 alias gme='git merge'
 alias gnsw='git update-index --no-skip-worktree'
 alias gpl='git pull'
