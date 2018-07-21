@@ -278,45 +278,6 @@ function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
-# complete -o default -W 'del .' gdr
-# alias gdr='git_dir_worktree'
-# function git_dir_worktree() {
-  # if [ -z "${1+x}" ]
-  # then
-    # gets current_git_dir 2>/dev/null
-  # else
-    # if [ "$1" = "del" ]
-    # then
-      # dels current_git_dir 2>/dev/null && echo deleted || echo not set
-      # unset -f git
-    # else
-      # if [ "$1" = "." ]
-      # then
-        # set -- "$(pwd)" ${@:2}
-        # pwd
-      # fi
-      # if test -e $1; then 
-        # sets current_git_dir $1
-      # else
-        # echo 'path not exists'
-        # return
-      # fi
-      # git_dir=$(gets current_git_dir | nocolor)
-      # sys_git=$(which -a git | awk 'NR==2 {print}')
-      # function git() {
-        # $sys_git ls-remote --exit-code &>/dev/null
-        # if [ "$?" = 0 ]; then
-          # $sys_git "$@"
-        # else
-          # $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} "$@"
-        # fi
-      # }
-    # fi
-  # fi
-# }
-# if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
-
-
 function gls() {
   USAGE=$(cat << EOT
 USAGE:
@@ -380,6 +341,8 @@ EOT
 }
 
 # test script; like python's __main__
+# add the key map in .vimrc
+# map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>
 if [ "$exec_in_vim" = 1 ]
 then
   :

@@ -232,7 +232,7 @@ map gy :!clear;echo ;python %<CR>
 "快捷执行当前node文件
 map gn :!clear;echo ;node %<CR>
 "快捷执行当前bash文件
-map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset $exec_in_vim<CR>
+map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim<CR>
 "快捷执行当前lisp文件
 map gl :!clear;echo ;clisp %<CR>
 
