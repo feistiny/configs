@@ -64,7 +64,6 @@ alias gpl='git pull'
 alias gplr='git pull --rebase'
 alias gps='git push'
 alias grb='git rebase'
-alias grh='git reset HEAD'
 alias grmc='git rm --cached'
 alias grm='git rm'
 alias grs='git reset'
@@ -91,6 +90,9 @@ function grtad() {
   git remote set-url all --add $url 2>/dev/null || \
     git remote add all $url
   unset url url_in_remote
+}
+function grh() {
+ git reset HEAD "'"$1"'"
 }
 function gsbcf() {
   prefix=$1
@@ -272,27 +274,33 @@ function git_dir_worktree() {
     if [ "$1" = "del" ]
     then
       dels current_git_dir 2>/dev/null && echo deleted || echo not set
+      unset -f git
     else
       if [ "$1" = "." ]
       then
         set -- "$(pwd)" ${@:2}
         pwd
       fi
-      sets current_git_dir $1
+      if test -e $1; then 
+        sets current_git_dir $1
+      else
+        echo 'path not exists'
+        return
+      fi
       git_dir=$(gets current_git_dir | nocolor)
       sys_git=$(which -a git | awk 'NR==2 {print}')
       function git() {
-        if [ -d .git ]; then
+        $sys_git ls-remote --exit-code 2>/dev/null
+        if [ "$?" = 0 ]; then
           $sys_git "$@"
         else
-          # echo "this is not a git dir, git executes in ${git_dir} :"
           $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} "$@"
         fi
       }
     fi
   fi
 }
-# if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
+if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
 
 
 function gls() {
