@@ -115,26 +115,26 @@ function gsbps() {
 function gsbpl() {
   pull_push=${pull_push:-pull}
   remote=$1
-  gdr=$(gdr)
   
   # check if remote exists
   git ls-remote --exit-code ${remote} &>/dev/null
-  if test $? != 0
+  if test $? = 0
   then
-    echo 'remote not exists'
-  elif test -n "${gdr}"
-  then
-    cd_to=1
-    cd ${gdr}
+    cd $(git rev-parse --show-toplevel)
   fi
-   
   prefix=$(git config --get "remote.${remote}.prefix")
   if [ -z "${prefix}" ] ; then echo 'subtree prefix not found';return; fi
   branch=$(git config --get "remote.${remote}.branch")
   if [ -z "${branch}" ] ; then echo 'subtree branch not found';return; fi
-  git subtree "${pull_push}" --prefix="${prefix}" "${remote}" "${branch}" "${@:2}"
-  if test "$?" = 0 && test "$cd_to" = 1; then echo 'return';cd - >/dev/null; fi
-  unset prefix remote branch cd_to pull_push gdr
+  if test "${pull_push}" = "pull"; then
+    squash_and_msg="--squash -m "
+    if test -z "${@:2}"; then
+      squash_and_msg="${squash_and_msg} merge"
+    fi
+  fi
+  git subtree "${pull_push}" --prefix="${prefix}" "${remote}" "${branch}" ${squash_and_msg:-} "${@:2}"
+  if test "$?" = 0 ; then cd -; &>/dev/null; fi
+  unset prefix remote branch pull_push gdr squash_and_msg
 }
 alias gdfd='gdfl diff'
 function gdfl() {
@@ -258,49 +258,47 @@ function delete_snippets() {
   update_complete_for_snippets
 }
 
-source <(gets history_export)
-
 function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
-complete -o default -W 'del .' gdr
-alias gdr='git_dir_worktree'
-function git_dir_worktree() {
-  if [ -z "${1+x}" ]
-  then
-    gets current_git_dir 2>/dev/null
-  else
-    if [ "$1" = "del" ]
-    then
-      dels current_git_dir 2>/dev/null && echo deleted || echo not set
-      unset -f git
-    else
-      if [ "$1" = "." ]
-      then
-        set -- "$(pwd)" ${@:2}
-        pwd
-      fi
-      if test -e $1; then 
-        sets current_git_dir $1
-      else
-        echo 'path not exists'
-        return
-      fi
-      git_dir=$(gets current_git_dir | nocolor)
-      sys_git=$(which -a git | awk 'NR==2 {print}')
-      function git() {
-        $sys_git ls-remote --exit-code 2>/dev/null
-        if [ "$?" = 0 ]; then
-          $sys_git "$@"
-        else
-          $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} "$@"
-        fi
-      }
-    fi
-  fi
-}
-if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
+# complete -o default -W 'del .' gdr
+# alias gdr='git_dir_worktree'
+# function git_dir_worktree() {
+  # if [ -z "${1+x}" ]
+  # then
+    # gets current_git_dir 2>/dev/null
+  # else
+    # if [ "$1" = "del" ]
+    # then
+      # dels current_git_dir 2>/dev/null && echo deleted || echo not set
+      # unset -f git
+    # else
+      # if [ "$1" = "." ]
+      # then
+        # set -- "$(pwd)" ${@:2}
+        # pwd
+      # fi
+      # if test -e $1; then 
+        # sets current_git_dir $1
+      # else
+        # echo 'path not exists'
+        # return
+      # fi
+      # git_dir=$(gets current_git_dir | nocolor)
+      # sys_git=$(which -a git | awk 'NR==2 {print}')
+      # function git() {
+        # $sys_git ls-remote --exit-code &>/dev/null
+        # if [ "$?" = 0 ]; then
+          # $sys_git "$@"
+        # else
+          # $sys_git --git-dir=${git_dir}/.git --work-tree=${git_dir} "$@"
+        # fi
+      # }
+    # fi
+  # fi
+# }
+# if [ -n "$(gets current_git_dir)" ]; then gdr $(gets current_git_dir); fi
 
 
 function gls() {
