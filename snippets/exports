@@ -1,3 +1,9 @@
+# history
 export HISTTIMEFORMAT="%F %T `whoami` "
 export HISTCONTROL=ignoredups
 export HISTIGNORE="history*:l[ls]*:rea:[ \t]*:l:cd:pu:d:po:[gs]ets:edits:dels:"
+
+# less with color
+export LESS='-R'
+
+

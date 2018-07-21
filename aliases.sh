@@ -343,7 +343,7 @@ EOT
   unset pre_opts debug key level
 }
 
-eval "source ${snippets_dir}/history_export"
+eval "source ${snippets_dir}/exports"
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>
