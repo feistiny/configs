@@ -17,7 +17,8 @@ alias vimu='vim -u ~/configs/.vimrc'
 alias jj='j -s'
 
 # reaload aliases.sh #
-alias rea='source ~/configs/aliases.sh && echo "reloaded" && cp ~/configs/.tmux.conf ~/.tmux.conf'
+alias rea='source ~/configs/aliases.sh && echo "reloaded"'
+alias tmuxl='tmux -f ~/configs/.tmux.conf'
 
 # easy to change directory #
 alias d='dirs -v'
