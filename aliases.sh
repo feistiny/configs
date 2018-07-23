@@ -237,6 +237,7 @@ declare -A snippets_array
 if [ -z "${1+x}" ]
 then
   eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'"
+  update_complete_for_snippets
 else
   for i in $(eval "ls ${snippets_dir}")
   do
