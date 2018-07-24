@@ -97,7 +97,7 @@ function gciamp() {
   git commit -am "$msg" && git push
 }
 function grh() {
- git reset HEAD "'"$1"'"
+ git reset HEAD "$1"
 }
 function gsbcf() {
   prefix=$1
@@ -344,6 +344,7 @@ EOT
 }
 
 eval "source ${snippets_dir}/exports"
+eval "bind -f ${snippets_dir}/inputrc"
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>
