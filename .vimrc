@@ -35,6 +35,11 @@ call plug#begin('~/.vim/plugged')
 " tpope/vim-unimpaired " 交换上下行
 " python-mode/python-mode " 写python必用插件
 
+Plug 'm2mdas/phpcomplete-extended'
+    Plug 'Shougo/vimproc.vim'
+    Plug 'Shougo/unite.vim'
+
+Plug 'arnaud-lb/vim-php-namespace'
 
 " git上的插件地址
 Plug 'scrooloose/nerdcommenter' " 代码注释插件
@@ -42,7 +47,7 @@ Plug 'scrooloose/nerdcommenter' " 代码注释插件
 
 Plug 'Shougo/neocomplcache.vim' " Better autocompletion
 
-Plug 'ctrlpvim/ctrlp.vim' " Code and files fuzzy finder
+Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
 
 Plug 'mattn/emmet-vim' " html,css的插件
 Plug 'maksimr/vim-jsbeautify' " html,js,css美化
@@ -95,6 +100,11 @@ Plug 'junegunn/vim-easy-align' " =号对齐
 call plug#end()
 endif
 
+" php laravel complete
+autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+
+
 """初次打开vim,自动安装Plug列表的插件
 if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
@@ -124,8 +134,7 @@ au BufNewFile,BufRead *.{tpl,htm} set filetype=html
 au BufNewFile,BufRead *.js set filetype=javascript
 au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
-au BufNewFile,BufRead *.conf set filetype=conf
-au BufNewFile,BufRead *.yml set filetype=yaml
+au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
 autocmd FileType html,css EmmetInstall
 autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
@@ -237,6 +246,14 @@ map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim<CR>
 map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
+let g:php_namespace_sort_after_insert = 1
+autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
+function! IPhpExpandClass()
+    call PhpExpandClass()
+    call feedkeys('a', 'n')
+endfunction
+autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
+
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
@@ -256,10 +273,11 @@ nmap ga <Plug>(EasyAlign)
 nnoremap <space> :w<CR> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
-nnoremap <leader>ev :vsplit $MYVIMRC<cr> "编辑.vimrc
-nnoremap <leader>sv :source ~/.vimrc<CR> "重新加载.vimrc
+nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
+nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
 nnoremap <leader>l :se wrap!<CR> "切换是否换行
 nnoremap th :set hlsearch!<CR> "切换高亮显示
+map <leader>c :CtrlPClearCache<cr>
 vnoremap // y/<C-R>"<CR> "向后搜索当前的选择
 vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
 " 快捷liu调试函数<<<

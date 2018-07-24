@@ -5,6 +5,7 @@ shell_dir='~/configs'
 
 # ls aliases #
 alias l='ls -al'
+alias lh='ls -alh'
 alias la='ls -a'
 alias lla='ll -a'
 alias lsd='ls -l | grep ^d'
@@ -216,14 +217,16 @@ function composer_china() {
 function su_without_password() {
 if [ -z "${1+x}" ]
 then
+  echo '/etc/pam.d/su'
   echo '$1 target_user $2 from_user'
 fi
   target_user=$1
   from_user=$2
-  sudo cat <<EOT >>/etc/pam.d/su
+  read -d '' OUT <<EOT
 auth       [success=ignore default=1] pam_succeed_if.so user = $target_user
 auth       sufficient   pam_succeed_if.so use_uid user = $from_user
 EOT
+echo "$OUT"
 unset target_user from_user
 }
 

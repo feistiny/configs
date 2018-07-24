@@ -1,0 +1,1 @@
+ctags -R --languages=php --php-kinds=cfi --regex-php="/^[ \t]*trait[ \t]+([a-z0_9_]+)/\1/t,traits/i" -f .tags
