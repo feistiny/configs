@@ -1,0 +1,5 @@
+# tab once if exists multi complete
+set show-all-if-ambiguous on
+
+# complete ignore case
+set completion-ignore-case on
