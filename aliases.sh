@@ -17,7 +17,8 @@ alias vimu='vim -u ~/configs/.vimrc'
 alias jj='j -s'
 
 # reaload aliases.sh #
-alias rea='source ~/configs/aliases.sh && echo "reloaded" && cp ~/configs/.tmux.conf ~/.tmux.conf'
+alias rea='source ~/configs/aliases.sh && echo "reloaded"'
+alias tmuxl='tmux -f ~/configs/.tmux.conf'
 
 # easy to change directory #
 alias d='dirs -v'
@@ -237,6 +238,7 @@ declare -A snippets_array
 if [ -z "${1+x}" ]
 then
   eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'"
+  update_complete_for_snippets
 else
   for i in $(eval "ls ${snippets_dir}")
   do
