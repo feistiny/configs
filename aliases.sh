@@ -70,6 +70,7 @@ alias grb='git rebase'
 alias grmc='git rm --cached'
 alias grm='git rm'
 alias grs='git reset'
+complete -W 'HEAD~' grs
 alias grt='git remote'
 alias grp='git rev-parse'
 alias gsa='git stash apply'
