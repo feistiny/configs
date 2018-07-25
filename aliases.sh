@@ -78,6 +78,7 @@ alias gsh='git stash'
 alias gsl='git stash list'
 alias gsp='git stash pop'
 alias gst='git status'
+alias gsti='git status --ignored'
 alias gsw='git update-index --skip-worktree'
 function gad() {
   to_add='.'
@@ -286,6 +287,7 @@ function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
+alias guls='git ls-files --others --ignore --exclude-standard'
 function gls() {
   USAGE=$(cat << EOT
 USAGE:
