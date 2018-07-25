@@ -97,7 +97,7 @@ function grtad() {
 }
 function gciamp() {
   msg=${1:-+++}
-  git commit -am "$msg" && git push
+  git commit -am "$msg" && git push ${@:2}
 }
 function grh() {
  git reset HEAD "$1"
