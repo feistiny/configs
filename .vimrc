@@ -34,6 +34,7 @@ call plug#begin('~/.vim/plugged')
 " 待使用的git插件
 " tpope/vim-unimpaired " 交换上下行
 " python-mode/python-mode " 写python必用插件
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'posva/vim-vue'
 Plug 'pangloss/vim-javascript'
 Plug 'm2mdas/phpcomplete-extended'
@@ -226,21 +227,25 @@ map t9 9gt
 map t0 :tablast<CR>
 """切换到第几个标签
 
-map tp :tab split<CR> " 复制标签
-map tj :set paste!<CR><Left> " 切换粘贴模式
-map tL :Tabcloseleft<CR> " 关闭右侧标签
-map tR :Tabcloseright<CR> " 关闭左边标签
-map tc :tabc<CR> :tabp<CR> " 关闭当前tab
-map ts :tabs<CR> " 查看打开的tabs列表
-map tG :tabdo TMToggle<CR> "tab树
+" next tab
+map tp :tabp<CR>
+" previous tab
+map tn :tabp<CR>
+" copy the curent tab to a new one
+map ty :tab split<CR>
+" 切换粘贴模式
+map tj :set paste!<CR><Left>
+" 关闭右侧标签
+map tL :Tabcloseleft<CR>
+" 关闭左边标签
+map tR :Tabcloseright<CR>
+" 关闭当前tab
+map tc :tabc<CR> :tabp<CR>
 " 移动当前tab到输入序号的位置
 map tm :tabm 
 " 新标签
 map tw :tabnew 
-map <C-H> :bp<CR> " 左边buffer
-map <C-L> :bn<CR> " 右边buffer
-map <C-J> :tabp<CR> " 左边标签
-map <C-K> :tabn<CR> " 右边标签
+map <F2> :buffers<CR>:b<Space>
 
 """返回上一个标签<<<
 auto tableave * let g:pre_tabpagenr=tabpagenr()

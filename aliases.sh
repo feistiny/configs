@@ -19,7 +19,7 @@ alias jj='j -s'
 
 # reaload aliases.sh #
 alias rea='source ~/configs/aliases.sh && echo "reloaded"'
-alias tmuxl='tmux -f ~/configs/.tmux.conf'
+alias tml='tmux -f ~/configs/.tmux.conf'
 
 # easy to change directory #
 alias d='dirs -v'
@@ -29,6 +29,16 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
+
+alias tmls='tmux ls'
+function tmks() {
+    for i in "$@"
+    do
+        tmux kill-session -t $i
+    done
+    unset i
+}
+alias tmkr='tmux kill-server'
 
 # laravel artisan #
 alias cmp='composer'
@@ -264,7 +274,7 @@ fi
 
 alias edits='edit_snippets'
 function edit_snippets() {
-  eval "vimu ${snippets_dir}/$1" 
+  eval "vim -u ~/configs/.vimrc ${snippets_dir}/$1" 
   update_complete_for_snippets
 }
 alias sets='set_snippets'
