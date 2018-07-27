@@ -9,6 +9,7 @@ alias lh='ls -alh'
 alias la='ls -a'
 alias lla='ll -a'
 alias lsd='ls -l | grep ^d'
+alias clr='clear'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
@@ -106,7 +107,7 @@ function grtad() {
     git remote add all $url
   unset url url_in_remote
 }
-function gciamp() {
+function gcimp() {
   msg=${1:-+++}
   git commit -am "$msg" && git push ${@:2}
 }

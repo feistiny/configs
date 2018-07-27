@@ -1,3 +1,4 @@
+set nocompatible "不用vi兼容模式
 " Fisa-vim-config
 
 " ============================================================================
@@ -35,6 +36,10 @@ call plug#begin('~/.vim/plugged')
 " tpope/vim-unimpaired " 交换上下行
 " python-mode/python-mode " 写python必用插件
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'Chiel92/vim-autoformat'
+Plug 'prettier/vim-prettier', {
+    \ 'do': 'npm install',
+    \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss'] }
 Plug 'posva/vim-vue'
 Plug 'pangloss/vim-javascript'
 Plug 'm2mdas/phpcomplete-extended'
@@ -101,7 +106,6 @@ Plug 'junegunn/vim-easy-align' " =号对齐
 
 call plug#end()
 endif
-set nocompatible "不用vi兼容模式
 
 " php laravel complete
 autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
@@ -246,6 +250,8 @@ map tm :tabm
 " 新标签
 map tw :tabnew 
 map <F2> :buffers<CR>:b<Space>
+map <F3> :Autoformat<CR>
+" let g:autoformat_verbosemode=1
 
 """返回上一个标签<<<
 auto tableave * let g:pre_tabpagenr=tabpagenr()
@@ -279,7 +285,14 @@ set foldcolumn=1
 augroup javascript_folding
     au!
     au FileType javascript setlocal foldmethod=syntax
+    au FileType javascript setlocal foldlevel=99
 augroup END
+
+let g:prettier#autoformat = 0
+let g:prettier#quickfix_enabled = 1
+autocmd BufWritePre *.js,*.css,*.scss,*.less Prettier
+map <leader>p :Prettier<CR>
+
 let g:php_namespace_sort_after_insert = 1
 autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
 function! IPhpExpandClass()
