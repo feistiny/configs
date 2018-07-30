@@ -84,10 +84,8 @@ Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
 Plug 'terryma/vim-expand-region' " visual扩张到上一层
 
 "snippets
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
 
 Plug 'vim-scripts/taglist.vim' " tag窗口,方便查看源码结构
 "Plug 'vim-scripts/taglist.vim'
@@ -122,7 +120,12 @@ endif
 if has('mouse')
   set mouse=a
 endif
- 
+
+let g:UltiSnipsSnippetDirectories=[$HOME."/configs/UltiSnips"]
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsListSnippets="<f4>"
 
 " F1-10 keys strange behavious, https://superuser.com/questions/258986/vim-strange-behaviour-f1-10
 " Condition should identify terminal in question so "
