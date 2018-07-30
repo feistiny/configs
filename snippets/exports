@@ -1,7 +1,7 @@
 # history
 export HISTTIMEFORMAT="%F %T `whoami` "
 export HISTCONTROL=ignoredups
-export HISTIGNORE="&:history:history :l?:l??:rea:[ \t]*:l:cd:pu:d:po:[gs]ets:edits:dels:gst:gpl:gps:fg:bg:pwd:?:??:"
+export HISTIGNORE="history:history :l?:l??:rea:[ ]*:l:cd:pu:d:po:[gs]ets:edits:dels:gst:gpl:gps:fg:bg:pwd:?:??:"
 
 # less with color
 export LESS='-R'

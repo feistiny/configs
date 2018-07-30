@@ -9,17 +9,18 @@ alias lh='ls -alh'
 alias la='ls -a'
 alias lla='ll -a'
 alias lsd='ls -l | grep ^d'
+alias clr='clear'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
-alias vimu='vim -u ~/configs/.vimrc'
+alias vu='vim -u ~/configs/.vimrc'
 
 # autojump #
 alias jj='j -s'
 
 # reaload aliases.sh #
 alias rea='source ~/configs/aliases.sh && echo "reloaded"'
-alias tmuxl='tmux -f ~/configs/.tmux.conf'
+alias tml='tmux -f ~/configs/.tmux.conf'
 
 # easy to change directory #
 alias d='dirs -v'
@@ -29,6 +30,16 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
+
+alias tmls='tmux ls'
+function tmks() {
+    for i in "$@"
+    do
+        tmux kill-session -t $i
+    done
+    unset i
+}
+alias tmkr='tmux kill-server'
 
 # laravel artisan #
 alias cmp='composer'
@@ -48,8 +59,8 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
-alias gcia='git commit --amend -C HEAD && git push'
-alias gciaa='git commit -a --amend -C HEAD && git push'
+alias gciap='git commit --amend -C HEAD && git push -f'
+alias gciaap='git commit -a --amend -C HEAD && git push -f'
 alias gciam='git commit -am'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
@@ -96,7 +107,7 @@ function grtad() {
     git remote add all $url
   unset url url_in_remote
 }
-function gciamp() {
+function gcimp() {
   msg=${1:-+++}
   git commit -am "$msg" && git push ${@:2}
 }
@@ -264,7 +275,7 @@ fi
 
 alias edits='edit_snippets'
 function edit_snippets() {
-  eval "vimu ${snippets_dir}/$1" 
+  eval "vim -u ~/configs/.vimrc ${snippets_dir}/$1" 
   update_complete_for_snippets
 }
 alias sets='set_snippets'

@@ -1,3 +1,4 @@
+set nocompatible "不用vi兼容模式
 " Fisa-vim-config
 
 " ============================================================================
@@ -34,7 +35,13 @@ call plug#begin('~/.vim/plugged')
 " 待使用的git插件
 " tpope/vim-unimpaired " 交换上下行
 " python-mode/python-mode " 写python必用插件
-
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'Chiel92/vim-autoformat'
+Plug 'prettier/vim-prettier', {
+    \ 'do': 'npm install',
+    \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss'] }
+Plug 'posva/vim-vue'
+Plug 'pangloss/vim-javascript'
 Plug 'm2mdas/phpcomplete-extended'
     Plug 'Shougo/vimproc.vim'
     Plug 'Shougo/unite.vim'
@@ -116,7 +123,27 @@ if has('mouse')
   set mouse=a
 endif
  
-set nocompatible "不用vi兼容模式
+
+" F1-10 keys strange behavious, https://superuser.com/questions/258986/vim-strange-behaviour-f1-10
+" Condition should identify terminal in question so "
+" that it won't change anything for terminals without this problem "
+
+if !has("gui_running") && $TERM is "xterm"
+    for [key, code] in [["<F1>", "\eOP"],
+                        \["<F2>", "\eOQ"],
+                        \["<F3>", "\eOR"],
+                        \["<F4>", "\eOS"],
+                        \["<F5>", "\e[15~"],
+                        \["<F6>", "\e[17~"],
+                        \["<F7>", "\e[18~"],
+                        \["<F8>", "\e[19~"],
+                        \["<F9>", "\e[20~"],
+                        \["<F10>", "\e[21~"],
+                        \]
+        execute "set" key."=".code
+    endfor
+endif
+
 set backspace=indent,eol,start "解决vi兼容模式下, insert mode无法删除
 set expandtab "有关tab的操作转成空格
 set tabstop=4 "读取时,1*tab=4*space
@@ -160,7 +187,6 @@ let b:match_words='\<begin\>:\<end\>'
 
 set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
-set cursorline " 选中行高亮 
 set hlsearch "高亮搜索
 syntax on "显示语法错误
 set number "显示行号
@@ -205,21 +231,27 @@ map t9 9gt
 map t0 :tablast<CR>
 """切换到第几个标签
 
-map tp :tab split<CR> " 复制标签
-map tj :set paste!<CR><Left> " 切换粘贴模式
-map tL :Tabcloseleft<CR> " 关闭右侧标签
-map tR :Tabcloseright<CR> " 关闭左边标签
-map tc :tabc<CR> :tabp<CR> " 关闭当前tab
-map ts :tabs<CR> " 查看打开的tabs列表
-map tG :tabdo TMToggle<CR> "tab树
+" next tab
+map tp :tabp<CR>
+" previous tab
+map tn :tabp<CR>
+" copy the curent tab to a new one
+map ty :tab split<CR>
+" 切换粘贴模式
+map tj :set paste!<CR><Left>
+" 关闭右侧标签
+map tL :Tabcloseleft<CR>
+" 关闭左边标签
+map tR :Tabcloseright<CR>
+" 关闭当前tab
+map tc :tabc<CR> :tabp<CR>
 " 移动当前tab到输入序号的位置
 map tm :tabm 
 " 新标签
 map tw :tabnew 
-map <C-H> :bp<CR> " 左边buffer
-map <C-L> :bn<CR> " 右边buffer
-map <C-J> :tabp<CR> " 左边标签
-map <C-K> :tabn<CR> " 右边标签
+map <F2> :buffers<CR>:b<Space>
+map <F3> :Autoformat<CR>
+" let g:autoformat_verbosemode=1
 
 """返回上一个标签<<<
 auto tableave * let g:pre_tabpagenr=tabpagenr()
@@ -246,6 +278,21 @@ map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim<CR>
 map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
+let g:javascript_plugin_flow = 1
+set foldcolumn=1
+augroup javascript_folding
+    au!
+    au FileType javascript setlocal foldmethod=syntax
+    au FileType javascript setlocal foldlevel=99
+augroup END
+
+let g:prettier#autoformat = 0
+let g:prettier#quickfix_enabled = 1
+autocmd BufWritePre *.js,*.css,*.scss,*.less Prettier
+map <leader>p :Prettier<CR>
+
 let g:php_namespace_sort_after_insert = 1
 autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
 function! IPhpExpandClass()
@@ -257,7 +304,7 @@ autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
-set term=ansi
+set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {} 
 let g:snipMate.no_default_aliases=1
@@ -325,8 +372,8 @@ set laststatus=2
 highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue
 " 获取当前路径，将$HOME转化为~
 function! CurDir()
-	let curdir = substitute(getcwd(), $HOME, "~", "g")
-	return curdir
+    let curdir = substitute(getcwd(), $HOME, "~", "g")
+    return curdir
 endfunction
 set statusline=[%n]\ %f%m%r%h\ \|\ %{PasteForStatusline()}\  
 """状态栏配置
