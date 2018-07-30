@@ -351,6 +351,10 @@ EOT
   unset pre_opts debug key level
 }
 
+function straceall() {
+  strace $(pgrep "${1}" | xargs | sed 's/[0-9]\+/-p &/g')
+}
+
 eval "source ${snippets_dir}/exports"
 eval "bind -f ${snippets_dir}/inputrc"
 # test script; like python's __main__
