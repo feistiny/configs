@@ -354,16 +354,14 @@ EOT
   then
     cat
   else
-    level=${level:-1}
-    ((level=level>0?level-1:level+1))
-    cat | awk '$1~/^[^/]*(\/[^/]+){'"${level/-/,}"'}$/{print $1}'
+    cat | cut -d'/' -f "${level}" | sort | uniq
   fi
   # echo $command
   unset pre_opts debug key level
 }
 
 function straceall() {
-  strace $(pgrep "${1}" | xargs | sed 's/[0-9]\+/-p &/g')
+  strace "${@:2}" $(pgrep "${1}" | xargs | sed 's/[0-9]\+/-p &/g')
 }
 
 eval "source ${snippets_dir}/exports"
