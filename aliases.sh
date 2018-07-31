@@ -1,3 +1,4 @@
+stty -ixon
 #!/bin/basn
 shell_dir='~/configs'
 
@@ -92,6 +93,7 @@ alias gsp='git stash pop'
 alias gst='git status'
 alias gsti='git status --ignored'
 alias gsw='git update-index --skip-worktree'
+alias gsm='git submodule'
 function gad() {
   to_add='.'
   if [ -n "${1}" ]; then to_add=$1; fi
@@ -180,6 +182,7 @@ gll:_git_checkout
 gl:_git_checkout
 gdf:_git_diff
 gdfc:_git_diff
+gsm:_git_submodule
 EOF
 )
 
@@ -360,6 +363,28 @@ EOT
   fi
   # echo $command
   unset pre_opts debug key level
+}
+function mktouch() {
+  if [ $# -lt 1 ]; then
+    echo "Missing argument";
+    return 1;
+  fi
+
+  for f in "$@"; do
+    mkdir -p -- "$(dirname -- "$f")"
+    touch -- "$( echo $f | tr -s / | sed 's/\/$//' )"
+  done
+  unset f
+}
+function whereip() {
+  if test $# -eq 0; then
+    curl -s ip.cn
+  else
+    curl -s ip.cn/index.php?ip=$1
+  fi
+}
+function getip() {
+  whereip "$@" | grep -oP '\d{1,3}(\.\d{1,3}){3}' | nocolor
 }
 
 function straceall() {

@@ -10,16 +10,16 @@ let mapleader=","
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.vim/autoload/plug.vim')
 if !filereadable(vim_plug_path)
-    echo "Installing Vim-plug..."
-    echo ""
-    silent !mkdir -p ~/.vim/autoload
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    let vim_plug_just_installed = 1
+  echo "Installing Vim-plug..."
+  echo ""
+  silent !mkdir -p ~/.vim/autoload
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  let vim_plug_just_installed = 1
 endif
 
 " manually load vim-plug the first time
 if vim_plug_just_installed
-    :execute 'source '.fnameescape(vim_plug_path)
+  :execute 'source '.fnameescape(vim_plug_path)
 endif
 
 " Obscure hacks done, you can now modify the rest of the .vimrc as you wish :)
@@ -31,89 +31,106 @@ endif
 " this needs to be here, so vim-plug knows we are declaring the plugins we
 " want to use
 if filereadable(vim_plug_path)
-call plug#begin('~/.vim/plugged')
-" 待使用的git插件
-" tpope/vim-unimpaired " 交换上下行
-" python-mode/python-mode " 写python必用插件
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'Chiel92/vim-autoformat'
-Plug 'prettier/vim-prettier', {
-    \ 'do': 'npm install',
-    \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss'] }
-Plug 'posva/vim-vue'
-Plug 'pangloss/vim-javascript'
-Plug 'm2mdas/phpcomplete-extended'
-    Plug 'Shougo/vimproc.vim'
-    Plug 'Shougo/unite.vim'
+  call plug#begin('~/.vim/plugged')
+  " 待使用的git插件
+  " tpope/vim-unimpaired " 交换上下行
+  " python-mode/python-mode " 写python必用插件
 
-Plug 'arnaud-lb/vim-php-namespace'
+  " comment multi-languages
+  " Plug 'tyru/caw.vim'
+  " Plug 'Shougo/context_filetype.vim'
 
-" git上的插件地址
-Plug 'scrooloose/nerdcommenter' " 代码注释插件
-"Plug 'ervandew/supertab'
+  Plug 'christoomey/vim-tmux-navigator'
+  Plug 'Chiel92/vim-autoformat'
+  Plug 'steelsojka/deoplete-flow'
+  " Plug 'prettier/vim-prettier', {
+        " \ 'do': 'yarn install',
+        " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
+  Plug 'posva/vim-vue'
+  Plug 'pangloss/vim-javascript'
+  Plug 'm2mdas/phpcomplete-extended'
+  Plug 'Shougo/vimproc.vim'
+  Plug 'Shougo/unite.vim'
 
-Plug 'Shougo/neocomplcache.vim' " Better autocompletion
+  Plug 'arnaud-lb/vim-php-namespace'
 
-Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
+  " git上的插件地址
+  Plug 'scrooloose/nerdcommenter' " 代码注释插件
+  "Plug 'ervandew/supertab'
 
-Plug 'mattn/emmet-vim' " html,css的插件
-Plug 'maksimr/vim-jsbeautify' " html,js,css美化
+  Plug 'Shougo/neocomplcache.vim' " Better autocompletion
 
-Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
+  Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
 
-Plug 'dkprice/vim-easygrep' " 全局搜索
-Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
+  Plug 'mattn/emmet-vim' " html,css的插件
+  Plug 'maksimr/vim-jsbeautify' " html,js,css美化
 
-Plug 'tpope/vim-repeat'
+  Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
 
-Plug 'scrooloose/nerdtree' " 文件目录树
+  Plug 'dkprice/vim-easygrep' " 全局搜索
+  Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
 
-Plug 'tpope/vim-surround' " 增删改包围
+  Plug 'tpope/vim-repeat'
 
-Plug 'vim-scripts/AutoClose' " )]}等自动闭合
-"Plug 'Townk/vim-autoclose'
+  Plug 'scrooloose/nerdtree' " 文件目录树
 
-Plug 'fholgado/minibufexpl.vim' " buffer插件
+  Plug 'tpope/vim-surround' " 增删改包围
 
-Plug 'PotHix/Vimpress' " vim写wordpress博客
+  Plug 'vim-scripts/AutoClose' " )]}等自动闭合
+  "Plug 'Townk/vim-autoclose'
 
-Plug 'plasticboy/vim-markdown' " markdown语法高亮
-Plug 'mzlogin/vim-markdown-toc' " markdown生成文章目录
-Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
+  Plug 'fholgado/minibufexpl.vim' " buffer插件
 
-Plug 'terryma/vim-expand-region' " visual扩张到上一层
+  Plug 'PotHix/Vimpress' " vim写wordpress博客
 
-"snippets
-Plug 'honza/vim-snippets'
-Plug 'SirVer/ultisnips'
+  "snippets
+  Plug 'honza/vim-snippets'
+  Plug 'SirVer/ultisnips'
 
-Plug 'vim-scripts/taglist.vim' " tag窗口,方便查看源码结构
-"Plug 'vim-scripts/taglist.vim'
-"Plug 'vim-php/phpctags'
-"Plug 'vim-php/tagbar-phpctags.vim'
+  Plug 'plasticboy/vim-markdown' " markdown语法高亮
+  Plug 'mzlogin/vim-markdown-toc' " markdown生成文章目录
+  Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
 
-Plug 'vim-scripts/dbext.vim' " vim里运行sql语句
+  Plug 'terryma/vim-expand-region' " visual扩张到上一层
 
-Plug 'triglav/vim-visual-increment' " 数字列增长
+  "snippets
+  Plug 'honza/vim-snippets'
+  Plug 'SirVer/ultisnips'
 
-Plug 'scrooloose/syntastic' " 语法错误检查
+  Plug 'vim-scripts/taglist.vim' " tag窗口,方便查看源码结构
+  "Plug 'vim-scripts/taglist.vim'
+  "Plug 'vim-php/phpctags'
+  "Plug 'vim-php/tagbar-phpctags.vim'
 
-Plug 'https://github.com/terryma/vim-multiple-cursors.git' " vim多点编辑
+  Plug 'vim-scripts/dbext.vim' " vim里运行sql语句
 
-Plug 'junegunn/vim-easy-align' " =号对齐
+  Plug 'triglav/vim-visual-increment' " 数字列增长
 
-call plug#end()
+  Plug 'scrooloose/syntastic' " 语法错误检查
+
+  Plug 'https://github.com/terryma/vim-multiple-cursors.git' " vim多点编辑
+
+  Plug 'junegunn/vim-easy-align' " =号对齐
+
+  call plug#end()
 endif
+
+execute pathogen#infect()
+syntax on "显示语法错误
+filetype plugin indent on
 
 " php laravel complete
 autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 """初次打开vim,自动安装Plug列表的插件
 if vim_plug_just_installed
-    echo "Installing Bundles, please ignore key map error messages"
-    :PlugInstall
+  echo "Installing Bundles, please ignore key map error messages"
+  :PlugInstall
 endif
 
 """支持鼠标
@@ -132,33 +149,31 @@ let g:UltiSnipsListSnippets="<f4>"
 " that it won't change anything for terminals without this problem "
 
 if !has("gui_running") && $TERM is "xterm"
-    for [key, code] in [["<F1>", "\eOP"],
-                        \["<F2>", "\eOQ"],
-                        \["<F3>", "\eOR"],
-                        \["<F4>", "\eOS"],
-                        \["<F5>", "\e[15~"],
-                        \["<F6>", "\e[17~"],
-                        \["<F7>", "\e[18~"],
-                        \["<F8>", "\e[19~"],
-                        \["<F9>", "\e[20~"],
-                        \["<F10>", "\e[21~"],
-                        \]
-        execute "set" key."=".code
-    endfor
+  for [key, code] in [["<F1>", "\eOP"],
+        \["<F2>", "\eOQ"],
+        \["<F3>", "\eOR"],
+        \["<F4>", "\eOS"],
+        \["<F5>", "\e[15~"],
+        \["<F6>", "\e[17~"],
+        \["<F7>", "\e[18~"],
+        \["<F8>", "\e[19~"],
+        \["<F9>", "\e[20~"],
+        \["<F10>", "\e[21~"],
+        \]
+    execute "set" key."=".code
+  endfor
 endif
 
 set backspace=indent,eol,start "解决vi兼容模式下, insert mode无法删除
 set expandtab "有关tab的操作转成空格
-set tabstop=4 "读取时,1*tab=4*space
-set shiftwidth=4 "输入时,1*tab=4*space
-set softtabstop=4 "删除时,1*tab=4*space
+set tabstop=2 "读取时,1*tab=4*space
+set shiftwidth=2 "输入时,1*tab=4*space
+set softtabstop=2 "删除时,1*tab=4*space
 set hidden "切换buffer时,原来的buffer撤销记录不清空
-set encoding=utf-8  
-set nobomb "去掉bom 
+set encoding=utf-8
+set nobomb "去掉bom
 
 """根据文件类型做不同设置<<<
-filetype plugin on
-filetype indent on
 let g:user_emmet_install_global = 0
 au BufNewFile,BufRead *.{tpl,htm} set filetype=html
 au BufNewFile,BufRead *.js set filetype=javascript
@@ -166,9 +181,9 @@ au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
 au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
 autocmd FileType html,css EmmetInstall
-autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType html,php setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
+" autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
 autocmd FileType sh,zsh setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
@@ -191,7 +206,6 @@ let b:match_words='\<begin\>:\<end\>'
 set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
 set hlsearch "高亮搜索
-syntax on "显示语法错误
 set number "显示行号
 " set relativenumber
 set nowrap "不换行
@@ -199,21 +213,23 @@ set so=3 "离屏幕边缘还有3行开始滚屏
 
 """关闭当前标签左/右的所有标签
 function! TabCloseRight(bang)
-    let cur=tabpagenr()
-    while cur < tabpagenr('$')
-        exe 'tabclose' . a:bang . ' ' . (cur + 1)
-    endwhile
+  let cur=tabpagenr()
+  while cur < tabpagenr('$')
+    exe 'tabclose' . a:bang . ' ' . (cur + 1)
+  endwhile
 endfunction
 
 function! TabCloseLeft(bang)
-    while tabpagenr() > 1
-        exe 'tabclose' . a:bang . ' 1'
-    endwhile
+  while tabpagenr() > 1
+    exe 'tabclose' . a:bang . ' 1'
+  endwhile
 endfunction
 
 command! -bang Tabcloseright call TabCloseRight('<bang>')
 command! -bang Tabcloseleft call TabCloseLeft('<bang>')
 """
+
+let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
 
 """python相关配置
 let g:syntastic_python_flake8_args = '--ignore=E501,E401' ",F821' \"忽略pep8每行超过79个字符的错误提示
@@ -249,9 +265,9 @@ map tR :Tabcloseright<CR>
 " 关闭当前tab
 map tc :tabc<CR> :tabp<CR>
 " 移动当前tab到输入序号的位置
-map tm :tabm 
+map tm :tabm
 " 新标签
-map tw :tabnew 
+map tw :tabnew
 map <F2> :buffers<CR>:b<Space>
 map <F3> :Autoformat<CR>
 " let g:autoformat_verbosemode=1
@@ -281,35 +297,61 @@ map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim<CR>
 map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
+" let g:ale_fixers = {
+" \'javascript': ['prettier','eslint'],
+" \}
+let g:ale_fixers = ['prettier','stylelint','eslint']
+let g:ale_completion_enabled = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 1
+let g:ale_keep_list_window_open = 1
+let g:ale_list_window_size = 5
+nmap <leader>p :ALEFix<CR>
+" let g:ale_sign_column_always = 1
+nmap <silent> <leader>k <Plug>(ale_previous_wrap)
+nmap <silent> <leader>j <Plug>(ale_next_wrap)
+
+
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
 let g:javascript_plugin_flow = 1
 set foldcolumn=1
 augroup javascript_folding
-    au!
-    au FileType javascript setlocal foldmethod=syntax
-    au FileType javascript setlocal foldlevel=99
+  au!
+  au FileType javascript setlocal foldmethod=syntax
+  au FileType javascript setlocal foldlevel=99
 augroup END
 
-let g:prettier#autoformat = 0
-let g:prettier#quickfix_enabled = 1
-autocmd BufWritePre *.js,*.css,*.scss,*.less Prettier
-map <leader>p :Prettier<CR>
+" au BufWrite * :Autoformat
+
+" autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+
+" let g:prettier#autoformat = 0
+" let g:prettier#quickfix_enabled = 1
+" let g:prettier#exec_cmd_async = 1
+" let g:prettier#quickfix_enabled = 1
+" let g:prettier#quickfix_auto_focus = 1
+" autocmd BufWritePre *.js,*.css,*.scss,*.less,*.vue PrettierAsync
+" map <leader>p :Prettier<CR>
 
 let g:php_namespace_sort_after_insert = 1
 autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
 function! IPhpExpandClass()
-    call PhpExpandClass()
-    call feedkeys('a', 'n')
+  call PhpExpandClass()
+  call feedkeys('a', 'n')
 endfunction
 autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
 
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
-set term=xterm
+" set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
-let g:snipMate = {} 
+let g:snipMate = {}
 let g:snipMate.no_default_aliases=1
 let g:snipMate.scope_aliases = {}
 let g:snipMate.scope_aliases['html'] = 'html,php'
@@ -320,6 +362,7 @@ nnoremap <silent> <Leader>t :Tlist<cr> " 切换taglist
 let Tlist_Use_Right_Window =1 " taglist 右侧显示
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+nmap <leader>sl :set shellcmdflag=-ic<CR>
 nnoremap <space> :w<CR> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
@@ -362,12 +405,12 @@ nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
 
 """检测粘贴模式函数<<<
 function! PasteForStatusline()
-    let paste_status = &paste
-    if paste_status == 1
-        return " [paste] "
-    else
-        return ""
-    endif
+  let paste_status = &paste
+  if paste_status == 1
+    return " [paste] "
+  else
+    return ""
+  endif
 endfunction
 """检测粘贴模式函数
 
@@ -375,10 +418,10 @@ set laststatus=2
 highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue
 " 获取当前路径，将$HOME转化为~
 function! CurDir()
-    let curdir = substitute(getcwd(), $HOME, "~", "g")
-    return curdir
+  let curdir = substitute(getcwd(), $HOME, "~", "g")
+  return curdir
 endfunction
-set statusline=[%n]\ %f%m%r%h\ \|\ %{PasteForStatusline()}\  
+" set statusline=[%n]\ %f%m%r%h\ \|\ %{PasteForStatusline()}\
 """状态栏配置
 
 """项目文件快捷打开,模糊匹配<<<
@@ -394,8 +437,8 @@ nnoremap ,f :CtrlPLine<CR>
 " recent files finder mapping
 nnoremap ,m :CtrlPMRUFiles<CR>
 function! CtrlPWithSearchText(search_text, ctrlp_command_end)
-    execute ':CtrlP' . a:ctrlp_command_end
-    call feedkeys(a:search_text)
+  execute ':CtrlP' . a:ctrlp_command_end
+  call feedkeys(a:search_text)
 endfunction
 " same as previous mappings, but calling with current word as default text
 nnoremap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
@@ -408,9 +451,9 @@ nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
-    \ 'file': '\.pyc$\|\.pyo|\.meta$',
-\}
+      \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
+      \ 'file': '\.pyc$\|\.pyo|\.meta$',
+      \}
 """项目文件快捷打开,模糊匹配
 
 " 新的自动补全的配置, 暂时可用, 以后再整理
@@ -435,14 +478,14 @@ let g:neocomplcache_enable_fuzzy_completion = 1
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'scheme' : $HOME.'/.gosh_completions'
+      \ }
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
+  let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
@@ -509,20 +552,20 @@ let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 """代码跳转配置<<<
 if has("cscope")
-    set csprg=/usr/bin/cscope
-    set csto=0
-    set cst
-    set nocsverb
-    " add any database in current directory
-    if filereadable("cscope.out")
-        cs add cscope.out
-        " else add database pointed to by environment
-    elseif filereadable("/tmp/cscope.out")
-        cs add /tmp/cscope.out
-    elseif $CSCOPE_DB != ""
-        cs add $CSCOPE_DB
-    endif
-    set csverb
+  set csprg=/usr/bin/cscope
+  set csto=0
+  set cst
+  set nocsverb
+  " add any database in current directory
+  if filereadable("cscope.out")
+    cs add cscope.out
+    " else add database pointed to by environment
+  elseif filereadable("/tmp/cscope.out")
+    cs add /tmp/cscope.out
+  elseif $CSCOPE_DB != ""
+    cs add $CSCOPE_DB
+  endif
+  set csverb
 endif
 nnoremap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 nnoremap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
@@ -555,29 +598,29 @@ let g:debuggerMaxDepth = 20
 """自定义的函数
 nnoremap <Leader>ct :call CscopeToTmp(0)
 function! CscopeToTmp(opt, ...)
-    if a:0 > 0
-        let _name = "-name '*." . a:1 . "'"
-    else
-        let _name = "-name '*." . &filetype . "'"
-    end
-    exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
+  if a:0 > 0
+    let _name = "-name '*." . a:1 . "'"
+  else
+    let _name = "-name '*." . &filetype . "'"
+  end
+  exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
 endfunction
 
 
 func! Run()
-    let type = b:current_syntax
-    echom type
-    if type == "c" || type == "cpp"
-        exec "!./%<"
-    elseif type == "bash"
-        exec "!clear;/bin/bash %"
-    elseif type == "python"
-        exec "!clear;$(which python) %"
-    elseif type == "php"
-        exec "!clear;$(which php) %"
-    elseif type == "javascript"
-        exec "!clear;node %"
-    endif
+  let type = b:current_syntax
+  echom type
+  if type == "c" || type == "cpp"
+    exec "!./%<"
+  elseif type == "bash"
+    exec "!clear;/bin/bash %"
+  elseif type == "python"
+    exec "!clear;$(which python) %"
+  elseif type == "php"
+    exec "!clear;$(which php) %"
+  elseif type == "javascript"
+    exec "!clear;node %"
+  endif
 endfunc
 
 map <Leader>r :call Run()<CR>
