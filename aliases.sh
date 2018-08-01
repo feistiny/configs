@@ -1,6 +1,6 @@
 stty -ixon
 #!/bin/basn
-shell_dir='~/configs'
+export shell_dir="$HOME/configs"
 
 # git clone in the root(~) dir #
 
@@ -14,11 +14,33 @@ alias clr='clear'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
-alias vu='vim -u ~/configs/.vimrc'
+alias vu="vim -u ${shell_dir}/.vimrc"
+
+# vi and emacs editing mode configs
+bind "set show-mode-in-prompt on" 
+bind 'set emacs-mode-string "â™‹ "' 
+bind 'set vi-ins-mode-string "â˜º "' 
+bind 'set vi-cmd-mode-string "í ½í±‰ "' 
+bind -m vi-insert  '"\C-\M-J": emacs-editing-mode' 
+bind -m vi-command '"\C-\M-J": emacs-editing-mode' 
+bind -m emacs      '"\C-\M-J": vi-editing-mode' 
+# bind -m vi-insert  '"\e_": emacs-editing-mode' 
+# bind -m vi-command '"\e_": emacs-editing-mode' 
+# bind -m emacs      '"\e_": vi-editing-mode' 
+bind -m vi-insert '"\e.": yank-last-arg' 
+bind -m vi-insert '"\e\C-y": yank-nth-arg' 
+bind -m vi-command '"\e.": yank-last-arg' 
+bind -m vi-command '"\e\C-y": yank-nth-arg' 
+bind -m vi-insert '"\C-p": previous-history'
+bind -m vi-insert '"\C-n": next-history'
+export VISUAL=vu
+
+# templaet snippets
+alias tpl='sempl -o -f'
 
 # reaload aliases.sh #
-alias rea='source ~/configs/aliases.sh && echo "reloaded"'
-alias tml='tmux -f ~/configs/.tmux.conf'
+alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
+alias tml="tmux -f ${shell_dir}/.tmux.conf"
 
 # easy to change directory #
 alias d='dirs -v'
@@ -277,7 +299,7 @@ fi
 
 alias edits='edit_snippets'
 function edit_snippets() {
-  eval "vim -u ~/configs/.vimrc ${snippets_dir}/$1" 
+  eval "vim -u ${shell_dir}/.vimrc ${snippets_dir}/$1" 
   update_complete_for_snippets
 }
 alias sets='set_snippets'
@@ -390,6 +412,11 @@ function straceall() {
 
 eval "source ${snippets_dir}/exports"
 eval "bind -f ${snippets_dir}/inputrc"
+
+if [[ -z $(which sempl) ]]; then
+  export PATH="${shell_dir}/plugins/.bin:${PATH}"
+fi
+
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>

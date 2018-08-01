@@ -364,7 +364,8 @@ nnoremap <silent> <Leader>t :Tlist<cr> " 切换taglist
 let Tlist_Use_Right_Window =1 " taglist 右侧显示
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
-nmap <leader>sl :set shellcmdflag=-ic<CR>
+nmap <leader>si :set shellcmdflag=-ic<CR>
+nmap <leader>sc :set shellcmdflag=-c<CR>
 nnoremap <space> :w<CR> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer

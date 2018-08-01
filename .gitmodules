@@ -1,0 +1,3 @@
+[submodule "plugins/sempl"]
+	path = plugins/sempl
+	url = https://github.com/nextrevision/sempl
