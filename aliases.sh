@@ -84,7 +84,9 @@ alias gciaap='git commit -a --amend -C HEAD && git push -f'
 alias gciam='git commit -am'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
-alias gcim='git commit -m'
+function gcim() {
+  git commit -m ${1-+++}
+}
 alias gcl='git clean'
 alias gco='git checkout'
 alias gdfc='git diff --cached'
@@ -408,6 +410,11 @@ function getip() {
 
 function straceall() {
   strace "${@:2}" $(pgrep "${1}" | xargs | sed 's/[0-9]\+/-p &/g')
+}
+
+alias rebinall="rebin $( ls ${shell_dir}/plugins )"
+function rebin() {
+  cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
 }
 
 eval "source ${snippets_dir}/exports"
