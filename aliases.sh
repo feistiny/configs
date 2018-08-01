@@ -413,7 +413,7 @@ function straceall() {
 eval "source ${snippets_dir}/exports"
 eval "bind -f ${snippets_dir}/inputrc"
 
-if [[ -z $(which sempl) ]]; then
+if [[ -z $(which sempl 2>/dev/null) ]]; then
   export PATH="${shell_dir}/plugins/.bin:${PATH}"
 fi
 
