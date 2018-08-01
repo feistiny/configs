@@ -116,6 +116,8 @@ if filereadable(vim_plug_path)
 endif
 
 execute pathogen#infect()
+call pathogen#helptags()
+
 syntax on "显示语法错误
 filetype plugin indent on
 
@@ -298,7 +300,7 @@ map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
 " let g:ale_fixers = {
-" \'javascript': ['prettier','eslint'],
+  " \'javascript': ['prettier','eslint'],
 " \}
 let g:ale_fixers = ['prettier','stylelint','eslint']
 let g:ale_completion_enabled = 1

@@ -16,9 +16,6 @@ alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias vu='vim -u ~/configs/.vimrc'
 
-# autojump #
-alias jj='j -s'
-
 # reaload aliases.sh #
 alias rea='source ~/configs/aliases.sh && echo "reloaded"'
 alias tml='tmux -f ~/configs/.tmux.conf'
