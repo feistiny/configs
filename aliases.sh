@@ -37,6 +37,9 @@ export VISUAL=vu
 
 # templaet snippets
 alias tpl='sempl -o -f'
+function stpl() {
+  tpl <(gets $1)
+}
 
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
@@ -276,25 +279,12 @@ function update_complete_for_snippets() {
 }
 update_complete_for_snippets
 function get_snippets() {
-declare -A snippets_array
 if [ -z "${1+x}" ]
 then
   eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'"
   update_complete_for_snippets
 else
-  for i in $(eval "ls ${snippets_dir}")
-  do
-    if [ "$( basename $i )" = "$1" ]
-    then
-      if [ -L $i ]
-      then
-        eval "cat ${snippets_dir}/$(readlink $i)"
-      else
-        eval "cat ${snippets_dir}/$i"
-      fi
-    fi
-  done
-  unset i
+  cat ${snippets_dir}/$1 
 fi
 
 }
