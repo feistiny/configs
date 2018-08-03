@@ -1,3 +1,6 @@
 [submodule "plugins/sempl"]
 	path = plugins/sempl
-	url = https://github.com/nextrevision/sempl
+	url = https://github.com/feistiny/sempl
+[submodule "plugins/jj"]
+	path = plugins/jj
+	url = https://github.com/tidwall/jj.git

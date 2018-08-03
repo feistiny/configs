@@ -1,0 +1,5 @@
+LOAD DATA ${local-local} INFILE "${csv_path-[csv_path]}"
+INTO TABLE ${table-[table]}
+FIELDS TERMINATED BY ',' ENCLOSED BY '${quote-"}'
+LINES TERMINATED BY '\n'
+IGNORE ${rows-0} ROWS

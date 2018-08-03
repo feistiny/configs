@@ -15,6 +15,7 @@ alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias vu="vim -u ${shell_dir}/.vimrc"
+alias his="history | tail -100"
 
 # vi and emacs editing mode configs
 bind "set show-mode-in-prompt on" 
@@ -38,7 +39,7 @@ export VISUAL=vu
 # templaet snippets
 alias tpl='sempl -o -f'
 function stpl() {
-  tpl <(gets $1)
+  tpl "${@:1:$(($#-1))}" <(gets "${@: -1}")
 }
 
 # reaload aliases.sh #
@@ -88,7 +89,7 @@ alias gciam='git commit -am'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 function gcim() {
-  git commit -m ${1-+++}
+  git commit -m "${1-+++}"
 }
 alias gcl='git clean'
 alias gco='git checkout'
@@ -275,7 +276,7 @@ unset target_user from_user
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(eval "ls ${snippets_dir} | xargs")" gets sets dels edits
+  complete -W "$(eval "ls ${snippets_dir} | xargs")" gets sets dels edits tpl stpl
 }
 update_complete_for_snippets
 function get_snippets() {
@@ -405,6 +406,12 @@ function straceall() {
 alias rebinall="rebin $( ls ${shell_dir}/plugins )"
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
+}
+function mktmp() {
+  name=${1-tmp}
+  subfix=$(echo ${2-.txt} | sed -r 's/^[^\.]/.&/')
+  mktemp --tmpdir=$(pwd) -t "${name}.XXXXXX${subfix}"
+  unset name subfix
 }
 
 eval "source ${snippets_dir}/exports"

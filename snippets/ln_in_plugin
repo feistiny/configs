@@ -1,6 +1,1 @@
-function generate_links() {
-  find ${shell_dir}/plugins/${p-sempl} -maxdepth ${depth-1} -perm -100 ! -path *.git* -type f | xargs -i ln -sf {} ${shell_dir}/plugins/.bin/ 2>/dev/null
-}
-export p=$1
-generate_links
-unset p
+find ${shell_dir}/plugins/${p-sempl} -maxdepth ${depth-1} -perm -100 ! -path *.git* -type f | xargs -i ln -sf {} ${shell_dir}/plugins/.bin/ 2>/dev/null

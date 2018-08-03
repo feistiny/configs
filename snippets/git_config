@@ -1,2 +1,3 @@
- git config --global core.autocrlf input
- git config --global core.filemode false
+git config --global core.autocrlf input
+git config --global core.filemode false
+git config --global push.default simple
