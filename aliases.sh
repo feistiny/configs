@@ -407,6 +407,15 @@ alias rebinall="rebin $( ls ${shell_dir}/plugins )"
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
 }
+function mktf() {
+  if [[ -e "$1" && $# = 2 ]]; then
+    touch "$1/$(date +%Y-%m-%d-%H-%M-%S)-$2"
+  elif [[ $# = 1 ]]; then
+    touch "$(date +%Y-%m-%d-%H-%M-%S)-$1"
+  fi
+  # mktemp --tmpdir=$(pwd) -t "${name}.XXXXXX${subfix}"
+  # unset name subfix
+}
 function mktmp() {
   name=${1-tmp}
   subfix=$(echo ${2-.txt} | sed -r 's/^[^\.]/.&/')
