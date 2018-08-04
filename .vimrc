@@ -48,7 +48,7 @@ if filereadable(vim_plug_path)
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
   Plug 'posva/vim-vue'
   Plug 'pangloss/vim-javascript'
-  Plug 'm2mdas/phpcomplete-extended'
+  " Plug 'm2mdas/phpcomplete-extended'
   Plug 'Shougo/vimproc.vim'
   Plug 'Shougo/unite.vim'
 
@@ -122,8 +122,8 @@ syntax on "显示语法错误
 filetype plugin indent on
 
 " php laravel complete
-autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
-let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+" autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
+" let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
@@ -366,6 +366,8 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap <leader>si :set shellcmdflag=-ic<CR>
 nmap <leader>sc :set shellcmdflag=-c<CR>
+nmap <leader>w :e<CR>
+nmap <leader>df :NERDTreeFind<CR>
 nnoremap <space> :w<CR> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
