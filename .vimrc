@@ -185,7 +185,7 @@ au BufNewFile,BufRead *.js set filetype=javascript
 au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
 au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
-autocmd FileType html,css EmmetInstall
+autocmd FileType html,css,vue EmmetInstall
 autocmd FileType html,php setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
