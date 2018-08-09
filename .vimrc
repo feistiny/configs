@@ -45,6 +45,11 @@ if filereadable(vim_plug_path)
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
+
+  Plug 'stephpy/vim-php-cs-fixer'
+
+  Plug 'xolox/vim-misc'
+  Plug 'xolox/vim-easytags'
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
@@ -132,6 +137,8 @@ let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:ycm_key_list_select_completion=[]
 let g:ycm_key_list_previous_completion=[]
 
+let g:ycm_collect_identifiers_from_tags_files = 1
+
 """初次打开vim,自动安装Plug列表的插件
 if vim_plug_just_installed
   echo "Installing Bundles, please ignore key map error messages"
@@ -148,6 +155,29 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsListSnippets="<f4>"
+
+" If php-cs-fixer is in $PATH, you don't need to define line below
+" let g:php_cs_fixer_path = "~/php-cs-fixer.phar" " define the path to the php-cs-fixer.phar
+
+" If you use php-cs-fixer version 1.x
+let g:php_cs_fixer_level = "symfony"                   " options: --level (default:symfony)
+let g:php_cs_fixer_config = "default"                  " options: --config
+" If you want to define specific fixers:
+"let g:php_cs_fixer_fixers_list = "linefeed,short_tag" " options: --fixers
+"let g:php_cs_fixer_config_file = '.php_cs'            " options: --config-file
+" End of php-cs-fixer version 1 config params
+
+" If you use php-cs-fixer version 2.x
+let g:php_cs_fixer_rules = "@PSR2"          " options: --rules (default:@PSR2)
+"let g:php_cs_fixer_cache = ".php_cs.cache" " options: --cache-file
+"let g:php_cs_fixer_config_file = '.php_cs' " options: --config
+" End of php-cs-fixer version 2 config params
+
+let g:php_cs_fixer_php_path = "php"               " Path to PHP
+let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by default (<leader>pcd)
+let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
+let g:php_cs_fixer_verbose = 0                    " Return the output of command if 1, else an inline information.
+
 
 " F1-10 keys strange behavious, https://superuser.com/questions/258986/vim-strange-behaviour-f1-10
 " Condition should identify terminal in question so "
@@ -171,9 +201,6 @@ endif
 
 set backspace=indent,eol,start "解决vi兼容模式下, insert mode无法删除
 set expandtab "有关tab的操作转成空格
-set tabstop=2 "读取时,1*tab=4*space
-set shiftwidth=2 "输入时,1*tab=4*space
-set softtabstop=2 "删除时,1*tab=4*space
 set hidden "切换buffer时,原来的buffer撤销记录不清空
 set encoding=utf-8
 set nobomb "去掉bom
@@ -194,13 +221,17 @@ autocmd FileType sh,zsh setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab 
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 autocmd BufWritePost *.py setlocal et autoindent
 autocmd BufWritePost *.lisp setlocal et autoindent
+nmap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
+nmap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
 """根据文件类型做不同设置
 
+let b:easytags_auto_highlight=1
+
 """打开代码折叠<<<
-if has('fdm')
+" if has('fdm')
   set fdm=indent
   set foldlevel=99
-endif
+" endif
 """打开代码折叠
 
 """ html标签首尾跳转<<<
@@ -357,10 +388,11 @@ function! IPhpExpandClass()
 endfunction
 autocmd FileType php inoremap <Leader>x <Esc>:call IPhpExpandClass()<CR>
 autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
-
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
+let g:easytags_dynamic_files = 2
+let g:easytags_auto_highlight = 1
 " set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -378,13 +410,16 @@ nmap <leader>si :set shellcmdflag=-ic<CR>
 nmap <leader>sc :set shellcmdflag=-c<CR>
 nmap <leader>w :e<CR>
 nmap <leader>df :NERDTreeFind<CR>
-nnoremap <space> :w<CR> "快速保存改动
+nnoremap <C-S> :w<CR><Left> "快速保存改动
+inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
 nnoremap <leader>l :se wrap!<CR> "切换是否换行
 nnoremap th :set hlsearch!<CR> "切换高亮显示
+nnoremap g= gg=G''zz
+nnoremap <space> za
 map <leader>c :CtrlPClearCache<cr>
 vnoremap // y/<C-R>"<CR> "向后搜索当前的选择
 vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
@@ -404,7 +439,7 @@ inoremap <C-J> <C-O>h
 inoremap <C-K> <C-O>l
 let g:surround_indent = 0
 let g:EasyGrepCommand=1
-let g:EasyGrepPerlStyle=1"}}}
+let g:EasyGrepPerlStyle=1
 " common config
 
 """分割窗口相关操作<<<
