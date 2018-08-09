@@ -44,7 +44,8 @@ function stpl() {
 
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
-alias tml="tmux -f ${shell_dir}/.tmux.conf"
+alias tml="tmux -f ${shell_dir}/.tmux.conf a -t"
+alias tml1="tmux -f ${shell_dir}/.tmux.conf"
 
 # easy to change directory #
 alias d='dirs -v'
