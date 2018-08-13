@@ -22,6 +22,10 @@ alias his="history | tail -100"
 alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
+function lesp() {
+  cat ~/.vim/plugged/vim-snippets/snippets/${1-php}.snippets \
+    "${shell_dir}/UltiSnips/${1-php}.snippets" | less
+}
 
 
 # vi and emacs editing mode configs
