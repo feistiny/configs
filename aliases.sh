@@ -1,6 +1,7 @@
 stty -ixon
 #!/bin/basn
 export shell_dir="$HOME/configs"
+export plugins_dir="$HOME/configs/plugins"
 
 # git clone in the root(~) dir #
 
@@ -34,7 +35,7 @@ bind -m vi-command '"\e.": yank-last-arg'
 bind -m vi-command '"\e\C-y": yank-nth-arg' 
 bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
-export VISUAL=vu
+export VISUAL=vim
 
 # templaet snippets
 alias tpl='sempl -o -f'
@@ -405,6 +406,13 @@ function straceall() {
 }
 
 alias rebinall="rebin $( ls ${shell_dir}/plugins )"
+function rebins() {
+  if [[ ! -e "${plugins_dir}/.bin" ]]; then
+    mkdir -p "${plugins_dir}/.bin"
+  fi
+  ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
+  ln -sf "${plugins_dir}/sempl/cryptool" "${plugins_dir}/.bin/cryptool"
+}
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
 }
