@@ -55,7 +55,7 @@ if filereadable(vim_plug_path)
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
   Plug 'posva/vim-vue'
   Plug 'pangloss/vim-javascript'
-  " Plug 'm2mdas/phpcomplete-extended'
+  Plug 'm2mdas/phpcomplete-extended'
   Plug 'Shougo/vimproc.vim'
   Plug 'Shougo/unite.vim'
 
@@ -127,7 +127,8 @@ syntax on "显示语法错误
 filetype plugin indent on
 
 " php laravel complete
-" autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
+let g:phpcomplete_index_composer_command='composer'
+autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 " let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
 let g:UltiSnipsExpandTrigger="<tab>"

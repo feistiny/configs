@@ -1,0 +1,14 @@
+  "repositories": {
+    "laravel-admin": {
+      "type": "package",
+      "package": {
+        "name": "encore/laravel-admin",
+        "version": "1.5.14",
+        "source":{
+          "url": "https://github.com/feistiny/laravel-admin",
+          "type": "git",
+          "reference": "master"
+        }
+      }
+    }
+  },

@@ -2,6 +2,7 @@ stty -ixon
 #!/bin/basn
 export shell_dir="$HOME/configs"
 export plugins_dir="$HOME/configs/plugins"
+export ansible_dir="$HOME/configs/ansible"
 
 # git clone in the root(~) dir #
 
@@ -17,6 +18,11 @@ alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias vu="vim -u ${shell_dir}/.vimrc"
 alias his="history | tail -100"
+
+alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
+alias ap="ansible-playbook -i ${ansible_dir}/hosts"
+alias ansible="ansible -i ${ansible_dir}/hosts"
+
 
 # vi and emacs editing mode configs
 bind "set show-mode-in-prompt on" 
@@ -412,6 +418,7 @@ function rebins() {
   fi
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
   ln -sf "${plugins_dir}/sempl/cryptool" "${plugins_dir}/.bin/cryptool"
+  mv "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj"
 }
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
@@ -437,6 +444,9 @@ eval "bind -f ${snippets_dir}/inputrc"
 
 if [[ -z $(which sempl 2>/dev/null) ]]; then
   export PATH="${shell_dir}/plugins/.bin:${PATH}"
+fi
+if [[ -x "/usr/local/go/bin/go" ]]; then
+  export PATH="/usr/local/go/bin/:${PATH}"
 fi
 
 # test script; like python's __main__
