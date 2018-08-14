@@ -23,8 +23,15 @@ alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
 function lesp() {
-  cat ~/.vim/plugged/vim-snippets/snippets/${1-php}.snippets \
-    "${shell_dir}/UltiSnips/${1-php}.snippets" | less
+  out=$(cat ~/.vim/plugged/vim-snippets/snippets/${1-php}.snippets \
+    "${shell_dir}/UltiSnips/${1-php}.snippets" 2>/dev/null);
+  if [[ -n "$out" ]]; then
+    echo "$out" | less
+  else
+    ls ~/.vim/plugged/vim-snippets/snippets/*${1-php}* \
+      ${shell_dir}/UltiSnips/*${1-php}* 2>/dev/null
+  fi
+  unset out
 }
 
 
