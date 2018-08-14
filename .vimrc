@@ -281,6 +281,14 @@ command! -bang Tabcloseright call TabCloseRight('<bang>')
 command! -bang Tabcloseleft call TabCloseLeft('<bang>')
 """
 
+""" custom func set foldcolumn
+fun! s:setfoldcolumn(...)
+  exe 'set foldcolumn=' . a:1
+endf 
+command! -nargs=1 SetFoldColumn call s:setfoldcolumn(<f-args>)
+nnoremap <leader>tc :SetFoldColumn 0
+"""
+
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
 
 """python相关配置
