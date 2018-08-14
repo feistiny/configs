@@ -453,6 +453,10 @@ if [[ -x "/usr/local/go/bin/go" ]]; then
   export PATH="/usr/local/go/bin/:${PATH}"
 fi
 
+alias addswap='stpl swapfile_mk'
+alias delswap='stpl swapfile_rm'
+# complete for custom commands
+complete -W "$(eval "ls /var/_swap_ | xargs")" addswap delswap
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>

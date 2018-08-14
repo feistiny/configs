@@ -1,4 +1,5 @@
-swapoff /var/_swap_/swapfile
-rm -rf /var/_swap_/swapfile
-sed -i '/_swap_\/swapfile/d' /etc/fstab
+f=${f-swapfile}
+swapoff /var/_swap_/$f
+rm -rf /var/_swap_/$f
+sed -i "/_swap_\/$f/d" /etc/fstab
 free -m

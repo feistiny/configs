@@ -40,7 +40,9 @@ if filereadable(vim_plug_path)
   " Plug 'tyru/caw.vim'
   " Plug 'Shougo/context_filetype.vim'
 
+  " Plug 'mkusher/padawan.vim'
   Plug 'Valloric/YouCompleteMe'
+  Plug 'alvan/vim-php-manual'
 
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
@@ -131,14 +133,27 @@ let g:phpcomplete_index_composer_command='composer'
 autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 " let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
+let g:ycm_semantic_triggers = {}
+let g:ycm_semantic_triggers.php = 
+                        \ ['->', '::', '(', 'use ', 'namespace ', '\']
+
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 let g:ycm_key_list_select_completion=[]
 let g:ycm_key_list_previous_completion=[]
-
 let g:ycm_collect_identifiers_from_tags_files = 1
+
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_start_word_key      = '<C-n>'
+let g:multi_cursor_select_all_word_key = '<A-n>'
+let g:multi_cursor_start_key           = 'g<C-n>'
+let g:multi_cursor_select_all_key      = 'g<A-n>'
+let g:multi_cursor_next_key            = '<C-n>'
+let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
 
 """初次打开vim,自动安装Plug列表的插件
 if vim_plug_just_installed
@@ -500,7 +515,7 @@ nnoremap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
 nnoremap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
 nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
-let g:ctrlp_working_path_mode = 0
+let g:ctrlp_working_path_mode = 'a'
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
       \ 'file': '\.pyc$\|\.pyo|\.meta$',
