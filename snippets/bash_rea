@@ -1,0 +1,1 @@
+grep aliases.sh ~/.bashrc >/dev/null && { sed -i '/aliases.sh/calias rea="source ~/configs/aliases.sh" 2>/dev/null' ~/.bashrc; } || { echo 'alias rea="source ~/configs/aliases.sh" 2>/dev/null' >> ~/.bashrc; }
