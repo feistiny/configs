@@ -18,6 +18,7 @@ alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias vu="vim -u ${shell_dir}/.vimrc"
 alias his="history | tail -100"
+alias ext="unset HISTFILE && exit"
 
 alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"
@@ -33,6 +34,8 @@ function lesp() {
   fi
   unset out
 }
+alias mdv='mdv -t 729.8953'
+alias watch='watch --color'
 
 
 # vi and emacs editing mode configs

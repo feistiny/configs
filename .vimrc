@@ -41,7 +41,7 @@ if filereadable(vim_plug_path)
   " Plug 'Shougo/context_filetype.vim'
 
   " Plug 'mkusher/padawan.vim'
-  Plug 'Valloric/YouCompleteMe'
+  " Plug 'Valloric/YouCompleteMe'
   Plug 'alvan/vim-php-manual'
 
   Plug 'christoomey/vim-tmux-navigator'
@@ -51,13 +51,13 @@ if filereadable(vim_plug_path)
   Plug 'stephpy/vim-php-cs-fixer'
 
   Plug 'xolox/vim-misc'
-  Plug 'xolox/vim-easytags'
+  " Plug 'xolox/vim-easytags'
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
   Plug 'posva/vim-vue'
   Plug 'pangloss/vim-javascript'
-  Plug 'm2mdas/phpcomplete-extended'
+  " Plug 'm2mdas/phpcomplete-extended'
   Plug 'Shougo/vimproc.vim'
   Plug 'Shougo/unite.vim'
 
@@ -129,21 +129,21 @@ syntax on "显示语法错误
 filetype plugin indent on
 
 " php laravel complete
-let g:phpcomplete_index_composer_command='composer'
-autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
+" let g:phpcomplete_index_composer_command='composer'
+" autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 " let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
-let g:ycm_semantic_triggers = {}
-let g:ycm_semantic_triggers.php = 
-                        \ ['->', '::', '(', 'use ', 'namespace ', '\']
+" let g:ycm_semantic_triggers = {}
+" let g:ycm_semantic_triggers.php = 
+                        " \ ['->', '::', '(', 'use ', 'namespace ', '\']
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-let g:ycm_key_list_select_completion=[]
-let g:ycm_key_list_previous_completion=[]
-let g:ycm_collect_identifiers_from_tags_files = 1
+" let g:ycm_key_list_select_completion=[]
+" let g:ycm_key_list_previous_completion=[]
+" let g:ycm_collect_identifiers_from_tags_files = 1
 
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_start_word_key      = '<C-n>'
@@ -240,8 +240,6 @@ autocmd BufWritePost *.lisp setlocal et autoindent
 nmap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
 nmap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
 """根据文件类型做不同设置
-
-let b:easytags_auto_highlight=1
 
 """打开代码折叠<<<
 " if has('fdm')
@@ -404,19 +402,15 @@ function! IPhpInsertUse()
     call PhpInsertUse()
     call feedkeys('a',  'n')
 endfunction
-autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
 autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
 function! IPhpExpandClass()
     call PhpExpandClass()
     call feedkeys('a', 'n')
 endfunction
-autocmd FileType php inoremap <Leader>x <Esc>:call IPhpExpandClass()<CR>
 autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
-let g:easytags_dynamic_files = 2
-let g:easytags_auto_highlight = 1
 " set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
