@@ -105,6 +105,7 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
+alias gciac='git commit --amend -c HEAD'
 alias gciap='git commit --amend -C HEAD && git push -f'
 alias gciaap='git commit -a --amend -C HEAD && git push -f'
 alias gciam='git commit -am'
@@ -119,6 +120,16 @@ alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
 alias gl='git log --oneline'
+function gld() {
+  diff_branch="$1"
+  if [[ ! -n "$1" ]]; then
+    current_branch=$(git rev-parse --abbrev-ref HEAD);
+    upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream});
+    diff_branch="${current_branch}...${upstream}"
+  fi
+  echo $diff_branch
+  git log --left-right --graph --oneline "$diff_branch"
+}
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
 alias gnsw='git update-index --no-skip-worktree'
@@ -126,6 +137,7 @@ alias gpl='git pull'
 alias gplr='git pull --rebase'
 alias gps='git push'
 alias grb='git rebase'
+alias grbc='git rebase --continue'
 alias grmc='git rm --cached'
 alias grm='git rm'
 alias grs='git reset'
