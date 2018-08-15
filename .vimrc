@@ -41,7 +41,7 @@ if filereadable(vim_plug_path)
   " Plug 'Shougo/context_filetype.vim'
 
   " Plug 'mkusher/padawan.vim'
-  " Plug 'Valloric/YouCompleteMe'
+  Plug 'Valloric/YouCompleteMe'
   Plug 'alvan/vim-php-manual'
 
   Plug 'christoomey/vim-tmux-navigator'
@@ -51,7 +51,7 @@ if filereadable(vim_plug_path)
   Plug 'stephpy/vim-php-cs-fixer'
 
   Plug 'xolox/vim-misc'
-  " Plug 'xolox/vim-easytags'
+  Plug 'xolox/vim-easytags'
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
@@ -133,17 +133,13 @@ filetype plugin indent on
 " autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 " let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
-" let g:ycm_semantic_triggers = {}
+let g:ycm_semantic_triggers = {}
 " let g:ycm_semantic_triggers.php = 
                         " \ ['->', '::', '(', 'use ', 'namespace ', '\']
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
-" let g:ycm_key_list_select_completion=[]
-" let g:ycm_key_list_previous_completion=[]
-" let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_key_list_select_completion=[]
+let g:ycm_key_list_previous_completion=[]
+let g:ycm_collect_identifiers_from_tags_files = 1
 
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_start_word_key      = '<C-n>'
@@ -168,9 +164,8 @@ endif
 
 let g:UltiSnipsSnippetDirectories=[$HOME."/configs/UltiSnips"]
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-let g:UltiSnipsListSnippets="<f4>"
+let g:UltiSnipsJumpForwardTrigger="<C-n>"
+let g:UltiSnipsJumpBackwardTrigger="<C-p>"
 
 " If php-cs-fixer is in $PATH, you don't need to define line below
 " let g:php_cs_fixer_path = "~/php-cs-fixer.phar" " define the path to the php-cs-fixer.phar
