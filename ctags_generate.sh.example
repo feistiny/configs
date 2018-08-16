@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+shopt -s expand_aliases
+source ${shell_dir}/aliases.sh
+cd app
+f=../.tags stpl php_ctags | sh
+cd - 1>/dev/null
+cd config
+f=../.tags stpl php_ctags | sh
+cd - 1>/dev/null
+cd database
+f=../.tags stpl php_ctags | sh
+cd - 1>/dev/null
+cd vendor/encore/laravel-admin
+f=../../../.tags stpl php_ctags | sh
+cd - 1>/dev/null
+echo 'done'

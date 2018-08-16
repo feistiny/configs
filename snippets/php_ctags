@@ -1,1 +1,1 @@
-ctags --sort=yes -h .php -R --languages=php --php-kinds=cfi -f .tags
+ctags -a --tag-relative=yes --sort=yes -h .php -R --languages=php --php-kinds=cfi -f ${f-.tags}
