@@ -37,25 +37,23 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 
-
-# vi and emacs editing mode configs
-bind "set show-mode-in-prompt on" 
-bind 'set emacs-mode-string "â™‹ "' 
-bind 'set vi-ins-mode-string "â˜º "' 
-bind 'set vi-cmd-mode-string "í ½í±‰ "' 
-bind -m vi-insert  '"\C-\M-J": emacs-editing-mode' 
-bind -m vi-command '"\C-\M-J": emacs-editing-mode' 
-bind -m emacs      '"\C-\M-J": vi-editing-mode' 
-# bind -m vi-insert  '"\e_": emacs-editing-mode' 
-# bind -m vi-command '"\e_": emacs-editing-mode' 
-# bind -m emacs      '"\e_": vi-editing-mode' 
-bind -m vi-insert '"\e.": yank-last-arg' 
-bind -m vi-insert '"\e\C-y": yank-nth-arg' 
-bind -m vi-command '"\e.": yank-last-arg' 
-bind -m vi-command '"\e\C-y": yank-nth-arg' 
-bind -m vi-insert '"\C-p": previous-history'
-bind -m vi-insert '"\C-n": next-history'
-export VISUAL=vim
+if [[ "$1" =~ i ]]; then
+  # vi and emacs editing mode configs
+  bind "set show-mode-in-prompt on"
+  bind 'set emacs-mode-string "â™‹ "'
+  bind 'set vi-ins-mode-string "â˜º "'
+  bind 'set vi-cmd-mode-string "í ½í±‰ "'
+  bind -m vi-insert  '"\C-\M-J": emacs-editing-mode'
+  bind -m vi-command '"\C-\M-J": emacs-editing-mode'
+  bind -m emacs      '"\C-\M-J": vi-editing-mode'
+  bind -m vi-insert '"\e.": yank-last-arg'
+  bind -m vi-insert '"\e\C-y": yank-nth-arg'
+  bind -m vi-command '"\e.": yank-last-arg'
+  bind -m vi-command '"\e\C-y": yank-nth-arg'
+  bind -m vi-insert '"\C-p": previous-history'
+  bind -m vi-insert '"\C-n": next-history'
+  export VISUAL=vim
+fi
 
 # templaet snippets
 alias tpl='sempl -o -f'
@@ -169,6 +167,10 @@ function grtad() {
   unset url url_in_remote
 }
 function gcimp() {
+  msg=${1:-+++}
+  git commit -m "$msg" && git push ${@:2}
+}
+function gciamp() {
   msg=${1:-+++}
   git commit -am "$msg" && git push ${@:2}
 }
@@ -466,7 +468,9 @@ function mktmp() {
 }
 
 eval "source ${snippets_dir}/exports"
-eval "bind -f ${snippets_dir}/inputrc"
+if [[ "$-" =~ i ]]; then
+  eval "bind -f ${snippets_dir}/inputrc"
+fi
 
 if [[ -z $(which sempl 2>/dev/null) ]]; then
   export PATH="${shell_dir}/plugins/.bin:${PATH}"
