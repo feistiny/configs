@@ -154,7 +154,7 @@ alias gsm='git submodule'
 function gad() {
   to_add='.'
   if [ -n "${1}" ]; then to_add=$1; fi
-  git add $to_add ${@:2}
+  git add "*${to_add}*" ${@:2}
   unset to_add
 }
 function grtad() {

@@ -502,6 +502,7 @@ nnoremap ,g :CtrlPBufTag<CR>
 nnoremap ,G :CtrlPBufTagAll<CR>
 " general code finder in all files mapping
 nnoremap ,f :CtrlPLine<CR>
+nnoremap ,fc :CtrlPLine %<CR>
 " recent files finder mapping
 nnoremap ,m :CtrlPMRUFiles<CR>
 function! CtrlPWithSearchText(search_text, ctrlp_command_end)
