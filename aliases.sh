@@ -37,25 +37,23 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 
-
-# vi and emacs editing mode configs
-bind "set show-mode-in-prompt on" 
-bind 'set emacs-mode-string "â™‹ "' 
-bind 'set vi-ins-mode-string "â˜º "' 
-bind 'set vi-cmd-mode-string "í ½í±‰ "' 
-bind -m vi-insert  '"\C-\M-J": emacs-editing-mode' 
-bind -m vi-command '"\C-\M-J": emacs-editing-mode' 
-bind -m emacs      '"\C-\M-J": vi-editing-mode' 
-# bind -m vi-insert  '"\e_": emacs-editing-mode' 
-# bind -m vi-command '"\e_": emacs-editing-mode' 
-# bind -m emacs      '"\e_": vi-editing-mode' 
-bind -m vi-insert '"\e.": yank-last-arg' 
-bind -m vi-insert '"\e\C-y": yank-nth-arg' 
-bind -m vi-command '"\e.": yank-last-arg' 
-bind -m vi-command '"\e\C-y": yank-nth-arg' 
-bind -m vi-insert '"\C-p": previous-history'
-bind -m vi-insert '"\C-n": next-history'
-export VISUAL=vim
+if [[ "$1" =~ i ]]; then
+  # vi and emacs editing mode configs
+  bind "set show-mode-in-prompt on"
+  bind 'set emacs-mode-string "â™‹ "'
+  bind 'set vi-ins-mode-string "â˜º "'
+  bind 'set vi-cmd-mode-string "í ½í±‰ "'
+  bind -m vi-insert  '"\C-\M-J": emacs-editing-mode'
+  bind -m vi-command '"\C-\M-J": emacs-editing-mode'
+  bind -m emacs      '"\C-\M-J": vi-editing-mode'
+  bind -m vi-insert '"\e.": yank-last-arg'
+  bind -m vi-insert '"\e\C-y": yank-nth-arg'
+  bind -m vi-command '"\e.": yank-last-arg'
+  bind -m vi-command '"\e\C-y": yank-nth-arg'
+  bind -m vi-insert '"\C-p": previous-history'
+  bind -m vi-insert '"\C-n": next-history'
+  export VISUAL=vim
+fi
 
 # templaet snippets
 alias tpl='sempl -o -f'
@@ -65,8 +63,17 @@ function stpl() {
 
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
-alias tml="tmux -f ${shell_dir}/.tmux.conf a -t"
-alias tmll="tmux -f ${shell_dir}/.tmux.conf"
+alias tml='\tmux'" -f ${shell_dir}/.tmux.conf a -t"
+alias tmll='\tmux'" -f ${shell_dir}/.tmux.conf"
+alias tmls='\tmux ls'
+function tmks() {
+    for i in "$@"
+    do
+        \tmux kill-session -t $i
+    done
+    unset i
+}
+alias tmkr='\tmux kill-server'
 
 # easy to change directory #
 alias d='dirs -v'
@@ -76,16 +83,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-
-alias tmls='tmux ls'
-function tmks() {
-    for i in "$@"
-    do
-        tmux kill-session -t $i
-    done
-    unset i
-}
-alias tmkr='tmux kill-server'
 
 # laravel artisan #
 alias cmp='composer'
@@ -108,11 +105,13 @@ alias gcf='git config'
 alias gciac='git commit --amend -c HEAD'
 alias gciap='git commit --amend -C HEAD && git push -f'
 alias gciaap='git commit -a --amend -C HEAD && git push -f'
-alias gciam='git commit -am'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 function gcim() {
   git commit -m "${1-+++}"
+}
+function gciam() {
+  git commit -am "${1-+++}"
 }
 alias gcl='git clean'
 alias gco='git checkout'
@@ -122,14 +121,13 @@ alias gfe='git fetch'
 alias gl='git log --oneline'
 function gld() {
   diff_branch="$1"
-  if [[ -z "$1" ]]; then
+  if [[ ! -n "$1" ]]; then
     current_branch=$(git rev-parse --abbrev-ref HEAD);
     upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream});
     diff_branch="${current_branch}...${upstream}"
   fi
   git log --left-right --graph --oneline "$diff_branch"
 }
-alias gld=''
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
 alias gnsw='git update-index --no-skip-worktree'
@@ -169,6 +167,10 @@ function grtad() {
   unset url url_in_remote
 }
 function gcimp() {
+  msg=${1:-+++}
+  git commit -m "$msg" && git push ${@:2}
+}
+function gciamp() {
   msg=${1:-+++}
   git commit -am "$msg" && git push ${@:2}
 }
@@ -464,9 +466,22 @@ function mktmp() {
   mktemp --tmpdir=$(pwd) -t "${name}.XXXXXX${subfix}"
   unset name subfix
 }
+function dfa() {
+  info=$(declare -f "$1")
+  _alias=$(alias "$1" 2>/dev/null)
+  if [[ -n "$info" ]]; then
+    echo "$info"
+  elif [[ -n "$_alias" ]]; then
+    echo "$_alias"
+  else
+    echo 'definition not found'
+  fi
+}
 
 eval "source ${snippets_dir}/exports"
-eval "bind -f ${snippets_dir}/inputrc"
+if [[ "$-" =~ i ]]; then
+  eval "bind -f ${snippets_dir}/inputrc"
+fi
 
 if [[ -z $(which sempl 2>/dev/null) ]]; then
   export PATH="${shell_dir}/plugins/.bin:${PATH}"
@@ -478,7 +493,7 @@ fi
 alias addswap='stpl swapfile_mk'
 alias delswap='stpl swapfile_rm'
 # complete for custom commands
-complete -W "$(eval "ls /var/_swap_ | xargs")" addswap delswap
+complete -W "$(eval "ls /var/_swap_ 2>/dev/null | xargs")" addswap delswap
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>
