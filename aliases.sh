@@ -63,8 +63,17 @@ function stpl() {
 
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
-alias tml="tmux -f ${shell_dir}/.tmux.conf a -t"
-alias tmll="tmux -f ${shell_dir}/.tmux.conf"
+alias tml='\tmux'" -f ${shell_dir}/.tmux.conf a -t"
+alias tmll='\tmux'" -f ${shell_dir}/.tmux.conf"
+alias tmls='\tmux ls'
+function tmks() {
+    for i in "$@"
+    do
+        \tmux kill-session -t $i
+    done
+    unset i
+}
+alias tmkr='\tmux kill-server'
 
 # easy to change directory #
 alias d='dirs -v'
@@ -74,16 +83,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-
-alias tmls='tmux ls'
-function tmks() {
-    for i in "$@"
-    do
-        tmux kill-session -t $i
-    done
-    unset i
-}
-alias tmkr='tmux kill-server'
 
 # laravel artisan #
 alias cmp='composer'
@@ -482,7 +481,7 @@ fi
 alias addswap='stpl swapfile_mk'
 alias delswap='stpl swapfile_rm'
 # complete for custom commands
-complete -W "$(eval "ls /var/_swap_ | xargs")" addswap delswap
+complete -W "$(eval "ls /var/_swap_ 2>/dev/null | xargs")" addswap delswap
 # test script; like python's __main__
 # add the key map in .vimrc
 # map gb :!export exec_in_vim=1;clear;echo ;bash %;unset exec_in_vim<CR>
