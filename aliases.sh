@@ -125,6 +125,9 @@ alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
 alias gl='git log --oneline'
+function glp() {
+  git log --oneline -p "${@: 1:$(($#-1))}" "*${@: -1}*"
+}
 function gld() {
   diff_branch="$1"
   if [[ ! -n "$1" ]]; then
