@@ -411,7 +411,7 @@ autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
 let &termencoding=&encoding
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
-" set term=xterm
+set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
 let g:snipMate.no_default_aliases=1
