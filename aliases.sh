@@ -37,7 +37,7 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 
-if [[ "$1" =~ i ]]; then
+if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
   bind "set show-mode-in-prompt on"
   bind 'set emacs-mode-string "♋ "'
