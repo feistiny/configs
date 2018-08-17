@@ -6,4 +6,4 @@
   }
 }
 # vim-python-version-switch
-source <( echo "alias vpvs='pdate-alternatives --config vim'" )
+alias vpvs='update-alternatives --config vim'
