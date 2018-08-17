@@ -355,6 +355,9 @@ map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim<CR>
 map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
+
+" let g:php_manual_online_search_shortcut = ''
+
 " let g:ale_fixers = {
   " \'javascript': ['prettier','eslint'],
 " \}
@@ -409,6 +412,7 @@ function! IPhpExpandClass()
 endfunction
 autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
 let &termencoding=&encoding
+let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set tags=.tags
 set term=xterm
