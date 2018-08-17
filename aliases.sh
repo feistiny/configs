@@ -115,6 +115,12 @@ function gciam() {
 }
 alias gcl='git clean'
 alias gco='git checkout'
+function gdfcf() {
+  git diff --cached "*${1}*"
+}
+function gdff() {
+  git diff "*${1}*"
+}
 alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
