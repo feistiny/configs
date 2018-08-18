@@ -37,6 +37,7 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 
+set -o vi
 if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
   bind "set show-mode-in-prompt on"
@@ -119,7 +120,7 @@ function gdfcf() {
   git diff --cached "*${1}*"
 }
 function gdff() {
-  git diff "*${1}*"
+  git diff "${@: 1:$(($#-1))}" "*${@: -1}*"
 }
 alias gdfc='git diff --cached'
 alias gdf='git diff'
