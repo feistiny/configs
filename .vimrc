@@ -455,7 +455,8 @@ vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
-vnoremap pc dO"""<esc>PO"""<esc>
+vnoremap pc c"""<c-r>""""<esc>
+vnoremap pd c . <c-r>" . <esc>
 " vnoremap cl yo{php liu(<c-r>",on);}<esc>
 " vnoremap cL yO{php liu(<c-r>",on);}<esc>
 " 快捷liu调试函数
