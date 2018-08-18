@@ -139,7 +139,6 @@ function gld() {
 }
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
-alias gnsw='git update-index --no-skip-worktree'
 alias gpl='git pull'
 alias gplr='git pull --rebase'
 alias gps='git push'
@@ -158,7 +157,29 @@ alias gsl='git stash list'
 alias gsp='git stash pop'
 alias gst='git status'
 alias gsti='git status --ignored'
-alias gsw='git update-index --skip-worktree'
+function gsw() {
+  # exists in current dir
+  if [[ -e ${@: -1} ]]; then
+    file=${@: -1}
+  else
+    file="*${@: -1}*"
+  fi
+  git update-index --skip-worktree "${@: 1:$(($#-1))}" $file
+  glsw
+}
+function gnsw() {
+  # exists in current dir
+  if [[ -e ${@: -1} ]]; then
+    file=${@: -1}
+  else
+    file="*${@: -1}*"
+  fi
+  git update-index --no-skip-worktree "${@: 1:$(($#-1))}" $file
+  glsw
+}
+function glsw() {
+  git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
+}
 alias gsm='git submodule'
 function gad() {
   to_add='.'
@@ -454,8 +475,8 @@ function rebins() {
     mkdir -p "${plugins_dir}/.bin"
   fi
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
-  ln -sf "${plugins_dir}/sempl/cryptool" "${plugins_dir}/.bin/cryptool"
-  mv "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj"
+  ln -sf "${plugins_dir}/sempl/crypttool" "${plugins_dir}/.bin/crypttool"
+  cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj"
 }
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
