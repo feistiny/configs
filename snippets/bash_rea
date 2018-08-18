@@ -1,1 +1,5 @@
-grep aliases.sh ~/.bashrc >/dev/null && { sed -i '/aliases.sh/calias rea="source ~/configs/aliases.sh" 2>/dev/null' ~/.bashrc; } || { echo 'alias rea="source ~/configs/aliases.sh" 2>/dev/null' >> ~/.bashrc; }
+if [[ -n ${norea-''} ]]; then
+  grep aliases.sh ~/.bashrc >/dev/null && { sed -i '/aliases.sh/csource ~/configs/aliases.sh ${showerr-2>/dev/null}' ~/.bashrc; } || { echo 'source ~/configs/aliases.sh ${showerr-2>/dev/null}' >> ~/.bashrc; }
+else
+  grep aliases.sh ~/.bashrc >/dev/null && { sed -i '/aliases.sh/calias rea="source ~/configs/aliases.sh 2>/dev/null"' ~/.bashrc; } || { echo 'alias rea="source ~/configs/aliases.sh 2>/dev/null"' >> ~/.bashrc; }
+fi

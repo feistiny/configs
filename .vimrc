@@ -43,6 +43,7 @@ if filereadable(vim_plug_path)
   " Plug 'mkusher/padawan.vim'
   Plug 'Valloric/YouCompleteMe'
   Plug 'alvan/vim-php-manual'
+  Plug 'wesQ3/vim-windowswap'
 
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
@@ -132,6 +133,12 @@ filetype plugin indent on
 " let g:phpcomplete_index_composer_command='composer'
 " autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 " let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+
+let g:windowswap_map_keys = 0 "prevent default bindings
+
+nnoremap <silent> <leader>yw :call WindowSwap#MarkWindowSwap()<CR>
+nnoremap <silent> <leader>pw :call WindowSwap#DoWindowSwap()<CR>
+nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>"
 
 let g:ycm_key_list_stop_completion = ['<C-y>']
 let g:ycm_key_invoke_completion = '<C-z>'
@@ -356,7 +363,7 @@ map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
 
-" let g:php_manual_online_search_shortcut = ''
+let g:php_manual_online_search_shortcut = ''
 
 " let g:ale_fixers = {
   " \'javascript': ['prettier','eslint'],
