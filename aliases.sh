@@ -103,16 +103,17 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
-alias gciac='git commit --amend -c HEAD'
-alias gciap='git commit --amend -C HEAD && git push -f'
-alias gciaap='git commit -a --amend -C HEAD && git push -f'
 alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
+alias gcia='git commit --amend -C HEAD'
 function gcim() {
-  git commit -m "${1-+++}"
+  git commit "${@: 1:$(($#-1))}" -m "*${@: -1-+++}*"
 }
-function gciam() {
-  git commit -am "${1-+++}"
+alias gciac='git commit --amend -c HEAD'
+alias gciap='git commit --amend -C HEAD && git push -f'
+function gcimp() {
+  msg=${1:-+++}
+  git commit -m "$msg" && git push ${@:2}
 }
 alias gcl='git clean'
 alias gco='git checkout'
@@ -196,14 +197,6 @@ function grtad() {
   git remote set-url all --add $url 2>/dev/null || \
     git remote add all $url
   unset url url_in_remote
-}
-function gcimp() {
-  msg=${1:-+++}
-  git commit -m "$msg" && git push ${@:2}
-}
-function gciamp() {
-  msg=${1:-+++}
-  git commit -am "$msg" && git push ${@:2}
 }
 function grh() {
  git reset HEAD "$1"
