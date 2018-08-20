@@ -343,7 +343,7 @@ unset target_user from_user
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(cd ${snippets_dir}; find . -type f -not -name '.*'  | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl
+  complete -W "$(cd ${snippets_dir}; find . -type f -not -name '.*'  | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst
 }
 update_complete_for_snippets
 function get_snippets() {
@@ -558,6 +558,9 @@ function sss() {
     ssh-add ${i%%.enc}
   done
   cd -
+}
+function sst() {
+  ssh "$(cat ${snippets_dir}/$1)"
 }
 
 
