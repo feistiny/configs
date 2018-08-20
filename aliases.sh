@@ -365,11 +365,13 @@ function edit_snippets() {
 }
 alias sets='set_snippets'
 function set_snippets() {
+  mktouch "${snippets_dir}/$1"
   eval "echo ${@:2} > ${snippets_dir}/$1"
   update_complete_for_snippets
 }
 alias setsd='set_snippets_heredoc'
 function set_snippets_heredoc() {
+  mktouch "${snippets_dir}/$1"
   read -d '' heredoc
   eval "echo $heredoc > ${snippets_dir}/$1"
   update_complete_for_snippets
