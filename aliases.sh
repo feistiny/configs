@@ -53,7 +53,7 @@ if [[ -z "$exec_in_vim" ]]; then
   bind -m vi-command '"\e\C-y": yank-nth-arg'
   bind -m vi-insert '"\C-p": previous-history'
   bind -m vi-insert '"\C-n": next-history'
-  export VISUAL=vim
+  export VISUAL=vu
 fi
 
 # templaet snippets
@@ -343,13 +343,13 @@ unset target_user from_user
 snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(eval "ls ${snippets_dir} | xargs")" gets sets dels edits tpl stpl
+  complete -W "$(cd ${snippets_dir}; find . -type f -not -name '.*'  | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl
 }
 update_complete_for_snippets
 function get_snippets() {
 if [ -z "${1+x}" ]
 then
-  eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %f\n' | sort -k '1' -k '2'"
+  eval "find ${snippets_dir} ! -name '.*' ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2'"
   update_complete_for_snippets
 else
   cat ${snippets_dir}/$1 
@@ -359,6 +359,7 @@ fi
 
 alias edits='edit_snippets'
 function edit_snippets() {
+  mktouch "${snippets_dir}/$1"
   eval "vim -u ${shell_dir}/.vimrc ${snippets_dir}/$1" 
   update_complete_for_snippets
 }
