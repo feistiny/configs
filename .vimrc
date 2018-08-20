@@ -322,7 +322,7 @@ map tn :tabp<CR>
 " copy the curent tab to a new one
 map ty :tab split<CR>
 " 切换粘贴模式
-map tj :set paste!<CR><Left>
+map tj :set paste!<CR>
 " 关闭右侧标签
 map tL :Tabcloseleft<CR>
 " 关闭左边标签
@@ -487,7 +487,7 @@ nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
 function! PasteForStatusline()
   let paste_status = &paste
   if paste_status == 1
-    return " [paste] "
+    return "| [paste]"
   else
     return ""
   endif
@@ -501,7 +501,7 @@ function! CurDir()
   let curdir = substitute(getcwd(), $HOME, "~", "g")
   return curdir
 endfunction
-" set statusline=[%n]\ %f%m%r%h\ \|\ %{PasteForStatusline()}\
+set statusline=[%n]\ %f%m%r%h\ %{PasteForStatusline()}
 """状态栏配置
 
 """项目文件快捷打开,模糊匹配<<<

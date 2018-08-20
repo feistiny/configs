@@ -107,7 +107,8 @@ alias gci='git commit'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gcia='git commit --amend -C HEAD'
 function gcim() {
-  git commit "${@: 1:$(($#-1))}" -m "*${@: -1-+++}*"
+  msg="${@: -1}"
+  git commit "${@: 1:$(($#-1))}" -m "${msg:-+++}"
 }
 alias gciac='git commit --amend -c HEAD'
 alias gciap='git commit --amend -C HEAD && git push -f'
