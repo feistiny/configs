@@ -1,3 +1,4 @@
 current_git_dir
 plugins/.bin
-*.secret
+ssh_keys
+ssh_keys_backup

@@ -37,7 +37,7 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 
-set -o vi
+set -o emacs
 if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
   bind "set show-mode-in-prompt on"
@@ -511,6 +511,56 @@ function dfa() {
     echo 'definition not found'
   fi
 }
+function ssp() {
+  cd "${snippets_dir}/ssh_keys"
+  read -p "old_password:" -s old_pass
+  # veirfy old_pass
+  for i in *.enc ; do
+    crypttool -p ${old_pass} decrypt $i &>/dev/null || { echo;tput setaf 1;echo 'old_pass error';tput sgr0;return; }
+    break
+  done
+  echo
+  read -s -p 'password:' pass
+  echo
+  read -s -p 'password(again):' pass2
+  while [[ $pass != $pass2 ]]; do
+    echo
+    echo 'Please try again'
+    read -s -p 'password:' pass
+    echo
+    read -s -p 'password(again):' pass2
+  done
+  backdir='../ssh_keys_backup'
+  mkdir -p $backdir
+  cp -a * $backdir
+  for i in *.enc ; do
+    crypttool -p ${old_pass} decrypt $i &>/dev/null || { echo 'decrypt error';rm *;cp -a "$backdi/*" .;return; }
+    chmod 600 ${i%%.enc}
+    rm $i
+  done
+  for i in * ; do
+    crypttool -p ${pass} encrypt $i  &>/dev/null || { echo 'encrypt error';rm *;cp -a "$backdi/*" .;return; }
+  done
+  rm $backdir/*
+  tput setaf 2; echo 'password changed successful'; tput sgr0;
+  cd - &>/dev/null
+  tput sgr0
+  # for more tput usage; see https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux#answer-20983251
+}
+function sss() {
+  eval `ssh-agent` #`` usage detail see https://serverfault.com/questions/547923/running-ssh-agent-from-a-shell-script?answertab=votes#answer-705635
+  cd "${snippets_dir}/ssh_keys"
+  read -p "password:" -s pass
+  echo
+  for i in *.enc ; do
+    crypttool -p ${pass} decrypt $i
+    chmod 600 ${i%%.enc}
+    ssh-add ${i%%.enc}
+  done
+  cd -
+}
+
+
 
 eval "source ${snippets_dir}/exports"
 if [[ "$-" =~ i ]]; then
