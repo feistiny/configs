@@ -445,7 +445,8 @@ nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
-nnoremap <leader>l :se wrap!<CR> "切换是否换行
+nnoremap <leader>lw :se wrap!<CR> "切换是否换行
+nnoremap <leader>lt :se list!<CR> "切换是否换行
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 nnoremap <space> za
