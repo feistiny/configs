@@ -16,6 +16,10 @@ snippet t. "$this->" i
 $this->$1
 endsnippet
 
+snippet tm "$this->method();" i
+$this->${1:info}($2);
+endsnippet
+
 snippet cl
 console.log($1);
 endsnippet

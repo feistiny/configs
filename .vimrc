@@ -310,7 +310,7 @@ fun! s:SwapCurrentWindowToTarget(...)
   endif
 endf
 command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
-nnoremap <leader>sw :SwapTwoWindows
+nnoremap <leader>sw :SwapTwoWindows 
 """
 
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
@@ -367,18 +367,6 @@ nnoremap <silent> tt :exe "tabn ".g:pre_tabpagenr<CR>
 vnoremap > >gv
 vnoremap < <gv
 """normal模式的缩进操作
-
-"下边执行文件的注释不能放到行后,否则执行结果闪消
-"快捷执行当前php文件
-map gp :!clear;echo ;php %<CR>
-"快捷执行当前python文件
-map gy :!clear;echo ;python %<CR>
-"快捷执行当前node文件
-map gn :!clear;echo ;node %<CR>
-"快捷执行当前bash文件
-map gb :!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim<CR>
-"快捷执行当前lisp文件
-map gl :!clear;echo ;clisp %<CR>
 
 " common config<<<
 
@@ -440,6 +428,7 @@ autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
 let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
+" todo, set tags up search to .git root dir
 set tags=.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
@@ -553,7 +542,9 @@ nnoremap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
 nnoremap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
 nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
-let g:ctrlp_working_path_mode = 'a'
+nmap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
+nmap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>
+" let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
       \ 'file': '\.pyc$\|\.pyo|\.meta$',
@@ -643,13 +634,15 @@ func! Run()
   if type == "c" || type == "cpp"
     exec "!./%<"
   elseif type == "bash"
-    exec "!clear;/bin/bash %"
+    exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
   elseif type == "python"
     exec "!clear;$(which python) %"
   elseif type == "php"
     exec "!clear;$(which php) %"
   elseif type == "javascript"
     exec "!clear;node %"
+  elseif type == "lisp"
+    exec "!clear;clisp %"
   endif
 endfunc
 
