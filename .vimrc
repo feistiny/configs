@@ -87,7 +87,7 @@ if filereadable(vim_plug_path)
   Plug 'vim-scripts/AutoClose' " )]}等自动闭合
   "Plug 'Townk/vim-autoclose'
 
-  Plug 'fholgado/minibufexpl.vim' " buffer插件
+  " Plug 'fholgado/minibufexpl.vim' " buffer插件
 
   Plug 'PotHix/Vimpress' " vim写wordpress博客
 
@@ -294,6 +294,25 @@ command! -nargs=1 SetFoldColumn call s:setfoldcolumn(<f-args>)
 nnoremap <leader>tc :SetFoldColumn 0
 """
 
+""" swap two split windows
+fun! s:SwapCurrentWindowToTarget(...)
+  let cur=winnr()
+  if a:0 == 2
+    " swap other two windows
+    exe a:1 . ' windo call WindowSwap#EasyWindowSwap() | ' .
+          \ a:2 . 'windo call WindowSwap#EasyWindowSwap() | ' .
+          \ cur . 'windo exe "normal xu"'
+  elseif a:0 == 1
+    " swap the current window to the target
+    exe cur . ' windo call WindowSwap#EasyWindowSwap() | ' .
+          \ a:1 . 'windo call WindowSwap#EasyWindowSwap() | ' .
+          \ a:1 . 'windo exe "normal ' . a:1 . 'ww"'
+  endif
+endf
+command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
+nnoremap <leader>sw :SwapTwoWindows
+"""
+
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
 
 """python相关配置
@@ -445,8 +464,11 @@ nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap ,3 :b#<CR> "上一个buffer
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
-nnoremap <leader>lw :se wrap!<CR> "切换是否换行
-nnoremap <leader>lt :se list!<CR> "切换是否换行
+nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
+nnoremap <leader>lt :se list!<CR>
+nnoremap <leader>lv :vsp #<CR>
+nnoremap <leader>ls :sp #<CR>
+nnoremap <leader>bt :MBEToggle<CR>
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 nnoremap <space> za
@@ -474,10 +496,10 @@ let g:EasyGrepPerlStyle=1
 " common config
 
 """分割窗口相关操作<<<
-nnoremap w= :resize +3<CR>
-nnoremap w- :resize -3<CR>
-nnoremap w, :vertical resize -3<CR>
-nnoremap w. :vertical resize +3<CR>
+nnoremap w= :resize +5<CR>
+nnoremap w- :resize -5<CR>
+nnoremap w, :vertical resize -5<CR>
+nnoremap w. :vertical resize +5<CR>
 "nmap <S-W> <C-W><C-W>
 nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
 """分割窗口相关操作
@@ -502,7 +524,7 @@ function! CurDir()
   let curdir = substitute(getcwd(), $HOME, "~", "g")
   return curdir
 endfunction
-set statusline=[%n]\ %f%m%r%h\ %{PasteForStatusline()}
+set statusline=[w%{winnr()}]\ [b%n]\ %f%m%r%h\ %{PasteForStatusline()}
 """状态栏配置
 
 """项目文件快捷打开,模糊匹配<<<
