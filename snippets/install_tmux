@@ -12,7 +12,7 @@ sudo apt install -y libncurses5-dev
 
 rm -fr /tmp/tmux
 
-git clone https://github.com/tmux/tmux.git /tmp/tmux
+git clone --single-branch -b ${v-2.6} https://github.com/tmux/tmux.git /tmp/tmux
 
 cd /tmp/tmux
 

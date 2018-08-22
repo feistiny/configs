@@ -103,7 +103,9 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 alias gbr='git branch'
 alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
 alias gcf='git config'
+alias gcp='git cherry-pick'
 alias gci='git commit'
+alias gcif='git commit --fixup'
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gcia='git commit --amend -C HEAD'
 function gcim() {
@@ -116,7 +118,11 @@ function gcimp() {
   msg=${1:-+++}
   git commit -m "$msg" && git push ${@:2}
 }
-alias gcl='git clean'
+alias gclo='git clone'
+function gcls() {
+  git clone --single-branch -b "$2" "$1" 
+}
+alias gcle='git clean'
 alias gco='git checkout'
 function gdfcf() {
   git diff --cached "*${1}*"
@@ -200,7 +206,7 @@ function grtad() {
   unset url url_in_remote
 }
 function grh() {
- git reset HEAD "$1"
+ git reset HEAD  "${@: 1:$(($#-1))}" "*${@: -1}*"
 }
 function gsbcf() {
   prefix=$1
@@ -264,6 +270,7 @@ do
 done < <(cat <<EOF
 gbr:_git_branch
 gco:_git_checkout
+gme:_git_checkout
 grb:_git_checkout
 gll:_git_checkout
 gl:_git_checkout

@@ -430,6 +430,7 @@ let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
 set tags=.tags
+let g:easytags_dynamic_files=1
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -474,6 +475,8 @@ vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
 vnoremap pc c"""<c-r>""""<esc>
 vnoremap pd c . <c-r>" . <esc>
+vnoremap pd1 c' . <c-r>" . '<esc>
+vnoremap pd2 c" . <c-r>" . "<esc>
 " vnoremap cl yo{php liu(<c-r>",on);}<esc>
 " vnoremap cL yO{php liu(<c-r>",on);}<esc>
 " 快捷liu调试函数
