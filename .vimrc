@@ -447,6 +447,11 @@ nmap <leader>si :set shellcmdflag=-ic<CR>
 nmap <leader>sc :set shellcmdflag=-c<CR>
 nmap <leader>w :e<CR>
 nmap <leader>df :NERDTreeFind<CR>
+nmap <leader>qn :cn<CR>
+nmap <leader>qp :cp<CR>
+nmap <leader>qc :ccl<CR>
+nmap <leader>qo :copen<CR>
+nmap <leader>qt :cc 
 nnoremap <C-S> :w<CR><Left> "快速保存改动
 inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
