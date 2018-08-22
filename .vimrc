@@ -445,7 +445,7 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap <leader>si :set shellcmdflag=-ic<CR>
 nmap <leader>sc :set shellcmdflag=-c<CR>
-nmap <leader>w :e<CR>
+nmap <leader>w :e!<CR>
 nmap <leader>df :NERDTreeFind<CR>
 nmap <leader>qn :cn<CR>
 nmap <leader>qp :cp<CR>
@@ -549,7 +549,7 @@ nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
 nmap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
 nmap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>
-" let g:ctrlp_working_path_mode = '0'
+let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
       \ 'file': '\.pyc$\|\.pyo|\.meta$',

@@ -1,4 +1,4 @@
 git config ${g---global} core.autocrlf input
 git config ${g---global} core.filemode false
 git config ${g---global} core.excludesfile '${path-~/configs/.gitignore_global}'
-git config ${g---global} push.default simple
+git config ${g---global} push.default current

@@ -264,6 +264,7 @@ do
 done < <(cat <<EOF
 gbr:_git_branch
 gco:_git_checkout
+grb:_git_checkout
 gll:_git_checkout
 gl:_git_checkout
 gdf:_git_diff
