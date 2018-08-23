@@ -1,0 +1,26 @@
+#!/bin/bash
+_cdir=$(pwd)
+_cfp="${_cdir}/.ctagsignore"
+if [[ ! -e "$_cfp" ]]; then
+  return 1
+fi
+_idir=$(grep -v '^#' $_cfp | \
+  grep -v '^!' | xargs
+)
+_excf=$(grep -v '^#' $_cfp | \
+  grep '^!' | sed 's/^!/--exclude=/' | xargs
+)
+export excludes="$_excf"
+export f="${_cdir}/.tags"
+shopt -s expand_aliases
+source ${shell_dir}/aliases.sh
+for dir in $_idir ; do
+  if [[ ! -e "$dir" ]]; then
+    continue
+  else
+    cd $dir
+    stpl "ctags/${l-php_ctags}" | bash
+    cd $_cdir
+  fi
+done
+echo 'done'
