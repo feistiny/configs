@@ -24,8 +24,16 @@ snippet cl
 console.log($1);
 endsnippet
 
-snippet ma
-public function get$1Attribute()
+snippet ga
+public function get$1Attribute($value)
+{
+	$2
+	return $3;
+}
+endsnippet
+
+snippet sa
+public function set$1Attribute()
 {
 	$2
 	return $3;

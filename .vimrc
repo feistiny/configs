@@ -235,7 +235,7 @@ au BufNewFile,BufRead *.js set filetype=javascript
 au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
 au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
-autocmd FileType html,css,vue EmmetInstall
+autocmd FileType html,css,vue,php EmmetInstall
 autocmd FileType html,php,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
 autocmd FileType sh,zsh,yaml,markdown,javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 autocmd BufWritePost *.py setlocal et autoindent
@@ -426,7 +426,12 @@ let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
 set tags=.tags
-let g:easytags_dynamic_files=1
+let g:easytags_dynamic_files = 1
+let g:easytags_on_cursorhold = 1
+let g:easytags_updatetime_min = 4000
+let g:easytags_auto_update = 1
+let g:easytags_async = 1
+let g:easytags_by_filetype = '~/tagfiles'
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -558,6 +563,7 @@ let g:ctrlp_custom_ignore = {
 """项目文件快捷打开,模糊匹配
 
 " nerdtree
+let NERDTreeChDIrMode = 2 " CWD changed when root changing
 " #open nerdtree when starting with no file
 " autocmd StdinReadPre * let s:std_in=1
 " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
