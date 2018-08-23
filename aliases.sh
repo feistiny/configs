@@ -134,6 +134,8 @@ alias gdfc='git diff --cached'
 alias gdf='git diff'
 alias gfe='git fetch'
 alias gl='git log --oneline'
+alias glgs='git log -S'
+alias glsp='git log -p -S'
 function glp() {
   git log --oneline -p "${@: 1:$(($#-1))}" "*${@: -1}*"
 }
