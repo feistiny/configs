@@ -236,12 +236,8 @@ au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
 au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
 autocmd FileType html,css,vue EmmetInstall
-autocmd FileType html,php setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
-" autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
-autocmd FileType sh,zsh setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
-autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+autocmd FileType html,php,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType sh,zsh,yaml,markdown,javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 autocmd BufWritePost *.py setlocal et autoindent
 autocmd BufWritePost *.lisp setlocal et autoindent
 nmap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
@@ -440,7 +436,9 @@ let g:snipMate.scope_aliases['html'] = 'html,php'
 let g:NERDSpaceDelims=1 " 注释符后加一个空格
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的
 nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
-nnoremap <silent> <Leader>t :Tlist<cr> " 切换taglist
+nnoremap <leader>tl :let g:NERDTreeWinPos="left"<cr>
+nnoremap <leader>tr :let g:NERDTreeWinPos="right"<cr>
+nnoremap <silent> <leader>t :Tlist<cr> " 切换taglist
 let Tlist_Use_Right_Window =1 " taglist 右侧显示
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
@@ -558,6 +556,13 @@ let g:ctrlp_custom_ignore = {
       \ 'file': '\.pyc$\|\.pyo|\.meta$',
       \}
 """项目文件快捷打开,模糊匹配
+
+" nerdtree
+" #open nerdtree when starting with no file
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" #close vim when only nerdtree exists
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
