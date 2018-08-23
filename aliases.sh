@@ -36,7 +36,7 @@ function lesp() {
 }
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
-alias mkctags="rm .tags; bash ${snippets_dir}/ctags/generate_ctags"
+alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
 
 set -o emacs
 if [[ -z "$exec_in_vim" ]]; then

@@ -349,7 +349,18 @@ map tm :tabm
 " 新标签
 map tw :tabnew
 map <F2> :buffers<CR>:b<Space>
-map <F3> :Autoformat<CR>
+
+map <F3> :call AutoFormatCode()<CR>
+func! AutoFormatCode()
+  let type = b:current_syntax
+  echom type
+  if type == "php"
+    exec "call PhpCsFixerFixFile()"
+    " exec "Autoformat"
+  else
+    exec "Autoformat"
+  endif
+endfunc
 " let g:autoformat_verbosemode=1
 
 """返回上一个标签<<<
@@ -431,7 +442,8 @@ let g:easytags_on_cursorhold = 1
 let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
-let g:easytags_by_filetype = '~/tagfiles'
+let g:easytags_file = '.tags'
+au InsertEnter * :set tags=
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}

@@ -23,4 +23,3 @@ for dir in $_idir ; do
     cd $_cdir
   fi
 done
-echo 'done'
