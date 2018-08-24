@@ -174,7 +174,9 @@ if has('mouse')
   set mouse=a
 endif
 
-let g:UltiSnipsSnippetDirectories=[$HOME."/configs/UltiSnips"]
+let g:UltiSnipsEditSplit='tabdo'
+let g:UltiSnipsSnippetsDir='UltiSnips'
+let g:UltiSnipsSnippetDirectories=[getcwd().'/UltiSnips', $HOME."/configs/UltiSnips"]
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
@@ -309,6 +311,27 @@ command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
 nnoremap <leader>sw :SwapTwoWindows 
 """
 
+""" delete(move) window to the target
+fun! s:MoveCurrentWindowToTarget(...)
+  let cur=winnr()
+  let _bcur = bufnr("%")
+  if a:0 == 2
+    " move another
+    exe a:1 . ' windo close | ' .
+          \ a:2 . 'windo e #' . a:1 . ' | ' .
+          \ cur . 'windo exe "normal xu"'
+  elseif a:0 == 1
+    " move the current
+    exe ' ' .
+          \ a:1 . 'windo e #' . _bcur . ' | ' .
+          \ cur . 'windo close | exe "normal <C-w>p"' .
+          \ ' '
+  endif
+endf
+command! -nargs=+ MoveTwoWindows call s:MoveCurrentWindowToTarget(<f-args>)
+nnoremap <leader>dw :MoveTwoWindows 
+"""
+
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
 
 """python相关配置
@@ -333,7 +356,7 @@ map t0 :tablast<CR>
 " next tab
 map tp :tabp<CR>
 " previous tab
-map tn :tabp<CR>
+map tn :tabn<CR>
 " copy the curent tab to a new one
 map ty :tab split<CR>
 " 切换粘贴模式
@@ -468,10 +491,10 @@ nmap <leader>qp :cp<CR>
 nmap <leader>qc :ccl<CR>
 nmap <leader>qo :copen<CR>
 nmap <leader>qt :cc 
+nnoremap <C-p> <C-w><C-p>
 nnoremap <C-S> :w<CR><Left> "快速保存改动
 inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动
 nnoremap tu :set nu!<CR> "切换行号显示
-nnoremap ,3 :b#<CR> "上一个buffer
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
 nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
@@ -481,7 +504,6 @@ nnoremap <leader>ls :sp #<CR>
 nnoremap <leader>bt :MBEToggle<CR>
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
-nnoremap <space> za
 map <leader>c :CtrlPClearCache<cr>
 vnoremap // y/<C-R>"<CR> "向后搜索当前的选择
 vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
@@ -541,29 +563,29 @@ set statusline=[w%{winnr()}]\ [b%n]\ %f%m%r%h\ %{PasteForStatusline()}
 
 """项目文件快捷打开,模糊匹配<<<
 " file finder mapping
-let g:ctrlp_map = ',e'
+let g:ctrlp_map = "<leader>e"
 " tags (symbols) in current file finder mapping
-nnoremap ,b :CtrlPBuffer<CR>
-nnoremap ,g :CtrlPBufTag<CR>
+nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <leader>g :CtrlPBufTag<CR>
 " tags (symbols) in all files finder mapping
-nnoremap ,G :CtrlPBufTagAll<CR>
+nnoremap <leader>G :CtrlPBufTagAll<CR>
 " general code finder in all files mapping
-nnoremap ,f :CtrlPLine<CR>
-nnoremap ,fc :CtrlPLine %<CR>
+nnoremap <leader>f :CtrlPLine<CR>
+nnoremap <leader>fc :CtrlPLine %<CR>
 " recent files finder mapping
-nnoremap ,m :CtrlPMRUFiles<CR>
+nnoremap <leader>m :CtrlPMRUFiles<CR>
 function! CtrlPWithSearchText(search_text, ctrlp_command_end)
   execute ':CtrlP' . a:ctrlp_command_end
   call feedkeys(a:search_text)
 endfunction
 " same as previous mappings, but calling with current word as default text
-nnoremap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
-nnoremap ,wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
-nnoremap ,wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
-nnoremap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
-nnoremap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
-nnoremap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
-nnoremap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
+nnoremap <leader>wg :call CtrlPWithSearchText(expand('<cword>')<leader> 'BufTag')<CR>
+nnoremap <leader>wG :call CtrlPWithSearchText(expand('<cword>')<leader> 'BufTagAll')<CR>
+nnoremap <leader>wf :call CtrlPWithSearchText(expand('<cword>')<leader> 'Line')<CR>
+nnoremap <leader>we :call CtrlPWithSearchText(expand('<cword>')<leader> '')<CR>
+nnoremap <leader>pe :call CtrlPWithSearchText(expand('<cfile>')<leader> '')<CR>
+nnoremap <leader>wm :call CtrlPWithSearchText(expand('<cword>')<leader> 'MRUFiles')<CR>
+nnoremap <leader>wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
 nmap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
 nmap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>

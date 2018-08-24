@@ -568,8 +568,21 @@ function sss() {
 function sst() {
   ssh "$(cat ${snippets_dir}/$1)"
 }
-
-
+function join_by() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+function gref() {
+  _pre='-rinHP'
+  _kw="${@: -1}"
+  _opts="${@: 1:$(($#-1))}"
+  if [[ $_kw =~ [A-Z] ]]; then
+    _pre=${_pre//i}
+  fi
+  _pre="$_pre --color=always -R"
+  grep $_pre "$_kw" * ${_opts} | less
+}
 
 eval "source ${snippets_dir}/exports"
 if [[ "$-" =~ i ]]; then
