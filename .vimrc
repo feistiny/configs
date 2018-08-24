@@ -4,7 +4,7 @@ set nocompatible "不用vi兼容模式
 " ============================================================================
 " Vim-plug initialization
 " Avoid modify this section, unless you are very sure of what you are doing
-let mapleader=","
+let mapleader="\<space>"
 
 """初次安装vim插件管理工具,以及从git上下载插件<<<
 let vim_plug_just_installed = 0
@@ -116,7 +116,7 @@ if filereadable(vim_plug_path)
 
   Plug 'scrooloose/syntastic' " 语法错误检查
 
-  Plug 'https://github.com/terryma/vim-multiple-cursors.git' " vim多点编辑
+  " Plug 'https://github.com/terryma/vim-multiple-cursors.git' " vim多点编辑
 
   Plug 'junegunn/vim-easy-align' " =号对齐
 
@@ -140,7 +140,7 @@ nnoremap <silent> <leader>yw :call WindowSwap#MarkWindowSwap()<CR>
 nnoremap <silent> <leader>pw :call WindowSwap#DoWindowSwap()<CR>
 nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>"
 
-let g:ycm_key_list_stop_completion = ['<C-y>']
+let g:ycm_key_list_stop_completion = ['<C-q>']
 let g:ycm_key_invoke_completion = '<C-z>'
 let g:ycm_semantic_triggers = {}
 let g:ycm_semantic_triggers.php = 
