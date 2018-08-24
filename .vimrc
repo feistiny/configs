@@ -313,19 +313,22 @@ nnoremap <leader>sw :SwapTwoWindows
 
 """ delete(move) window to the target
 fun! s:MoveCurrentWindowToTarget(...)
-  let cur=winnr()
-  let _bcur = bufnr("%")
+  let cur = winnr()
   if a:0 == 2
+    let _buf1 = winbufnr(a:1)
+    echom _buf1
     " move another
-    exe a:1 . ' windo close | ' .
-          \ a:2 . 'windo e #' . a:1 . ' | ' .
-          \ cur . 'windo exe "normal xu"'
+    exe 'normal mZ'
+    exe a:2 . 'windo e #' . _buf1
+    exe cur . 'windo exe "normal ' . a:1 . 'c"'
+    exe 'normal `Z'
   elseif a:0 == 1
+    let _bcur = bufnr("%")
     " move the current
-    exe ' ' .
-          \ a:1 . 'windo e #' . _bcur . ' | ' .
-          \ cur . 'windo close | exe "normal <C-w>p"' .
-          \ ' '
+    exe 'normal mz'
+    exe a:1 . 'windo e #' . _bcur
+    exe 'normal ' . cur . 'c'
+    exe 'normal `z'
   endif
 endf
 command! -nargs=+ MoveTwoWindows call s:MoveCurrentWindowToTarget(<f-args>)
@@ -501,7 +504,7 @@ nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
 nnoremap <leader>lt :se list!<CR>
 nnoremap <leader>lv :vsp #<CR>
 nnoremap <leader>ls :sp #<CR>
-nnoremap <leader>bt :MBEToggle<CR>
+" nnoremap <leader>bt :MBEToggle<CR>
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 map <leader>c :CtrlPClearCache<cr>
