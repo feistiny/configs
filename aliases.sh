@@ -37,6 +37,17 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
+function pcsd() {
+  _dir="${*:-.}"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
+  unset _dir
+}
+function pcsd() {
+  _dir="${*:-.}"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --dry-run --diff --diff-format=udiff --allow-risky yes "$_dir" | less
+  unset _dir
+}
+alias aiy='apt install -y'
 
 set -o emacs
 if [[ -z "$exec_in_vim" ]]; then
@@ -113,12 +124,14 @@ alias gcia='git commit --amend -C HEAD'
 function gcim() {
   msg="${@: -1}"
   git commit "${@: 1:$(($#-1))}" -m "${msg:-+++}"
+  unset msg
 }
 alias gciac='git commit --amend -c HEAD'
 alias gciap='git commit --amend -C HEAD && git push -f'
 function gcimp() {
   msg=${1:-+++}
   git commit -m "$msg" && git push ${@:2}
+  unset msg
 }
 alias gclo='git clone'
 function gcls() {
@@ -149,6 +162,7 @@ function gld() {
     diff_branch="${current_branch}...${upstream}"
   fi
   git log --left-right --graph --oneline "$diff_branch"
+  unset diff_branch current_branch upstream
 }
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
@@ -179,6 +193,7 @@ function gsw() {
   fi
   git update-index --skip-worktree "${@: 1:$(($#-1))}" $file
   glsw
+  unset file
 }
 function gnsw() {
   # exists in current dir
@@ -189,6 +204,7 @@ function gnsw() {
   fi
   git update-index --no-skip-worktree "${@: 1:$(($#-1))}" $file
   glsw
+  unset file
 }
 function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
@@ -450,7 +466,7 @@ EOT
     cat | cut -d'/' -f "${level}" | sort | uniq
   fi
   # echo $command
-  unset pre_opts debug key level
+  unset USAGE pre_opts debug key level
 }
 function mktouch() {
   if [ $# -lt 1 ]; then
@@ -516,6 +532,7 @@ function dfa() {
   else
     echo 'definition not found'
   fi
+  unset info _alias
 }
 function ssp() {
   cd "${snippets_dir}/ssh_keys"
@@ -552,6 +569,7 @@ function ssp() {
   cd - &>/dev/null
   tput sgr0
   # for more tput usage; see https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux#answer-20983251
+  unset back_dir
 }
 function sss() {
   eval `ssh-agent` #`` usage detail see https://serverfault.com/questions/547923/running-ssh-agent-from-a-shell-script?answertab=votes#answer-705635
@@ -582,6 +600,7 @@ function gref() {
   fi
   _pre="$_pre --color=always -R"
   grep $_pre "$_kw" * ${_opts} | less
+  unset _pre _kw _opts
 }
 
 eval "source ${snippets_dir}/exports"

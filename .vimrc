@@ -182,20 +182,20 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 
 " If php-cs-fixer is in $PATH, you don't need to define line below
-" let g:php_cs_fixer_path = "~/php-cs-fixer.phar" " define the path to the php-cs-fixer.phar
+" let g:php_cs_fixer_path = "php-cs-fixer" " define the path to the php-cs-fixer.phar
 
 " If you use php-cs-fixer version 1.x
-let g:php_cs_fixer_level = "symfony"                   " options: --level (default:symfony)
-let g:php_cs_fixer_config = "default"                  " options: --config
+" let g:php_cs_fixer_level = "symfony"                   " options: --level (default:symfony)
+" let g:php_cs_fixer_config = '/root/configs/.php_cs'        " options: --config
 " If you want to define specific fixers:
 "let g:php_cs_fixer_fixers_list = "linefeed,short_tag" " options: --fixers
-"let g:php_cs_fixer_config_file = '.php_cs'            " options: --config-file
+" let g:php_cs_fixer_config_file = '/root/configs/.php_cs'            " options: --config-file
 " End of php-cs-fixer version 1 config params
 
 " If you use php-cs-fixer version 2.x
-let g:php_cs_fixer_rules = "@Symfony"          " options: --rules (default:@PSR2)
+" let g:php_cs_fixer_rules = "@Symfony"          " options: --rules (default:@PSR2)
 "let g:php_cs_fixer_cache = ".php_cs.cache" " options: --cache-file
-"let g:php_cs_fixer_config_file = '.php_cs' " options: --config
+let g:php_cs_fixer_config_file = '/root/configs/.php_cs' " options: --config
 " End of php-cs-fixer version 2 config params
 
 let g:php_cs_fixer_php_path = "php"               " Path to PHP

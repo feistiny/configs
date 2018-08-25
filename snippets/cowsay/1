@@ -1,0 +1,2 @@
+exec > >(while IFS= read -d '' -r line; do if [[ -n $line ]]; then echo; printf "%s\n" "$line" | cowsay; fi; done)
+PROMPT_COMMAND='printf "\0"'
