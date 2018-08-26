@@ -44,6 +44,7 @@ if filereadable(vim_plug_path)
   Plug 'Valloric/YouCompleteMe'
   Plug 'alvan/vim-php-manual'
   Plug 'wesQ3/vim-windowswap'
+  Plug 'editorconfig/editorconfig-vim'
 
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
@@ -152,6 +153,8 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_filetype_specific_completion_to_disable = {
       \ 'gitcommit': 1
       \}
+
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_start_word_key      = '<C-n>'
@@ -566,6 +569,7 @@ set statusline=[w%{winnr()}]\ [b%n]\ %f%m%r%h\ %{PasteForStatusline()}
 
 """项目文件快捷打开,模糊匹配<<<
 " file finder mapping
+let g:ctrlp_show_hidden = 1
 let g:ctrlp_map = "<leader>e"
 " tags (symbols) in current file finder mapping
 nnoremap <leader>b :CtrlPBuffer<CR>
@@ -683,7 +687,7 @@ function! CscopeToTmp(opt, ...)
   exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
 endfunction
 
-
+map <Leader>r :call Run()<CR>
 func! Run()
   let type = b:current_syntax
   echom type
@@ -702,7 +706,19 @@ func! Run()
   endif
 endfunc
 
-map <Leader>r :call Run()<CR>
+nnoremap <leader>pcs :call SwitchAutoPHPCsFixer()<cr>
+fun! SwitchAutoPHPCsFixer()
+  let b:open = 0
+  if b:open == 1
+    exe "aug! autoPhpCsFxier"
+  elseif b:open == 0
+    aug autoPhpCsFxier
+      au!
+      au BufWritePost *.php call PhpCsFixerFixFile()
+    aug END
+    let b:open = 1
+  endif
+endf
 
 """自定义abbr<<<
 iabbr liu liu(1);
@@ -724,3 +740,5 @@ autocmd FileType json vnoremap <buffer> tf :call RangeJsonBeautify()<cr>
 autocmd FileType jsx vnoremap <buffer> tf :call RangeJsxBeautify()<cr>
 autocmd FileType html vnoremap <buffer> tf :call RangeHtmlBeautify()<cr>
 autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
+
+set formatoptions-=cro
