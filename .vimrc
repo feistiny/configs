@@ -45,6 +45,7 @@ if filereadable(vim_plug_path)
   Plug 'alvan/vim-php-manual'
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
+  " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
@@ -144,7 +145,7 @@ nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>"
 let g:ycm_key_list_stop_completion = ['<C-q>']
 let g:ycm_key_invoke_completion = '<C-z>'
 let g:ycm_semantic_triggers = {}
-let g:ycm_semantic_triggers.php = 
+let g:ycm_semantic_triggers.php =
                         \ ['->', '::', '(', 'use ', 'namespace ', '\']
 let g:ycm_auto_trigger = 1
 let g:ycm_key_list_select_completion=[]
@@ -249,12 +250,7 @@ nmap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
 nmap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
 """根据文件类型做不同设置
 
-"""打开代码折叠<<<
-" if has('fdm')
-  set fdm=indent
-  set foldlevel=99
-" endif
-"""打开代码折叠
+nnoremap <leader>fl :set fdm=indent \| set foldlevel=01
 
 """ html标签首尾跳转<<<
 runtime macros/matchit.vim
@@ -265,7 +261,7 @@ set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
 set hlsearch "高亮搜索
 set number "显示行号
-" set relativenumber
+set relativenumber
 set nowrap "不换行
 set so=3 "离屏幕边缘还有3行开始滚屏
 
@@ -290,7 +286,7 @@ command! -bang Tabcloseleft call TabCloseLeft('<bang>')
 """ custom func set foldcolumn
 fun! s:setfoldcolumn(...)
   exe 'set foldcolumn=' . a:1
-endf 
+endf
 command! -nargs=1 SetFoldColumn call s:setfoldcolumn(<f-args>)
 nnoremap <leader>tc :SetFoldColumn 0
 """
@@ -311,31 +307,69 @@ fun! s:SwapCurrentWindowToTarget(...)
   endif
 endf
 command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
-nnoremap <leader>sw :SwapTwoWindows 
+nnoremap <leader>sw :SwapTwoWindows 0
 """
 
-""" delete(move) window to the target
-fun! s:MoveCurrentWindowToTarget(...)
-  let cur = winnr()
+""" move(delete) window to the other
+fun! MoveCurrentWindowToTarget(split, copy, ...)
+  let l:cur_winnr = winnr()
+  let l:split_mode = a:split == '' ? 'e' : a:split
+  let l:copy_mode = a:copy == '' ? 0 : 1
+
+  " move one to the other
   if a:0 == 2
-    let _buf1 = winbufnr(a:1)
-    echom _buf1
-    " move another
+    let l:from_winnr = a:1
+    let l:to_winnr = a:2
+    let l:from_bufnr = winbufnr(a:1)
+
     exe 'normal mZ'
-    exe a:2 . 'windo e #' . _buf1
-    exe cur . 'windo exe "normal ' . a:1 . 'c"'
+    exe l:to_winnr . 'windo ' . l:split_mode . ' #' . l:from_bufnr
+    if l:copy_mode == 0
+      exe l:cur_winnr . 'windo exe "normal ' . l:from_winnr . 'c"'
+    endif
     exe 'normal `Z'
   elseif a:0 == 1
-    let _bcur = bufnr("%")
-    " move the current
+    let l:to_winnr = a:1
+    let l:cur_bufnr = bufnr("%")
+
+    if a:split != ''
+      echom 'split:' . l:split_mode
+      " refresh cur_winnr
+      if l:to_winnr == l:cur_winnr
+        echom '='
+        return
+      elseif l:to_winnr < l:cur_winnr
+        let l:cur_winnr+=1
+        echom '+'
+      endif
+    else
+      echom 'e'
+      if l:to_winnr == l:cur_winnr
+        return
+      endif
+    endif
+
+    " move current to the other
     exe 'normal mz'
-    exe a:1 . 'windo e #' . _bcur
-    exe 'normal ' . cur . 'c'
+    exe l:to_winnr . 'windo ' . l:split_mode . ' #' . l:cur_bufnr
+    if l:copy_mode == 0
+      exe 'normal ' . l:cur_winnr . 'c'
+    endif
     exe 'normal `z'
   endif
 endf
-command! -nargs=+ MoveTwoWindows call s:MoveCurrentWindowToTarget(<f-args>)
-nnoremap <leader>dw :MoveTwoWindows 
+command! -nargs=+ MoveTwoWindows call MoveCurrentWindowToTarget('', '',  <f-args>)
+nnoremap <leader>dw :MoveTwoWindows 0
+command! -nargs=+ MoveTwoWindowsSplit call MoveCurrentWindowToTarget('sp', '',  <f-args>)
+nnoremap <leader>dws :MoveTwoWindowsSplit 0
+command! -nargs=+ MoveTwoWindowsVerticalSplit call MoveCurrentWindowToTarget('vsp', '', <f-args>)
+nnoremap <leader>dwv :MoveTwoWindowsVerticalSplit 0
+command! -nargs=+ CopyTwoWindows call MoveCurrentWindowToTarget('', 1, <f-args>)
+nnoremap <leader>yw :CopyTwoWindows 0
+command! -nargs=+ CopyTwoWindowsSplit call MoveCurrentWindowToTarget('sp', 1, <f-args>)
+nnoremap <leader>yws :CopyTwoWindowsSplit 0
+command! -nargs=+ CopyTwoWindowsVerticalSplit call MoveCurrentWindowToTarget('vsp', 1, <f-args>)
+nnoremap <leader>ywv :CopyTwoWindowsVerticalSplit 0
 """
 
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
@@ -496,7 +530,7 @@ nmap <leader>qn :cn<CR>
 nmap <leader>qp :cp<CR>
 nmap <leader>qc :ccl<CR>
 nmap <leader>qo :copen<CR>
-nmap <leader>qt :cc 
+nmap <leader>qt :cc
 nnoremap <C-p> <C-w><C-p>
 nnoremap <C-S> :w<CR><Left> "快速保存改动
 inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动

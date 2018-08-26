@@ -135,18 +135,18 @@ function gcimp() {
 }
 alias gclo='git clone'
 function gcls() {
-  git clone --single-branch -b "$2" "$1" 
+  git clone --single-branch -b "$2" "$1"
 }
 alias gcle='git clean'
 alias gco='git checkout'
-function gdfcf() {
-  git diff --cached "*${1}*"
-}
+alias gdf='git diff --ws-error-highlight=new,old'
+alias gdfc='gdf --cached'
 function gdff() {
-  git diff "${@: 1:$(($#-1))}" "*${@: -1}*"
+  gdf "${@: 1:$(($#-1))}" "*${@: -1}*"
 }
-alias gdfc='git diff --cached'
-alias gdf='git diff'
+function gdfcf() {
+  gdf --cached "*${1}*"
+}
 alias gfe='git fetch'
 alias gl='git log --oneline'
 alias glgs='git log -S'
@@ -237,8 +237,8 @@ function gsbcf() {
   then
     echo 'remote not exists'
   fi
-  git config remote.${remote}.prefix ${prefix} 
-  git config remote.${remote}.branch ${branch} 
+  git config remote.${remote}.prefix ${prefix}
+  git config remote.${remote}.branch ${branch}
   git config --get-regexp remote.${remote}
   unset prefix remote branch
 }
@@ -249,7 +249,7 @@ function gsbps() {
 function gsbpl() {
   pull_push=${pull_push:-pull}
   remote=$1
-  
+
   # check if remote exists
   git ls-remote --exit-code ${remote} &>/dev/null
   if test $? = 0
@@ -311,7 +311,7 @@ alias dps='docker ps'
 alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi'
 alias dstp='docker stop $(docker ps -aq)'
-alias dtp='docker top' 
+alias dtp='docker top'
 
 
 function dlog() {
@@ -335,7 +335,7 @@ function dexla() {
 }
 
 function grepkill() {
-  # TODO reuse the grep results 
+  # TODO reuse the grep results
   ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep
   read -p '确定杀死这些进程？'
   ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep | \
@@ -374,7 +374,7 @@ then
   eval "find ${snippets_dir} ! -name '.*' ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2'"
   update_complete_for_snippets
 else
-  cat ${snippets_dir}/$1 
+  cat ${snippets_dir}/$1
 fi
 
 }
@@ -382,7 +382,7 @@ fi
 alias edits='edit_snippets'
 function edit_snippets() {
   mktouch "${snippets_dir}/$1"
-  eval "vim -u ${shell_dir}/.vimrc ${snippets_dir}/$1" 
+  eval "vim -u ${shell_dir}/.vimrc ${snippets_dir}/$1"
   update_complete_for_snippets
 }
 alias sets='set_snippets'
@@ -427,7 +427,7 @@ EOT
     return
   fi
   pre_opts=''
-  while [ $# -gt 0 ] 
+  while [ $# -gt 0 ]
   do
   key="$1"
   case $key in
@@ -454,12 +454,12 @@ EOT
   esac
   done
   command="git ls-tree --name-only $pre_opts HEAD"
-  if [ -z "${debug+x}" ] 
+  if [ -z "${debug+x}" ]
   then
     command+=' 2>/dev/null'
   fi
   eval "$command" |
-  if [ -z ${level+x} ] 
+  if [ -z ${level+x} ]
   then
     cat
   else
