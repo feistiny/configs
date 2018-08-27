@@ -397,6 +397,22 @@ function glso() {
   git ls-files -o ${_opts}
   unset _opts
 }
+function glsot() {
+  _files=${*-$(glso)}
+  _pattern=${@#}
+  if [[ -n $_files ]]; then
+    tail -n +1 -- $_files | less ${_pattern---pattern='==>.*<=='}
+  fi
+  unset _files _pattern
+}
+function glsom() {
+  _files=${*-$(glso)}
+  _pattern=${@#}
+  if [[ -n $_files ]]; then
+    more $_files | less ${_pattern---pattern='==>.*<=='}
+  fi
+  unset _opts _files
+}
 function gls() {
   USAGE=$(cat << EOT
 USAGE:
