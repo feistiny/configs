@@ -507,6 +507,7 @@ let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
 au InsertEnter * :set tags=
+au InsertLeave * :set tags=.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -742,13 +743,16 @@ endfunc
 
 nnoremap <leader>pcs :call SwitchAutoPHPCsFixer()<cr>
 fun! SwitchAutoPHPCsFixer()
-  let b:open = 0
+  let b:open = get(b:, 'open', 0)
   if b:open == 1
-    exe "aug! autoPhpCsFxier"
+    exe "au! autoPhpCsFxier BufWritePost *.php"
+    let b:open = 0
   elseif b:open == 0
     aug autoPhpCsFxier
       au!
-      au BufWritePost *.php call PhpCsFixerFixFile()
+      " todo, when auto fix, php will lose syntax highlighting
+      au BufWritePost *.php silent! call PhpCsFixerFixFile()
+      au BufWritePost *.php :e!
     aug END
     let b:open = 1
   endif
