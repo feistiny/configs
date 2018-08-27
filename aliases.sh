@@ -392,7 +392,11 @@ function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
-alias guls='git ls-files --others --ignore --exclude-standard'
+function glso() {
+  _opts=${*---exclude-standard}
+  git ls-files -o ${_opts}
+  unset _opts
+}
 function gls() {
   USAGE=$(cat << EOT
 USAGE:
