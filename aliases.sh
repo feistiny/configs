@@ -37,6 +37,17 @@ function lesp() {
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
+function pcsd() {
+  _dir="${*:-.}"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
+  unset _dir
+}
+function pcsd() {
+  _dir="${*:-.}"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --dry-run --diff --diff-format=udiff --allow-risky yes "$_dir" | less
+  unset _dir
+}
+alias aiy='apt install -y'
 
 set -o emacs
 if [[ -z "$exec_in_vim" ]]; then
@@ -113,27 +124,29 @@ alias gcia='git commit --amend -C HEAD'
 function gcim() {
   msg="${@: -1}"
   git commit "${@: 1:$(($#-1))}" -m "${msg:-+++}"
+  unset msg
 }
 alias gciac='git commit --amend -c HEAD'
 alias gciap='git commit --amend -C HEAD && git push -f'
 function gcimp() {
   msg=${1:-+++}
   git commit -m "$msg" && git push ${@:2}
+  unset msg
 }
 alias gclo='git clone'
 function gcls() {
-  git clone --single-branch -b "$2" "$1" 
+  git clone --single-branch -b "$2" "$1"
 }
 alias gcle='git clean'
 alias gco='git checkout'
-function gdfcf() {
-  git diff --cached "*${1}*"
-}
+alias gdf='git diff --ws-error-highlight=new,old'
+alias gdfc='gdf --cached'
 function gdff() {
-  git diff "${@: 1:$(($#-1))}" "*${@: -1}*"
+  gdf "${@: 1:$(($#-1))}" "*${@: -1}*"
 }
-alias gdfc='git diff --cached'
-alias gdf='git diff'
+function gdfcf() {
+  gdf --cached "*${1}*"
+}
 alias gfe='git fetch'
 alias gl='git log --oneline'
 alias glgs='git log -S'
@@ -149,6 +162,7 @@ function gld() {
     diff_branch="${current_branch}...${upstream}"
   fi
   git log --left-right --graph --oneline "$diff_branch"
+  unset diff_branch current_branch upstream
 }
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
@@ -179,6 +193,7 @@ function gsw() {
   fi
   git update-index --skip-worktree "${@: 1:$(($#-1))}" $file
   glsw
+  unset file
 }
 function gnsw() {
   # exists in current dir
@@ -189,6 +204,7 @@ function gnsw() {
   fi
   git update-index --no-skip-worktree "${@: 1:$(($#-1))}" $file
   glsw
+  unset file
 }
 function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
@@ -221,8 +237,8 @@ function gsbcf() {
   then
     echo 'remote not exists'
   fi
-  git config remote.${remote}.prefix ${prefix} 
-  git config remote.${remote}.branch ${branch} 
+  git config remote.${remote}.prefix ${prefix}
+  git config remote.${remote}.branch ${branch}
   git config --get-regexp remote.${remote}
   unset prefix remote branch
 }
@@ -233,7 +249,7 @@ function gsbps() {
 function gsbpl() {
   pull_push=${pull_push:-pull}
   remote=$1
-  
+
   # check if remote exists
   git ls-remote --exit-code ${remote} &>/dev/null
   if test $? = 0
@@ -295,7 +311,7 @@ alias dps='docker ps'
 alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi'
 alias dstp='docker stop $(docker ps -aq)'
-alias dtp='docker top' 
+alias dtp='docker top'
 
 
 function dlog() {
@@ -319,7 +335,7 @@ function dexla() {
 }
 
 function grepkill() {
-  # TODO reuse the grep results 
+  # TODO reuse the grep results
   ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep
   read -p '确定杀死这些进程？'
   ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep | \
@@ -358,7 +374,7 @@ then
   eval "find ${snippets_dir} ! -name '.*' ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2'"
   update_complete_for_snippets
 else
-  cat ${snippets_dir}/$1 
+  cat ${snippets_dir}/$1
 fi
 
 }
@@ -366,7 +382,7 @@ fi
 alias edits='edit_snippets'
 function edit_snippets() {
   mktouch "${snippets_dir}/$1"
-  eval "vim -u ${shell_dir}/.vimrc ${snippets_dir}/$1" 
+  eval "vim -u ${shell_dir}/.vimrc ${snippets_dir}/$1"
   update_complete_for_snippets
 }
 alias sets='set_snippets'
@@ -431,7 +447,7 @@ EOT
     return
   fi
   pre_opts=''
-  while [ $# -gt 0 ] 
+  while [ $# -gt 0 ]
   do
   key="$1"
   case $key in
@@ -458,19 +474,19 @@ EOT
   esac
   done
   command="git ls-tree --name-only $pre_opts HEAD"
-  if [ -z "${debug+x}" ] 
+  if [ -z "${debug+x}" ]
   then
     command+=' 2>/dev/null'
   fi
   eval "$command" |
-  if [ -z ${level+x} ] 
+  if [ -z ${level+x} ]
   then
     cat
   else
     cat | cut -d'/' -f "${level}" | sort | uniq
   fi
   # echo $command
-  unset pre_opts debug key level
+  unset USAGE pre_opts debug key level
 }
 function mktouch() {
   if [ $# -lt 1 ]; then
@@ -536,6 +552,7 @@ function dfa() {
   else
     echo 'definition not found'
   fi
+  unset info _alias
 }
 function ssp() {
   cd "${snippets_dir}/ssh_keys"
@@ -572,6 +589,7 @@ function ssp() {
   cd - &>/dev/null
   tput sgr0
   # for more tput usage; see https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux#answer-20983251
+  unset back_dir
 }
 function sss() {
   eval `ssh-agent` #`` usage detail see https://serverfault.com/questions/547923/running-ssh-agent-from-a-shell-script?answertab=votes#answer-705635
@@ -588,8 +606,22 @@ function sss() {
 function sst() {
   ssh "$(cat ${snippets_dir}/$1)"
 }
-
-
+function join_by() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+function gref() {
+  _pre='-rinHP'
+  _kw="${@: -1}"
+  _opts="${@: 1:$(($#-1))}"
+  if [[ $_kw =~ [A-Z] ]]; then
+    _pre=${_pre//i}
+  fi
+  _pre="$_pre --color=always -R"
+  grep $_pre "$_kw" * ${_opts} | less
+  unset _pre _kw _opts
+}
 
 eval "source ${snippets_dir}/exports"
 if [[ "$-" =~ i ]]; then
