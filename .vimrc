@@ -547,8 +547,8 @@ nnoremap <leader>ls :sp #<CR>
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 map <leader>c :CtrlPClearCache<cr>
-vnoremap // y/<C-R>"<CR> "向后搜索当前的选择
-vnoremap ?? y?<C-R>"<CR> "向前搜索当前的选择
+vnoremap // y/<C-R>"<CR>N "向后搜索当前的选择
+vnoremap ?? y?<C-R>"<CR>N "向前搜索当前的选择
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
