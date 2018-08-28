@@ -234,6 +234,8 @@ set expandtab "有关tab的操作转成空格
 set hidden "切换buffer时,原来的buffer撤销记录不清空
 set encoding=utf-8
 set nobomb "去掉bom
+set autoindent
+set smartindent
 
 """根据文件类型做不同设置<<<
 let g:user_emmet_install_global = 0
