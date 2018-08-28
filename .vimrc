@@ -263,7 +263,7 @@ set hlsearch "高亮搜索
 set number "显示行号
 set relativenumber
 set nowrap "不换行
-set so=3 "离屏幕边缘还有3行开始滚屏
+set scrolloff=1 "离屏幕边缘几行开始滚屏
 
 """关闭当前标签左/右的所有标签
 function! TabCloseRight(bang)

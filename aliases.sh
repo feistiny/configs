@@ -166,8 +166,16 @@ function gld() {
 }
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
-alias gpl='git pull'
-alias gplr='git pull --rebase'
+function gpl() {
+  current_branch=$(git rev-parse --abbrev-ref HEAD);
+  remote=$(git config --get-regexp "branch\.$current_branch\.remote" | sed -e "s/^.* //")
+  if [[ -n $current_branch ]] && [[ -n $remote ]]; then
+    git pull "$remote" "$current_branch"
+  else
+    git pull $*
+  fi
+}
+alias gplr='gpl --rebase'
 alias gps='git push'
 alias grb='git rebase'
 alias grbc='git rebase --continue'
