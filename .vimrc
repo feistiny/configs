@@ -45,6 +45,7 @@ if filereadable(vim_plug_path)
   Plug 'alvan/vim-php-manual'
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
+  Plug 'Olical/vim-enmasse'
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
@@ -757,6 +758,13 @@ fun! SwitchAutoPHPCsFixer()
     let b:open = 1
   endif
 endf
+
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
 
 """自定义abbr<<<
 iabbr liu liu(1);
