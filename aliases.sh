@@ -140,9 +140,11 @@ function gcls() {
 alias gcle='git clean'
 alias gco='git checkout'
 alias gdf='git diff --ws-error-highlight=new,old'
-alias gdfc='gdf --cached'
+alias gdfc='gdff --cached'
 function gdff() {
-  gdf "${@: 1:$(($#-1))}" "*${@: -1}*"
+  git_last $@
+  gdf $_rest "$_last"
+  git_last_unset
 }
 function gdfcf() {
   gdf --cached "*${1}*"
@@ -219,11 +221,14 @@ function glsw() {
 }
 alias gsm='git submodule'
 function git_last() {
-  if [[ $# -gt 1 ]]; then
+  if [[ $# -gt 1 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last="*${@: -1}*"
     _rest="${@: 1:$(($#-1))}"
-  elif [[ $# -gt 0 ]]; then
+  elif [[ $# -gt 0 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last="*${@: -1}*"
+  elif [[ ${@: -1} =~ ^- ]]; then
+    _last="*"
+    _rest="$@"
   else
     _last="*"
   fi
