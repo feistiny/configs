@@ -154,7 +154,9 @@ alias gl='git log --oneline'
 alias glgs='git log -S'
 alias glsp='git log -p -S'
 function glp() {
-  git log --oneline -p "${@: 1:$(($#-1))}" "*${@: -1}*"
+  git_last $@
+  git log --oneline -p $_rest "$_last"
+  git_last_unset
 }
 function gld() {
   diff_branch="$1"
