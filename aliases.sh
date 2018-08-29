@@ -218,11 +218,25 @@ function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
 }
 alias gsm='git submodule'
+function git_last() {
+  if [[ $# -gt 1 ]]; then
+    _last="*${@: -1}*"
+    _rest="${@: 1:$(($#-1))}"
+  elif [[ $# -gt 0 ]]; then
+    _last="*${@: -1}*"
+  else
+    _last="*"
+  fi
+  _rest=${_rest-}
+}
+function git_last_unset() {
+  unset _last _rest
+}
 function gad() {
-  to_add='*'
-  if [ -n "${1}" ]; then to_add=$1; fi
-  git add "*${to_add}*" ${@:2}
-  unset to_add
+  git_last $@
+  git add $_rest "${_last}"
+  gst
+  git_last_unset
 }
 function grtad() {
   url=$2
@@ -234,7 +248,9 @@ function grtad() {
   unset url url_in_remote
 }
 function grh() {
- git reset HEAD  "${@: 1:$(($#-1))}" "*${@: -1}*"
+  git_last $@
+  git reset HEAD $_rest "$_last"
+  git_last_unset
 }
 function gsbcf() {
   prefix=$1

@@ -768,6 +768,12 @@ function! ExecuteMacroOverVisualRange()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 
+nnoremap <leader>d. :call DeleteFileAndCloseBuffer()<CR>
+fun! DeleteFileAndCloseBuffer()
+  let choice = confirm("Delete file and close buffer?", "&Do it!\n&Nonono", 1)
+  if choice == 1 | call delete(expand('%:p')) | bdelete! | endif
+endfun
+
 """自定义abbr<<<
 iabbr liu liu(1);
 hi Comment ctermfg=darkgray
