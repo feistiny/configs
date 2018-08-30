@@ -561,14 +561,28 @@ function rebins() {
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
 }
-function mktf() {
-  if [[ -e "$1" && $# = 2 ]]; then
-    touch "$1/$(date +%Y-%m-%d-%H-%M-%S)-$2"
-  elif [[ $# = 1 ]]; then
-    touch "$(date +%Y-%m-%d-%H-%M-%S)-$1"
+function mkver() {
+  if [[ -e $1 ]]; then
+    if [[ $1 =~ \. ]]; then
+      _filename=${1%.*}
+      _extension=${1##*.}
+    else
+      _filename=$1
+    fi
+  else
+    echo 'no found'
+    return
   fi
-  # mktemp --tmpdir=$(pwd) -t "${name}.XXXXXX${subfix}"
-  # unset name subfix
+  if [[ -n $_filename ]]; then
+    _add="-$(date +%Y%m%d)-XXX"
+  else
+    _add="$(date +%Y%m%d)-XXX"
+  fi
+  _extension=${_extension:=}
+  _tmp_filename="$_filename${_add}${_extension:+.$_extension}"
+  _real_tmp=$(mktemp --tmpdir=$(pwd) -t "$_tmp_filename")
+  cp $1 $_real_tmp
+  unset _filename _extension _tmp_filename _add _real_tmp
 }
 function mktmp() {
   name=${1-tmp}
