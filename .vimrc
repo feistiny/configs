@@ -251,8 +251,8 @@ au BufNewFile,BufRead *.php set filetype=php
 au BufNewFile,BufRead *.py set filetype=python
 au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
 autocmd FileType html,css,vue,php EmmetInstall
-autocmd FileType html,php,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType sh,zsh,yaml,markdown,javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+autocmd FileType html,php,javascript,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType sh,zsh,yaml,markdown,json setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 autocmd BufWritePost *.py setlocal et autoindent
 autocmd BufWritePost *.lisp setlocal et autoindent
 nmap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
@@ -740,7 +740,7 @@ func! Run()
   elseif type == "bash"
     exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
   elseif type == "python"
-    exec "!clear;$(which python) %"
+    exec "!clear;$(which python) % | less"
   elseif type == "php"
     exec "!clear;$(which php) %"
   elseif type == "javascript"
@@ -801,4 +801,4 @@ autocmd FileType jsx vnoremap <buffer> tf :call RangeJsxBeautify()<cr>
 autocmd FileType html vnoremap <buffer> tf :call RangeHtmlBeautify()<cr>
 autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
 
-set formatoptions-=cro
+autocmd FileType * set formatoptions-=cro
