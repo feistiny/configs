@@ -643,14 +643,17 @@ function join_by() {
   echo "$*"
 }
 function gref() {
-  _pre='-rinHP'
+  _pre='-rinH'
   _kw="${@: -1}"
   _opts="${@: 1:$(($#-1))}"
   if [[ $_kw =~ [A-Z] ]]; then
     _pre=${_pre//i}
   fi
+  if ! [[ $_kw =~ ^[A-Za-z0-9]+$ ]]; then
+    _pre="${_pre}P"
+  fi
   _pre="$_pre --color=always -R"
-  grep $_pre "$_kw" * ${_opts} | less
+  grep $_pre ${_opts} "$_kw" | less
   unset _pre _kw _opts
 }
 
