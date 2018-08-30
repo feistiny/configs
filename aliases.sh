@@ -139,11 +139,11 @@ function gcls() {
 }
 alias gcle='git clean'
 alias gco='git checkout'
-alias gdf='git diff --ws-error-highlight=new,old'
+alias gdf="git diff --color $(git diff --ws-error-highlight=new,old &>/dev/null && echo --ws-error-highlight=new,old)"
 alias gdfc='gdff --cached'
 function gdff() {
   git_last $@
-  gdf $_rest "$_last"
+  gdf $_rest $_last
   git_last_unset
 }
 function gdfcf() {
@@ -155,7 +155,7 @@ alias glgs='git log -S'
 alias glsp='git log -p -S'
 function glp() {
   git_last $@
-  git log --oneline -p $_rest "$_last"
+  git log --oneline -p $_rest $_last
   git_last_unset
 }
 function gld() {
@@ -222,6 +222,7 @@ function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
 }
 alias gsm='git submodule'
+alias gsmu='gsm update --init --recursive && rebins'
 function git_last() {
   if [[ $# -gt 1 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last="*${@: -1}*"
@@ -256,7 +257,7 @@ function grtad() {
 }
 function grh() {
   git_last $@
-  git reset HEAD $_rest "$_last"
+  git reset HEAD $_rest $_last
   git_last_unset
 }
 function gsbcf() {
@@ -314,11 +315,12 @@ function gdfl() {
 }
 
 #git alias autocomplete
-[ -f /usr/share/bash-completion/completions/git ] && . /usr/share/bash-completion/completions/git
-while read line
-do
-  __git_complete ${line%%:*} ${line##*:}
-done < <(cat <<EOF
+if [[ -f /usr/share/bash-completion/completions/git ]]; then
+  . /usr/share/bash-completion/completions/git
+  while read line
+  do
+    __git_complete ${line%%:*} ${line##*:}
+  done < <(cat <<EOF
 gbr:_git_branch
 gco:_git_checkout
 gme:_git_checkout
@@ -330,6 +332,7 @@ gdfc:_git_diff
 gsm:_git_submodule
 EOF
 )
+fi
 
 
 # docker #
@@ -663,6 +666,7 @@ if [[ "$-" =~ i ]]; then
 fi
 
 if [[ -z $(which sempl 2>/dev/null) ]]; then
+  gsmu
   export PATH="${shell_dir}/plugins/.bin:${PATH}"
 fi
 if [[ -x "/usr/local/go/bin/go" ]]; then

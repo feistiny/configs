@@ -3,3 +3,5 @@ git config ${g:+--global} core.filemode false
 git config ${g:+--global} core.editor vim
 git config ${g:+--global} core.excludesfile '${path-~/configs/.gitignore_global}'
 git config ${g:+--global} push.default current
+git config ${g:+--global} color.status auto
+

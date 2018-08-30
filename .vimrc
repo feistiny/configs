@@ -17,6 +17,12 @@ if !filereadable(vim_plug_path)
   let vim_plug_just_installed = 1
 endif
 
+if !filereadable(expand('~/.vim/autoload/pathogen.vim'))
+  echo "Installing pathogen..."
+  echo ""
+  silent !curl -fLo ~/.vim/autoload/pathogen.vim --create-dirs https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+endif
+
 " manually load vim-plug the first time
 if vim_plug_just_installed
   :execute 'source '.fnameescape(vim_plug_path)
@@ -264,7 +270,7 @@ set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
 set hlsearch "高亮搜索
 set number "显示行号
-set relativenumber
+" set relativenumber
 set nowrap "不换行
 set scrolloff=1 "离屏幕边缘几行开始滚屏
 
