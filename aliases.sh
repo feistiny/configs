@@ -229,10 +229,10 @@ function git_last() {
   elif [[ $# -gt 0 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last="*${@: -1}*"
   elif [[ ${@: -1} =~ ^- ]]; then
-    _last="*"
+    _last="."
     _rest="$@"
   else
-    _last="*"
+    _last="."
   fi
   _rest=${_rest-}
 }
