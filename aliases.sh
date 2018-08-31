@@ -222,7 +222,7 @@ function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
 }
 alias gsm='git submodule'
-alias gsmu='gsm update --init --recursive && rebins'
+alias gsmu='gsm update --init --recursive'
 function git_last() {
   if [[ $# -gt 1 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last="*${@: -1}*"
@@ -551,12 +551,13 @@ function straceall() {
 
 alias rebinall="rebin $( ls ${shell_dir}/plugins )"
 function rebins() {
+  gsmu
   if [[ ! -e "${plugins_dir}/.bin" ]]; then
     mkdir -p "${plugins_dir}/.bin"
   fi
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
   ln -sf "${plugins_dir}/sempl/crypttool" "${plugins_dir}/.bin/crypttool"
-  cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj"
+  cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj" 2>/dev/null
 }
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
@@ -679,8 +680,7 @@ if [[ "$-" =~ i ]]; then
   eval "bind -f ${snippets_dir}/inputrc"
 fi
 
-if [[ -z $(which sempl 2>/dev/null) ]]; then
-  gsmu
+if [[ -x "${shell_dir}/plugins/.bin/sempl" ]]; then
   export PATH="${shell_dir}/plugins/.bin:${PATH}"
 fi
 if [[ -x "/usr/local/go/bin/go" ]]; then
