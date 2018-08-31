@@ -442,6 +442,12 @@ function nocolor() {
   sed 's/\x1b\[[0-9;]*m//g'
 }
 
+function glsl() {
+  lh `glsa | grep -v /$`
+}
+function glsa() {
+  git ls-files -o
+}
 function glso() {
   _opts=${*---exclude-standard}
   git ls-files -o ${_opts}
