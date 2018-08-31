@@ -34,6 +34,7 @@ function lesp() {
   fi
   unset out
 }
+alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
@@ -52,6 +53,8 @@ alias aiy='apt install -y'
 set -o emacs
 if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
+  bind '"\e[A":history-search-backward'
+  bind '"\e[B":history-search-forward'
   bind "set show-mode-in-prompt on"
   bind 'set emacs-mode-string "♋ "'
   bind 'set vi-ins-mode-string "☺ "'
