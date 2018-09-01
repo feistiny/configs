@@ -268,7 +268,7 @@ let b:match_words='\<begin\>:\<end\>'
 
 set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
-set hlsearch "高亮搜索
+set hlsearch incsearch "高亮搜索
 set number "显示行号
 " set relativenumber
 set nowrap "不换行
