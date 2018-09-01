@@ -3,6 +3,7 @@ stty -ixon
 export shell_dir="$HOME/configs"
 export plugins_dir="$HOME/configs/plugins"
 export ansible_dir="$HOME/configs/ansible"
+snippets_dir="${shell_dir}/snippets"
 
 # git clone in the root(~) dir #
 
@@ -23,16 +24,23 @@ alias ext="unset HISTFILE && exit"
 alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
+function getSnippetsDirs() {
+  _dirs=(
+  $HOME/.vim/plugged/vim-snippets \
+  ${shell_dir}/UltiSnips \
+  $(pwd)/UltiSnips \
+  )
+  echo ${_dirs[@]}
+  unset _dirs
+}
 function lesp() {
-  out=$(cat ~/.vim/plugged/vim-snippets/snippets/${1-php}.snippets \
-    "${shell_dir}/UltiSnips/${1-php}.snippets" 2>/dev/null);
-  if [[ -n "$out" ]]; then
-    echo "$out" | less
+  _files=$(find $(getSnippetsDirs) -type f -name "${1-php}.snippets");
+  if [[ -n "$_files" ]]; then
+    glsot "$_files"
   else
-    ls ~/.vim/plugged/vim-snippets/snippets/*${1-php}* \
-      ${shell_dir}/UltiSnips/*${1-php}* 2>/dev/null
+    find $(getSnippetsDirs) -type f -name "*${1-php}*.snippets"
   fi
-  unset out
+  unset _files
 }
 alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
@@ -91,10 +99,6 @@ function tmks() {
 }
 alias tmkr='\tmux kill-server'
 
-# easy to change directory #
-alias d='dirs -v'
-alias pu='pushd'
-alias po='popd'
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -399,21 +403,19 @@ echo "$OUT"
 unset target_user from_user
 }
 
-snippets_dir="${shell_dir}/snippets"
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(cd ${snippets_dir}; find . -type f -not -name '.*'  | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst
+  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst
 }
 update_complete_for_snippets
 function get_snippets() {
-if [ -z "${1+x}" ]
-then
-  eval "find ${snippets_dir} ! -name '.*' ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2'"
-  update_complete_for_snippets
-else
-  cat ${snippets_dir}/$1
-fi
-
+  if [ -z "${1+x}" ]
+  then
+    eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2'"
+    update_complete_for_snippets
+  else
+    cat ${snippets_dir}/$1
+  fi
 }
 
 alias edits='edit_snippets'
@@ -437,7 +439,11 @@ function set_snippets_heredoc() {
 }
 alias dels='delete_snippets'
 function delete_snippets() {
-  eval "rm ${snippets_dir}/$1"
+  if [[ $# -eq 0 ]]; then
+    find ${shell_dir} -type l ! -exec test -e {} \; -ok rm {} \;
+  else
+    rm ${snippets_dir}/$1
+  fi
   update_complete_for_snippets
 }
 
@@ -458,19 +464,10 @@ function glso() {
 }
 function glsot() {
   _files=${*-$(glso)}
-  _pattern=${@#}
   if [[ -n $_files ]]; then
     tail -n +1 -- $_files | less ${_pattern---pattern='==>.*<=='}
   fi
   unset _files _pattern
-}
-function glsom() {
-  _files=${*-$(glso)}
-  _pattern=${@#}
-  if [[ -n $_files ]]; then
-    more $_files | less ${_pattern---pattern='==>.*<=='}
-  fi
-  unset _opts _files
 }
 function gls() {
   USAGE=$(cat << EOT
@@ -682,6 +679,26 @@ function gref() {
   _pre="$_pre --color=always -R"
   grep $_pre ${_opts} "$_kw" | less
   unset _pre _kw _opts
+}
+# easy to change directory #
+alias d='dirs -v'
+function init_dirstack() {
+  dirs -c
+  for d in $(cat "${snippets_dir}/.ignore_files/dirstack" | xargs -n1 | tac); do
+    pushd $d 1>/dev/null
+  done
+  popd -0 1>/dev/null
+}
+init_dirstack
+function pu() {
+  pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
+  sets .ignore_files/dirstack ${DIRSTACK[@]}
+  d
+}
+function po() {
+  popd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
+  sets .ignore_files/dirstack ${DIRSTACK[@]}
+  d
 }
 
 eval "source ${snippets_dir}/exports"

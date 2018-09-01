@@ -1,0 +1,4 @@
+apt-get install -y python-software-properties
+add-apt-repository ppa:ondrej/php
+apt-get update
+apt-get install -y php${ver-7.1}
