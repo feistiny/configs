@@ -293,11 +293,17 @@ command! -bang Tabcloseleft call TabCloseLeft('<bang>')
 """
 
 """ custom func set foldcolumn
-fun! s:setfoldcolumn(...)
-  exe 'set foldcolumn=' . a:1
+fun! s:SideColumnToggle()
+  if &number
+    set foldcolumn=0
+    set number!
+  else
+    set foldcolumn=1
+    set number!
+  endif
 endf
-command! -nargs=1 SetFoldColumn call s:setfoldcolumn(<f-args>)
-nnoremap <leader>tc :SetFoldColumn 0
+command! SideColumnToggle call s:SideColumnToggle()
+nnoremap tu :SideColumnToggle<cr>
 """
 
 """ swap two split windows
@@ -544,7 +550,6 @@ nmap <leader>qt :cc
 nnoremap <C-p> <C-w><C-p>
 nnoremap <C-S> :w<CR><Left> "快速保存改动
 inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动
-nnoremap tu :set nu!<CR> "切换行号显示
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
 nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
