@@ -411,11 +411,18 @@ update_complete_for_snippets
 function get_snippets() {
   if [ -z "${1+x}" ]
   then
-    eval "find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2'"
+    _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
+    echo "$_list"
     update_complete_for_snippets
   else
-    cat ${snippets_dir}/$1
+    if [[ ! -f ${snippets_dir}/$1 ]]; then
+      _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
+      echo "$_list" | less --pattern="$1"
+    else
+      cat ${snippets_dir}/$1
+    fi
   fi
+  unset _list
 }
 
 alias edits='edit_snippets'
