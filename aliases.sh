@@ -416,13 +416,19 @@ function get_snippets() {
     update_complete_for_snippets
   else
     if [[ ! -f ${snippets_dir}/$1 ]]; then
-      _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
-      echo "$_list" | less --pattern="$1"
+      _matched_file="$(realpath $(find ${snippets_dir} \( -type f -o -type l \) -a -name *$1*) | xargs -n1 | uniq)"
+      _is_only_one_matched="$(echo "$_matched_file" | wc -l)"
+      if [[ $_is_only_one_matched -eq 1 ]]; then
+        cat $_matched_file
+      else
+        _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
+        echo "$_list" | less --pattern="$1"
+      fi
     else
       cat ${snippets_dir}/$1
     fi
   fi
-  unset _list
+  unset _list _matched_file _is_only_one_matched
 }
 
 alias edits='edit_snippets'
