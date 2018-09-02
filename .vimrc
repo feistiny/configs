@@ -52,6 +52,7 @@ if filereadable(vim_plug_path)
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
+  Plug 'vim-vdebug/vdebug'
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
@@ -67,7 +68,6 @@ if filereadable(vim_plug_path)
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
   Plug 'posva/vim-vue'
   Plug 'pangloss/vim-javascript'
-  " Plug 'm2mdas/phpcomplete-extended'
   Plug 'Shougo/vimproc.vim'
   Plug 'Shougo/unite.vim'
 
@@ -106,7 +106,7 @@ if filereadable(vim_plug_path)
 
   Plug 'plasticboy/vim-markdown' " markdown语法高亮
   Plug 'mzlogin/vim-markdown-toc' " markdown生成文章目录
-  Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
+  " Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
 
   Plug 'terryma/vim-expand-region' " visual扩张到上一层
 
@@ -138,14 +138,17 @@ call pathogen#helptags()
 syntax on "显示语法错误
 filetype plugin indent on
 
-" php laravel complete
-" let g:phpcomplete_index_composer_command='composer'
-" autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
-" let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+let g:vdebug_options = {}
+let g:vdebug_options["port"] = 9000
 
 let g:ycm_collect_identifiers_from_tags_files = 1
 
 let g:windowswap_map_keys = 0 "prevent default bindings
+
+let g:eregex_default_enable = 0
+let g:eregex_forward_delim = "/"
+let g:eregex_backward_delim = "?"
+nnoremap <leader>/ :call eregex#toggle()<CR>
 
 nnoremap <silent> <leader>yw :call WindowSwap#MarkWindowSwap()<CR>
 nnoremap <silent> <leader>pw :call WindowSwap#DoWindowSwap()<CR>
@@ -247,18 +250,27 @@ set smartindent
 
 """根据文件类型做不同设置<<<
 let g:user_emmet_install_global = 0
-au BufNewFile,BufRead *.{tpl,htm} set filetype=html
-au BufNewFile,BufRead *.js set filetype=javascript
-au BufNewFile,BufRead *.php set filetype=php
-au BufNewFile,BufRead *.py set filetype=python
-au BufNewFile,BufRead *.{yml,conf} set filetype=yaml
-autocmd FileType html,css,vue,php EmmetInstall
-autocmd FileType html,php,javascript,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
-autocmd FileType sh,zsh,yaml,markdown,json setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
-autocmd BufWritePost *.py setlocal et autoindent
-autocmd BufWritePost *.lisp setlocal et autoindent
-nmap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
-nmap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
+aug AliasFiletype
+  au!
+  autocmd BufNewFile,BufRead *.{tpl,htm} set filetype=html
+  autocmd BufNewFile,BufRead *.js set filetype=javascript
+  autocmd BufNewFile,BufRead *.php set filetype=php
+  autocmd BufNewFile,BufRead *.py set filetype=python
+  autocmd BufNewFile,BufRead *.{yml,conf} set filetype=yaml
+aug END
+aug EnableEmmet
+  au!
+  autocmd FileType html,css,vue,php EmmetInstall
+aug END
+aug FiletypeIndent
+  au!
+  autocmd FileType html,php,javascript,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
+  autocmd FileType sh,zsh,yaml,markdown,json setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+  autocmd BufWritePost *.py setlocal et autoindent
+  autocmd BufWritePost *.lisp setlocal et autoindent
+aug END
+nnoremap <leader>d2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
+nnoremap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
 """根据文件类型做不同设置
 
 nnoremap <leader>fl :set fdm=indent \| set foldlevel=01
@@ -306,6 +318,12 @@ fun! s:SideColumnToggle()
 endf
 command! SideColumnToggle call s:SideColumnToggle()
 nnoremap tu :SideColumnToggle<cr>
+"""
+
+"""
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p |
+diffthis
+nnoremap <leader>df :DiffOrig<cr>
 """
 
 """ swap two split windows
@@ -376,17 +394,17 @@ fun! MoveCurrentWindowToTarget(split, copy, ...)
   endif
 endf
 command! -nargs=+ MoveTwoWindows call MoveCurrentWindowToTarget('', '',  <f-args>)
-nnoremap <leader>dw :MoveTwoWindows 0
+nnoremap <leader>dw :MoveTwoWindows 
 command! -nargs=+ MoveTwoWindowsSplit call MoveCurrentWindowToTarget('sp', '',  <f-args>)
-nnoremap <leader>dws :MoveTwoWindowsSplit 0
+nnoremap <leader>dws :MoveTwoWindowsSplit 
 command! -nargs=+ MoveTwoWindowsVerticalSplit call MoveCurrentWindowToTarget('vsp', '', <f-args>)
-nnoremap <leader>dwv :MoveTwoWindowsVerticalSplit 0
+nnoremap <leader>dwv :MoveTwoWindowsVerticalSplit 
 command! -nargs=+ CopyTwoWindows call MoveCurrentWindowToTarget('', 1, <f-args>)
-nnoremap <leader>yw :CopyTwoWindows 0
+nnoremap <leader>yw :CopyTwoWindows 
 command! -nargs=+ CopyTwoWindowsSplit call MoveCurrentWindowToTarget('sp', 1, <f-args>)
-nnoremap <leader>yws :CopyTwoWindowsSplit 0
+nnoremap <leader>yws :CopyTwoWindowsSplit 
 command! -nargs=+ CopyTwoWindowsVerticalSplit call MoveCurrentWindowToTarget('vsp', 1, <f-args>)
-nnoremap <leader>ywv :CopyTwoWindowsVerticalSplit 0
+nnoremap <leader>ywv :CopyTwoWindowsVerticalSplit 
 """
 
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
@@ -398,39 +416,39 @@ let g:syntastic_python_flake8_args = '--ignore=E501,E401' ",F821' \"忽略pep8�
 """标签操作<<<
 
 """切换到第几个标签<<<
-map t1 1gt
-map t2 2gt
-map t3 3gt
-map t4 4gt
-map t5 5gt
-map t6 6gt
-map t7 7gt
-map t8 8gt
-map t9 9gt
-map t0 :tablast<CR>
+nnoremap t1 1gt
+nnoremap t2 2gt
+nnoremap t3 3gt
+nnoremap t4 4gt
+nnoremap t5 5gt
+nnoremap t6 6gt
+nnoremap t7 7gt
+nnoremap t8 8gt
+nnoremap t9 9gt
+nnoremap t0 :tablast<CR>
 """切换到第几个标签
 
 " next tab
-map tp :tabp<CR>
+nnoremap tp :tabp<CR>
 " previous tab
-map tn :tabn<CR>
+nnoremap tn :tabn<CR>
 " copy the curent tab to a new one
-map ty :tab split<CR>
+nnoremap ty :tab split<CR>
 " 切换粘贴模式
-map tj :set paste!<CR>
+nnoremap tj :set paste!<CR>
 " 关闭右侧标签
-map tL :Tabcloseleft<CR>
+nnoremap tL :Tabcloseleft<CR>
 " 关闭左边标签
-map tR :Tabcloseright<CR>
+nnoremap tR :Tabcloseright<CR>
 " 关闭当前tab
-map tc :tabc<CR> :tabp<CR>
+nnoremap tc :tabc<CR> :tabp<CR>
 " 移动当前tab到输入序号的位置
-map tm :tabm
+nnoremap tm :tabm
 " 新标签
-map tw :tabnew
-map <F2> :buffers<CR>:b<Space>
+nnoremap tw :tabnew
+nnoremap <leader>lb :buffers<CR>:b<Space>
 
-map <F3> :call AutoFormatCode()<CR>
+nnoremap <leader>af :call AutoFormatCode()<CR>
 func! AutoFormatCode()
   let type = b:current_syntax
   echom type
@@ -472,10 +490,10 @@ let g:ale_set_quickfix = 1
 let g:ale_open_list = 1
 let g:ale_keep_list_window_open = 1
 let g:ale_list_window_size = 5
-nmap <leader>p :ALEFix<CR>
+nnoremap <leader>p :ALEFix<CR>
 " let g:ale_sign_column_always = 1
-nmap <silent> <leader>k <Plug>(ale_previous_wrap)
-nmap <silent> <leader>j <Plug>(ale_next_wrap)
+nnoremap <silent> <leader>k <Plug>(ale_previous_wrap)
+nnoremap <silent> <leader>j <Plug>(ale_next_wrap)
 
 
 let g:javascript_plugin_jsdoc = 1
@@ -501,17 +519,20 @@ augroup END
 " map <leader>p :Prettier<CR>
 
 let g:php_namespace_sort_after_insert = 1
-autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
 function! IPhpInsertUse()
     call PhpInsertUse()
     call feedkeys('a',  'n')
 endfunction
-autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
 function! IPhpExpandClass()
     call PhpExpandClass()
     call feedkeys('a', 'n')
 endfunction
-autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
+aug PhpNamespaceGroup
+  au!
+  autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
+  autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
+  autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
+aug END
 let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
@@ -539,16 +560,16 @@ nnoremap <leader>tr :let g:NERDTreeWinPos="right"<cr>
 nnoremap <silent> <leader>t :Tlist<cr> " 切换taglist
 let Tlist_Use_Right_Window =1 " taglist 右侧显示
 xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-nmap <leader>si :set shellcmdflag=-ic<CR>
-nmap <leader>sc :set shellcmdflag=-c<CR>
-nmap <leader>w :e!<CR>
-nmap <leader>df :NERDTreeFind<CR>
-nmap <leader>qn :cn<CR>
-nmap <leader>qp :cp<CR>
-nmap <leader>qc :ccl<CR>
-nmap <leader>qo :copen<CR>
-nmap <leader>qt :cc
+nnoremap ga <Plug>(EasyAlign)
+nnoremap <leader>si :set shellcmdflag=-ic<CR>
+nnoremap <leader>sc :set shellcmdflag=-c<CR>
+nnoremap <leader>w :e!<CR>
+nnoremap <leader>tf :NERDTreeFind<CR>
+nnoremap <leader>qn :cn<CR>
+nnoremap <leader>qp :cp<CR>
+nnoremap <leader>qc :ccl<CR>
+nnoremap <leader>qo :copen<CR>
+nnoremap <leader>qt :cc
 nnoremap <C-p> <C-w><C-p>
 nnoremap <C-S> :w<CR><Left> "快速保存改动
 inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动
@@ -561,13 +582,13 @@ nnoremap <leader>ls :sp #<CR>
 " nnoremap <leader>bt :MBEToggle<CR>
 nnoremap th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
-map <leader>c :CtrlPClearCache<cr>
+nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap // y/<C-R>"<CR>N "向后搜索当前的选择
 vnoremap ?? y?<C-R>"<CR>N "向前搜索当前的选择
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
-vnoremap pc c"""<c-r>""""<esc>
+vnoremap pc c"""<esc>PO""" 
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c' . <c-r>" . '<esc>
 vnoremap pd2 c" . <c-r>" . "<esc>
@@ -637,16 +658,16 @@ function! CtrlPWithSearchText(search_text, ctrlp_command_end)
   call feedkeys(a:search_text)
 endfunction
 " same as previous mappings, but calling with current word as default text
-nnoremap <leader>wg :call CtrlPWithSearchText(expand('<cword>')<leader> 'BufTag')<CR>
-nnoremap <leader>wG :call CtrlPWithSearchText(expand('<cword>')<leader> 'BufTagAll')<CR>
-nnoremap <leader>wf :call CtrlPWithSearchText(expand('<cword>')<leader> 'Line')<CR>
-nnoremap <leader>we :call CtrlPWithSearchText(expand('<cword>')<leader> '')<CR>
-nnoremap <leader>pe :call CtrlPWithSearchText(expand('<cfile>')<leader> '')<CR>
-nnoremap <leader>wm :call CtrlPWithSearchText(expand('<cword>')<leader> 'MRUFiles')<CR>
+nnoremap <leader>wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
+nnoremap <leader>wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
+nnoremap <leader>wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
+nnoremap <leader>we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
+nnoremap <leader>pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
+nnoremap <leader>wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
 nnoremap <leader>wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
 " don't change working directory
-nmap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
-nmap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>
+nnoremap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
+nnoremap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>
 let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
@@ -666,11 +687,14 @@ aug closeNERDTreeFinally
 aug END
 
 " Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+aug omnifunc_group
+  au!
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+aug END
 
 " Enable heavy omni completion.
 if !exists('g:neocomplcache_force_omni_patterns')
@@ -741,7 +765,7 @@ function! CscopeToTmp(opt, ...)
   exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
 endfunction
 
-map <Leader>r :call Run()<CR>
+nnoremap <Leader>r :call Run()<CR>
 func! Run()
   let type = b:current_syntax
   echom type
@@ -799,16 +823,23 @@ hi Comment ctermfg=darkgray
 let g:dbext_default_profile_mysql_local = 'type=MYSQL:user=root:passwd=mysql272jp@:dbname=mysql'
 
 " html,css,js 美化快捷键
-map tf :call JsBeautify()<cr>
-autocmd FileType javascript noremap <buffer>  tf :call JsBeautify()<cr>
-autocmd FileType json noremap <buffer> tf :call JsonBeautify()<cr>
-autocmd FileType jsx noremap <buffer> tf :call JsxBeautify()<cr>
-autocmd FileType html noremap <buffer> tf :call HtmlBeautify()<cr>
-autocmd FileType css noremap <buffer> tf :call CSSBeautify()<cr>
-autocmd FileType javascript vnoremap <buffer>  tf :call RangeJsBeautify()<cr>
-autocmd FileType json vnoremap <buffer> tf :call RangeJsonBeautify()<cr>
-autocmd FileType jsx vnoremap <buffer> tf :call RangeJsxBeautify()<cr>
-autocmd FileType html vnoremap <buffer> tf :call RangeHtmlBeautify()<cr>
-autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
+nnoremap tf :call JsBeautify()<cr>
+aug JsBeautifyGroup
+  au!
+  autocmd FileType javascript nnoremap <buffer>  tf :call JsBeautify()<cr>
+  autocmd FileType json nnoremap <buffer> tf :call JsonBeautify()<cr>
+  autocmd FileType jsx nnoremap <buffer> tf :call JsxBeautify()<cr>
+  autocmd FileType html nnoremap <buffer> tf :call HtmlBeautify()<cr>
+  autocmd FileType css nnoremap <buffer> tf :call CSSBeautify()<cr>
+  autocmd FileType javascript vnoremap <buffer>  tf :call RangeJsBeautify()<cr>
+  autocmd FileType json vnoremap <buffer> tf :call RangeJsonBeautify()<cr>
+  autocmd FileType jsx vnoremap <buffer> tf :call RangeJsxBeautify()<cr>
+  autocmd FileType html vnoremap <buffer> tf :call RangeHtmlBeautify()<cr>
+  autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
+aug END
 
-autocmd FileType * set formatoptions-=cro
+aug FiletypeAutocmd
+  au!
+  autocmd FileType vim set list
+  autocmd FileType * set formatoptions-=cro
+aug END

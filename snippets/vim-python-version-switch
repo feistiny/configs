@@ -6,4 +6,4 @@
   }
 }
 # vim-python-version-switch
-alias vpvs='update-alternatives --config vim'
+alias vpvs='update-alternatives --config vim && vim --version'
