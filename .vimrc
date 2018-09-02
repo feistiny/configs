@@ -143,6 +143,8 @@ filetype plugin indent on
 " autocmd  FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
 " let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
+let g:ycm_collect_identifiers_from_tags_files = 1
+
 let g:windowswap_map_keys = 0 "prevent default bindings
 
 nnoremap <silent> <leader>yw :call WindowSwap#MarkWindowSwap()<CR>
@@ -521,8 +523,8 @@ let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
-au InsertEnter * :set tags=
-au InsertLeave * :set tags=.tags
+" au InsertEnter * :set tags=
+" au InsertLeave * :set tags=.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
