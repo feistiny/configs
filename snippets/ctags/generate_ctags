@@ -2,7 +2,8 @@
 _cdir=$(pwd)
 _cfp="${_cdir}/.ctagsignore"
 if [[ ! -e "$_cfp" ]]; then
-  return 1
+  echo $_cfp not found
+  exit 1
 fi
 _idir=$(grep -v '^#' $_cfp | \
   grep -v '^!' | xargs

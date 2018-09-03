@@ -125,8 +125,6 @@ if filereadable(vim_plug_path)
 
   Plug 'scrooloose/syntastic' " 语法错误检查
 
-  " Plug 'https://github.com/terryma/vim-multiple-cursors.git' " vim多点编辑
-
   Plug 'junegunn/vim-easy-align' " =号对齐
 
   call plug#end()
@@ -167,17 +165,8 @@ let g:ycm_filetype_specific_completion_to_disable = {
       \ 'gitcommit': 1
       \}
 
-let g:EditorConfig_exclude_patterns = ['fugitive://.*']
-
-let g:multi_cursor_use_default_mapping=0
-let g:multi_cursor_start_word_key      = '<C-n>'
-let g:multi_cursor_select_all_word_key = '<A-n>'
-let g:multi_cursor_start_key           = 'g<C-n>'
-let g:multi_cursor_select_all_key      = 'g<A-n>'
-let g:multi_cursor_next_key            = '<C-n>'
-let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+let g:EditorConfig_exec_path = "/usr/bin/editorconfig"
 
 """初次打开vim,自动安装Plug列表的插件
 if vim_plug_just_installed
@@ -247,6 +236,12 @@ set encoding=utf-8
 set nobomb "去掉bom
 set autoindent
 set smartindent
+set showcmd
+colorscheme desert
+set cursorline
+highlight CursorLine term=bold cterm=bold guibg=Grey40
+set cursorcolumn
+highlight CursorColumn term=bold cterm=bold guibg=Grey40
 
 """根据文件类型做不同设置<<<
 let g:user_emmet_install_global = 0
@@ -322,7 +317,6 @@ nnoremap tu :SideColumnToggle<cr>
 
 """
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p |
-diffthis
 nnoremap <leader>df :DiffOrig<cr>
 """
 
@@ -527,12 +521,13 @@ function! IPhpExpandClass()
     call PhpExpandClass()
     call feedkeys('a', 'n')
 endfunction
-aug PhpNamespaceGroup
+aug php_namespace_mapping
   au!
   autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
   autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
   autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
 aug END
+
 let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
@@ -572,7 +567,7 @@ nnoremap <leader>qo :copen<CR>
 nnoremap <leader>qt :cc
 nnoremap <C-p> <C-w><C-p>
 nnoremap <C-S> :w<CR><Left> "快速保存改动
-inoremap <C-S> <ESC>:w<CR><Left> "快速保存改动
+inoremap <C-S> <ESC>:w<CR> "快速保存改动
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
 nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行

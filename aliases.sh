@@ -3,7 +3,7 @@ stty -ixon
 export shell_dir="$HOME/configs"
 export plugins_dir="$HOME/configs/plugins"
 export ansible_dir="$HOME/configs/ansible"
-snippets_dir="${shell_dir}/snippets"
+export snippets_dir="${shell_dir}/snippets"
 
 # git clone in the root(~) dir #
 
@@ -57,12 +57,25 @@ function pcsd() {
   unset _dir
 }
 alias aiy='apt install -y'
+alias cpec="cp -i ${shell_dir}/.editorconfig ."
+alias mdv='mdv -t 729.8953'
+alias watch='watch --color'
+alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
+function pcsd() {
+  _dir="${*:-.}"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
+  unset _dir
+}
+function pcsd() {
+  _dir="${*:-.}"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --dry-run --diff --diff-format=udiff --allow-risky yes "$_dir" | less
+  unset _dir
+}
+alias aiy='apt install -y'
 
 set -o emacs
 if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
-  bind '"\e[A":history-search-backward'
-  bind '"\e[B":history-search-forward'
   bind "set show-mode-in-prompt on"
   bind 'set emacs-mode-string "♋ "'
   bind 'set vi-ins-mode-string "☺ "'
@@ -74,8 +87,10 @@ if [[ -z "$exec_in_vim" ]]; then
   bind -m vi-insert '"\e\C-y": yank-nth-arg'
   bind -m vi-command '"\e.": yank-last-arg'
   bind -m vi-command '"\e\C-y": yank-nth-arg'
-  bind -m vi-insert '"\C-p": previous-history'
-  bind -m vi-insert '"\C-n": next-history'
+  bind -m vi-insert '"\C-p": history-search-backward'
+  bind -m vi-insert '"\C-n": history-search-forward'
+  bind -m emacs '"\C-p": history-search-backward'
+  bind -m emacs '"\C-n": history-search-forward'
   export VISUAL=vu
 fi
 
@@ -177,6 +192,7 @@ function gld() {
 }
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
+alias gmt='git mergetool'
 function gpl() {
   current_branch=$(git rev-parse --abbrev-ref HEAD);
   remote=$(git config --get-regexp "branch\.$current_branch\.remote" | sed -e "s/^.* //")
@@ -201,6 +217,9 @@ alias gsb='git subtree'
 alias gsh='git stash'
 alias gsl='git stash list'
 alias gsp='git stash pop'
+function gss() {
+  git show stash@{${1-0}}
+}
 alias gst='git status'
 alias gsti='git status --ignored'
 function gsw() {
@@ -227,6 +246,22 @@ function gnsw() {
 }
 function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
+}
+function gvm() {
+  _files="$(git ls-files -m)"
+  if [[ -n $_files ]]; then
+    if [[ $# -gt 1 ]]; then
+      _regex="$(echo $* | sed 's/ /|/g')"
+      _ofiles=$(echo "$_files" | grep -P "$_regex")
+    elif [[ $# -gt 0 ]]; then
+      _ofiles=$(echo "$_files" | grep "$1")
+    else
+      git ls-files -m
+    fi
+    if [[ -n $_ofiles ]]; then
+      vim -p $_ofiles
+    fi
+  fi
 }
 alias gsm='git submodule'
 alias gsmu='gsm update --init --recursive'
@@ -475,6 +510,9 @@ function glso() {
   git ls-files -o ${_opts}
   unset _opts
 }
+function glsm() {
+  git ls-files -m
+}
 function glsot() {
   _files=${*-$(glso)}
   if [[ -n $_files ]]; then
@@ -697,10 +735,14 @@ function gref() {
 alias d='dirs -v'
 function init_dirstack() {
   dirs -c
-  for d in $(cat "${snippets_dir}/.ignore_files/dirstack" | xargs -n1 | tac); do
-    pushd $d 1>/dev/null
-  done
-  popd -0 1>/dev/null
+  _dirstack="$(cat ${snippets_dir}/.ignore_files/dirstack 2>/dev/null)"
+  if [[ -n $_dirstack ]]; then
+    for d in $(echo "$_dirstack" | xargs -n1 | tac); do
+      pushd $d 1>/dev/null
+    done
+    popd -0 1>/dev/null
+  fi
+  unset _dirstack
 }
 init_dirstack
 function pu() {
