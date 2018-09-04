@@ -772,7 +772,7 @@ function init_dirstack() {
   _dirstack="$(cat ${snippets_dir}/.ignore_files/dirstack 2>/dev/null)"
   if [[ -n $_dirstack ]]; then
     for _d in $(echo "$_dirstack" | xargs -n1 | tac); do
-      pushd $(realpath $_d) 1>/dev/null
+      pushd $_d 1>/dev/null
     done
     popd -0 1>/dev/null
   fi
@@ -780,14 +780,18 @@ function init_dirstack() {
 }
 init_dirstack
 function pu() {
+  _whoami=$(whoami)
   pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
-  sets .ignore_files/dirstack ${DIRSTACK[@]}
+  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
   d
+  unset _whoami
 }
 function po() {
+  _whoami=$(whoami)
   popd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
-  sets .ignore_files/dirstack ${DIRSTACK[@]}
+  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
   d
+  unset _whoami
 }
 
 eval "source ${snippets_dir}/exports"
