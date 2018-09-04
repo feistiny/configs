@@ -45,30 +45,11 @@ function lesp() {
 alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
-alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
+alias mkctags="echo 123;rm ${f-.tags} 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags \
+  && ls -lh ${f-.tags}"
 function pcsd() {
   _dir="${*:-.}"
   php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
-  unset _dir
-}
-function pcsd() {
-  _dir="${*:-.}"
-  php-cs-fixer fix --config ${shell_dir}/.php_cs --dry-run --diff --diff-format=udiff --allow-risky yes "$_dir" | less
-  unset _dir
-}
-alias aiy='apt install -y'
-alias cpec="cp -i ${shell_dir}/.editorconfig ."
-alias mdv='mdv -t 729.8953'
-alias watch='watch --color'
-alias mkctags="rm .tags 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh .tags"
-function pcsd() {
-  _dir="${*:-.}"
-  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
-  unset _dir
-}
-function pcsd() {
-  _dir="${*:-.}"
-  php-cs-fixer fix --config ${shell_dir}/.php_cs --dry-run --diff --diff-format=udiff --allow-risky yes "$_dir" | less
   unset _dir
 }
 alias aiy='apt install -y'
@@ -510,6 +491,7 @@ function get_snippets() {
       else
         _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
         echo "$_list" | less --pattern="$1"
+        return 2
       fi
     else
       cat ${snippets_dir}/$1
@@ -527,7 +509,7 @@ function edit_snippets() {
 alias sets='set_snippets'
 function set_snippets() {
   mktouch "${snippets_dir}/$1"
-  eval "echo ${@:2} > ${snippets_dir}/$1"
+  echo "${@:2}" > ${snippets_dir}/$1
   update_complete_for_snippets
 }
 alias setsd='set_snippets_heredoc'
@@ -789,12 +771,12 @@ function init_dirstack() {
   dirs -c
   _dirstack="$(cat ${snippets_dir}/.ignore_files/dirstack 2>/dev/null)"
   if [[ -n $_dirstack ]]; then
-    for d in $(echo "$_dirstack" | xargs -n1 | tac); do
-      pushd $d 1>/dev/null
+    for _d in $(echo "$_dirstack" | xargs -n1 | tac); do
+      pushd $(realpath $_d) 1>/dev/null
     done
     popd -0 1>/dev/null
   fi
-  unset _dirstack
+  unset _dirstack _d
 }
 init_dirstack
 function pu() {

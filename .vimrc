@@ -62,7 +62,7 @@ if filereadable(vim_plug_path)
   Plug 'stephpy/vim-php-cs-fixer'
 
   Plug 'xolox/vim-misc'
-  Plug 'xolox/vim-easytags'
+  " Plug 'xolox/vim-easytags'
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
@@ -152,8 +152,8 @@ nnoremap <silent> <leader>yw :call WindowSwap#MarkWindowSwap()<CR>
 nnoremap <silent> <leader>pw :call WindowSwap#DoWindowSwap()<CR>
 nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>"
 
-let g:ycm_key_list_stop_completion = ['<C-q>']
-let g:ycm_key_invoke_completion = '<C-z>'
+let g:ycm_key_list_stop_completion = ['<C-l>']
+let g:ycm_cache_omnifunc = 0
 let g:ycm_semantic_triggers = {}
 let g:ycm_semantic_triggers.php =
                         \ ['->', '::', '(', 'use ', 'namespace ', '\']
@@ -244,10 +244,12 @@ set cursorcolumn
 highlight CursorColumn term=bold cterm=bold guibg=Grey40
 
 """根据文件类型做不同设置<<<
+" let g:user_emmet_leader_key = '<tab>'
+" let g:user_emmet_expandabbr_key = ','
 let g:user_emmet_install_global = 0
 aug AliasFiletype
   au!
-  autocmd BufNewFile,BufRead *.{tpl,htm} set filetype=html
+  autocmd BufNewFile,BufRead *.{tpl,htm,html,vue} set filetype=html.javascript.css
   autocmd BufNewFile,BufRead *.js set filetype=javascript
   autocmd BufNewFile,BufRead *.php set filetype=php
   autocmd BufNewFile,BufRead *.py set filetype=python
@@ -260,7 +262,7 @@ aug END
 aug FiletypeIndent
   au!
   autocmd FileType html,php,javascript,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
-  autocmd FileType sh,zsh,yaml,markdown,json setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+  autocmd FileType sh,zsh,yaml,markdown,json,snippets setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
   autocmd BufWritePost *.py setlocal et autoindent
   autocmd BufWritePost *.lisp setlocal et autoindent
 aug END
@@ -281,7 +283,7 @@ set hlsearch incsearch "高亮搜索
 set number "显示行号
 " set relativenumber
 set nowrap "不换行
-set scrolloff=1 "离屏幕边缘几行开始滚屏
+set scrolloff=0 "离屏幕边缘几行开始滚屏
 
 """关闭当前标签左/右的所有标签
 function! TabCloseRight(bang)
@@ -336,7 +338,7 @@ fun! s:SwapCurrentWindowToTarget(...)
   endif
 endf
 command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
-nnoremap <leader>sw :SwapTwoWindows 0
+nnoremap <leader>sw :SwapTwoWindows 
 """
 
 """ move(delete) window to the other
@@ -362,17 +364,13 @@ fun! MoveCurrentWindowToTarget(split, copy, ...)
     let l:cur_bufnr = bufnr("%")
 
     if a:split != ''
-      echom 'split:' . l:split_mode
       " refresh cur_winnr
       if l:to_winnr == l:cur_winnr
-        echom '='
         return
       elseif l:to_winnr < l:cur_winnr
         let l:cur_winnr+=1
-        echom '+'
       endif
     else
-      echom 'e'
       if l:to_winnr == l:cur_winnr
         return
       endif
@@ -514,12 +512,15 @@ augroup END
 
 let g:php_namespace_sort_after_insert = 1
 function! IPhpInsertUse()
-    call PhpInsertUse()
-    call feedkeys('a',  'n')
+  exe 'mkview'
+  call PhpInsertUse()
+  call feedkeys('a',  'n')
+  echom '123'
+  exe 'loadview'
 endfunction
 function! IPhpExpandClass()
-    call PhpExpandClass()
-    call feedkeys('a', 'n')
+  call PhpExpandClass()
+  call feedkeys('a', 'n')
 endfunction
 aug php_namespace_mapping
   au!
@@ -532,15 +533,15 @@ let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
-set tags=.tags
+set tags=read.tags
 let g:easytags_dynamic_files = 1
 let g:easytags_on_cursorhold = 1
 let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
-" au InsertEnter * :set tags=
-" au InsertLeave * :set tags=.tags
+au InsertEnter * :set tags=write.tags
+au InsertLeave * :set tags=read.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -560,14 +561,16 @@ nnoremap <leader>si :set shellcmdflag=-ic<CR>
 nnoremap <leader>sc :set shellcmdflag=-c<CR>
 nnoremap <leader>w :e!<CR>
 nnoremap <leader>tf :NERDTreeFind<CR>
+nnoremap <leader>to :NERDTreeFocus<CR>
 nnoremap <leader>qn :cn<CR>
 nnoremap <leader>qp :cp<CR>
 nnoremap <leader>qc :ccl<CR>
 nnoremap <leader>qo :copen<CR>
 nnoremap <leader>qt :cc
 nnoremap <C-p> <C-w><C-p>
-nnoremap <C-S> :w<CR><Left> "快速保存改动
-inoremap <C-S> <ESC>:w<CR> "快速保存改动
+nnoremap <C-S> :w<CR>
+inoremap <C-S> <ESC>:w<CR>
+nnoremap <leader>; mpA;<esc>`p
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
 nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
@@ -575,7 +578,7 @@ nnoremap <leader>lt :se list!<CR>
 nnoremap <leader>lv :vsp #<CR>
 nnoremap <leader>ls :sp #<CR>
 " nnoremap <leader>bt :MBEToggle<CR>
-nnoremap th :set hlsearch!<CR> "切换高亮显示
+nnoremap <leader>th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap // y/<C-R>"<CR>N "向后搜索当前的选择
@@ -587,14 +590,14 @@ vnoremap pc c"""<esc>PO"""
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c' . <c-r>" . '<esc>
 vnoremap pd2 c" . <c-r>" . "<esc>
-" vnoremap cl yo{php liu(<c-r>",on);}<esc>
+vnoremap if yoif (<c-r>") {}<esc>
 " vnoremap cL yO{php liu(<c-r>",on);}<esc>
 " 快捷liu调试函数
 " 查看所选单词的帮助
 vnoremap <leader>hh y:h <c-r>"<cr>
 " 查看当前光标处的单词的帮助
 nnoremap <leader>hh :h <c-r>=expand("<cword>")<CR><CR>
-inoremap <C-L> <C-O>x
+inoremap <C-H> <C-O>x
 inoremap <C-J> <C-O>h
 inoremap <C-K> <C-O>l
 let g:surround_indent = 0
@@ -614,16 +617,33 @@ nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
 """状态栏配置<<<
 
 """检测粘贴模式函数<<<
+" todo update paste status only in this buffer
 function! PasteForStatusline()
   let paste_status = &paste
   if paste_status == 1
-    return "| [paste]"
+    return "[paste]\ "
   else
     return ""
   endif
 endfunction
 """检测粘贴模式函数
-
+function! StatusLineFileName()
+  let pre = ''
+  let pat = '://'
+  let name = expand('%:~:.')
+  if name =~# pat
+    let pre = name[:stridx(name, pat) + len(pat)-1] . '...'
+    let name = name[stridx(name, pat) + len(pat):]
+  endif
+  let name = simplify(name)
+  let ratio = winwidth(0) / len(name)
+  if ratio <= 2 && ratio > 1
+    let name = pathshorten(name)
+  elseif ratio <= 1
+    let name = fnamemodify(name, ':t')
+  endif
+  return pre . name
+endfunction
 set laststatus=2
 highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue
 " 获取当前路径，将$HOME转化为~
@@ -631,7 +651,12 @@ function! CurDir()
   let curdir = substitute(getcwd(), $HOME, "~", "g")
   return curdir
 endfunction
-set statusline=[w%{winnr()}]\ [b%n]\ %f%m%r%h\ %{PasteForStatusline()}
+set statusline=%{PasteForStatusline()}
+set statusline+=[w%{winnr()}]\ 
+set statusline+=[b%n]\ 
+set statusline+=%{StatusLineFileName()}\ 
+set statusline+=%=
+set statusline+=%=%l/%L
 """状态栏配置
 
 """项目文件快捷打开,模糊匹配<<<

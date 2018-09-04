@@ -1,0 +1,1 @@
+straceall vim -e '!select' -s 100

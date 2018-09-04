@@ -12,7 +12,7 @@ _excf=$(grep -v '^#' $_cfp | \
   grep '^!' | sed 's/^!/--exclude=/' | xargs
 )
 export excludes="$_excf"
-export f="${_cdir}/.tags"
+export f="${_cdir}/${f-.tags}"
 shopt -s expand_aliases
 source ${shell_dir}/aliases.sh
 for dir in $_idir ; do

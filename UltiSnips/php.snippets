@@ -3,27 +3,21 @@ function ($1) {
 	$2
 }
 endsnippet
-
 snippet ar
 '$1' => '$2',
 endsnippet
-
 snippet cu "function() use () {" i
  use ($1)
 endsnippet
-
 snippet t. "$this->" i
 $this->$1
 endsnippet
-
 snippet tm "$this->method();" i
 $this->${1:info}($2);
 endsnippet
-
 snippet cl
 console.log($1);
 endsnippet
-
 snippet ga
 public function get$1Attribute($value)
 {
@@ -31,7 +25,6 @@ public function get$1Attribute($value)
 	return $3;
 }
 endsnippet
-
 snippet sa
 public function set$1Attribute()
 {
@@ -39,9 +32,20 @@ public function set$1Attribute()
 	return $3;
 }
 endsnippet
-
 snippet lf
 elseif ($1) {
 	$2
 }
+endsnippet
+snippet ind "info a array" b
+info('$1:', $2);
+endsnippet
+snippet .d "add a array" i
+.' $1',$2
+endsnippet
+snippet ins "info a string" b
+info('$1: ' . $2);
+endsnippet
+snippet .s "concat string with one space" i
+.' $1'.$2
 endsnippet
