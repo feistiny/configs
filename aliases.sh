@@ -83,7 +83,14 @@ function stpl() {
 
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
-alias tml='\tmux'" -f ${shell_dir}/.tmux.conf a -t"
+function tml() {
+  big=$(tmls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+  if [[ -n $big ]]; then
+    \tmux -f ${shell_dir}/.tmux.conf attach -t ${1-${big}}
+  else
+    tmls
+  fi
+}
 alias tmll='\tmux'" -f ${shell_dir}/.tmux.conf"
 alias tmls='\tmux ls'
 function tmks() {
