@@ -140,7 +140,61 @@ alias gcf='git config'
 alias gcfg='git config --global'
 alias gcp='git cherry-pick'
 alias gci='git commit'
-alias gcif='git commit --fixup'
+function gcif() {
+  _greptofix=$(git log --oneline --grep "$1" | grep -v 'fixup!')
+  if [[ $(echo "$_greptofix" | wc -l) -eq 1 ]]; then
+    _commitid=$(echo $_greptofix | cut -d' ' -f1)
+  elif [[ $(echo "$_greptofix" | wc -l) -gt 1 ]]; then
+    OLD_IFS=${IFS}
+    IFS=$'\n'
+    PS3="choose a commit to fix: "
+    select commit in $(echo "$_greptofix"); do
+      if [[ -n $commit ]]; then
+        _commitid=$(echo $commit | cut -d' ' -f1)
+        break
+      else
+        echo 'out of range'
+      fi
+    done
+    IFS=${OLD_IFS}
+  else
+    echo 'commit message grep-results is none'
+    exit 1
+  fi
+  git commit --fixup "$_commitid"
+}
+alias grb='git rebase'
+alias grbc='git rebase --continue'
+function grbs() {
+  # git rebase --autosquash after greped commit
+  if [[ -z $1 ]]; then
+    echo 'grep a commit message to autosquash'
+    return 1
+  fi
+  _greptofix=$(git log --oneline --grep "$1" | grep -v 'fixup!')
+  if [[ $(echo "$_greptofix" | wc -l) -eq 1 ]]; then
+    _commitid=$(echo $_greptofix | cut -d' ' -f1)
+    _previd=$(git rev-parse $_commitid^ | cut -c -7)
+  elif [[ $(echo "$_greptofix" | wc -l) -gt 1 ]]; then
+    OLD_IFS=${IFS}
+    IFS=$'\n'
+    PS3="choose a commit to fix: "
+    select commit in $(echo "$_greptofix"); do
+      if [[ -n $commit ]]; then
+        _commitid=$(echo $commit | cut -d' ' -f1)
+        _previd=$(git rev-parse $_commitid^ | cut -c -7)
+        break
+      else
+        echo 'out of range'
+      fi
+    done
+    IFS=${OLD_IFS}
+  else
+    echo 'commit message grep-results is none'
+    return 2
+  fi
+  git rebase -i --autosquash "$_previd"
+}
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gcia='git commit --amend -C HEAD'
 function gcim() {
@@ -204,8 +258,6 @@ function gpl() {
 }
 alias gplr='gpl --rebase'
 alias gps='git push'
-alias grb='git rebase'
-alias grbc='git rebase --continue'
 alias grmc='git rm --cached'
 alias grm='git rm'
 alias grs='git reset'
