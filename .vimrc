@@ -318,7 +318,7 @@ nnoremap tu :SideColumnToggle<cr>
 """
 
 """
-command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p |
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 nnoremap <leader>df :DiffOrig<cr>
 """
 

@@ -179,11 +179,17 @@ function get_select_option() {
   fi
 }
 function gcif() {
+  local _commit
   if [[ -z $1 ]]; then
     echo 'just type to grep msg'
     return 2
   fi
-  git commit --fixup "$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")"
+  if [[ $(git cat-file -t $1) = 'commit' ]]; then
+    _commit=$1
+  else
+    _commit=$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")
+  fi
+  git commit --fixup $_commit
 }
 alias grb='git rebase'
 alias grbc='git rebase --continue'
@@ -267,7 +273,7 @@ alias gplr='gpl --rebase'
 alias gps='git push'
 alias grmc='git rm --cached'
 alias grm='git rm'
-alias grs='git reset'
+alias grs='git reset --soft'
 complete -W 'HEAD~' grs
 alias grt='git remote'
 alias grp='git rev-parse'
@@ -477,6 +483,7 @@ grb:_git_checkout
 gll:_git_checkout
 gl:_git_checkout
 gdf:_git_diff
+gsh:_git_stash
 gdfc:_git_diff
 gsm:_git_submodule
 EOF
