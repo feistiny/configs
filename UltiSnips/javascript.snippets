@@ -1,0 +1,23 @@
+snippet cld "console.log data" b
+console.log('$1 :', ${2:${VISUAL}});
+endsnippet
+
+snippet cl "console.log" b
+console.log(${2:${VISUAL:'+++'}});
+endsnippet
+
+snippet ,cl "console.log add data" i
+, '$1 : ', $2
+endsnippet
+
+snippet fu "closure" i
+function($1) {
+	$2
+}$0
+endsnippet
+
+snippet lf
+else if ($1) {
+	$0
+}
+endsnippet

@@ -53,6 +53,7 @@ function pcsd() {
   php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
 }
 alias aiy='apt install -y'
+alias adi='gets .gitignore.example >> .gitignore'
 
 set -o emacs
 if [[ -z "$exec_in_vim" ]]; then
