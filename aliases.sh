@@ -25,22 +25,22 @@ alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
 function getSnippetsDirs() {
+  local _dirs
   _dirs=(
   $HOME/.vim/plugged/vim-snippets \
   ${shell_dir}/UltiSnips \
   $(pwd)/UltiSnips \
   )
   echo ${_dirs[@]}
-  unset _dirs
 }
 function lesp() {
+  local _files
   _files=$(find $(getSnippetsDirs) -type f -name "${1-php}.snippets");
   if [[ -n "$_files" ]]; then
     glsot "$_files"
   else
     find $(getSnippetsDirs) -type f -name "*${1-php}*.snippets"
   fi
-  unset _files
 }
 alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
@@ -48,9 +48,9 @@ alias watch='watch --color'
 alias mkctags="echo 123;rm ${f-.tags} 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags \
   && ls -lh ${f-.tags}"
 function pcsd() {
+  local _dir
   _dir="${*:-.}"
   php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
-  unset _dir
 }
 alias aiy='apt install -y'
 
@@ -94,11 +94,11 @@ function tml() {
 alias tmll='\tmux'" -f ${shell_dir}/.tmux.conf"
 alias tmls='\tmux ls'
 function tmks() {
-    for i in "$@"
-    do
-        \tmux kill-session -t $i
-    done
-    unset i
+  local i
+  for i in "$@"
+  do
+    \tmux kill-session -t $i
+  done
 }
 alias tmkr='\tmux kill-server'
 
@@ -128,74 +128,93 @@ alias gcf='git config'
 alias gcfg='git config --global'
 alias gcp='git cherry-pick'
 alias gci='git commit'
-function gcif() {
-  _greptofix=$(git log --oneline --grep "$1" | grep -v 'fixup!')
-  if [[ $(echo "$_greptofix" | wc -l) -eq 1 ]]; then
-    _commitid=$(echo $_greptofix | cut -d' ' -f1)
-  elif [[ $(echo "$_greptofix" | wc -l) -gt 1 ]]; then
+function get_commitid_by_msg() {
+  local _commitid _line OLD_IFS commit
+  _line=$(echo "$*" | sed '/^$/d' | wc -l)
+  if [[ $_line -eq 1 ]]; then
+    echo "$*" | cut -d' ' -f1
+  elif [[ $_line -gt 1 ]]; then
     OLD_IFS=${IFS}
+    OLD_PS3=${PS3}
     IFS=$'\n'
     PS3="choose a commit to fix: "
-    select commit in $(echo "$_greptofix"); do
+    select commit in $(echo "$*"); do
       if [[ -n $commit ]]; then
-        _commitid=$(echo $commit | cut -d' ' -f1)
+        echo $commit | cut -d' ' -f1
         break
       else
         echo 'out of range'
       fi
     done
     IFS=${OLD_IFS}
+    PS3=${OLD_PS3}
   else
     echo 'commit message grep-results is none'
-    exit 1
+    return 1
   fi
-  git commit --fixup "$_commitid"
+}
+function get_select_option() {
+  local _line OLD_IFS _opt
+  _line=$(echo "$*" | sed '/^$/d' | wc -l)
+  if [[ $_line -eq 1 ]]; then
+    echo "$*"
+  elif [[ $_line -gt 1 ]]; then
+    OLD_IFS=${IFS}
+    OLD_PS3=${PS3}
+    IFS=$'\n'
+    PS3="choose an option: "
+    select _opt in $(echo "$*"); do
+      if [[ -n $_opt ]]; then
+        echo $_opt
+        break
+      else
+        echo 'out of range'
+      fi
+    done
+    IFS=${OLD_IFS}
+    PS3=${OLD_PS3}
+  else
+    echo 'optoins is none'
+    return 1
+  fi
+}
+function gcif() {
+  if [[ -z $1 ]]; then
+    echo 'just type to grep msg'
+    return 2
+  fi
+  git commit --fixup "$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")"
 }
 alias grb='git rebase'
 alias grbc='git rebase --continue'
 function grbs() {
+  local _commitid _previd
   # git rebase --autosquash after greped commit
   if [[ -z $1 ]]; then
     echo 'grep a commit message to autosquash'
     return 1
   fi
-  _greptofix=$(git log --oneline --grep "$1" | grep -v 'fixup!')
-  if [[ $(echo "$_greptofix" | wc -l) -eq 1 ]]; then
-    _commitid=$(echo $_greptofix | cut -d' ' -f1)
+  _commitid=$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")
+  if [[ -n $_commitid ]]; then
     _previd=$(git rev-parse $_commitid^ | cut -c -7)
-  elif [[ $(echo "$_greptofix" | wc -l) -gt 1 ]]; then
-    OLD_IFS=${IFS}
-    IFS=$'\n'
-    PS3="choose a commit to fix: "
-    select commit in $(echo "$_greptofix"); do
-      if [[ -n $commit ]]; then
-        _commitid=$(echo $commit | cut -d' ' -f1)
-        _previd=$(git rev-parse $_commitid^ | cut -c -7)
-        break
-      else
-        echo 'out of range'
-      fi
-    done
-    IFS=${OLD_IFS}
-  else
-    echo 'commit message grep-results is none'
-    return 2
+    if [[ -n $_previd ]]; then
+      git rebase -i --autosquash "$_previd"
+    fi
   fi
-  git rebase -i --autosquash "$_previd"
 }
 alias gcii='git -c user.name="lzf" -c user.email="liuzhanfei166@126.com" commit'
 alias gcia='git commit --amend -C HEAD'
 function gcim() {
+  local msg
   msg="${@: -1}"
   git commit "${@: 1:$(($#-1))}" -m "${msg:-+++}"
-  unset msg
 }
 alias gciac='git commit --amend -c HEAD'
 alias gciap='git commit --amend -C HEAD && git push -f'
 function gcimp() {
+  local msg
   msg=${1:-+++}
   git commit -m "$msg" && git push ${@:2}
-  unset msg
 }
 alias gclo='git clone'
 function gcls() {
@@ -219,10 +238,11 @@ alias glgs='git log -S'
 alias glsp='git log -p -S'
 function glp() {
   git_last $@
-  git log --oneline -p $_rest $_last
+  git log --oneline -p ${_rest:=-1} $_last
   git_last_unset
 }
 function gld() {
+  local diff_branch current_branch upstream
   diff_branch="$1"
   if [[ ! -n "$1" ]]; then
     current_branch=$(git rev-parse --abbrev-ref HEAD);
@@ -230,7 +250,6 @@ function gld() {
     diff_branch="${current_branch}...${upstream}"
   fi
   git log --left-right --graph --oneline "$diff_branch"
-  unset diff_branch current_branch upstream
 }
 alias gll="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gme='git merge'
@@ -258,12 +277,60 @@ alias gsh='git stash'
 alias gsl='git stash list'
 alias gsp='git stash pop'
 function gss() {
-  git show stash@{${1-0}}
+  if [[ $# -gt 1 ]] && [[ ${@: -1} =~ ^- ]]; then
+    _p="${2:+-p}"
+    _stash="$1"
+  elif [[ $# -eq 1 ]]; then
+    if [[ $1 =~ ^- ]]; then
+      _p="${1:+-p}"
+      _stash=0
+    elif [[ $1 =~ [0-9]+ ]]; then
+      _stash="$1"
+    fi
+  else
+    _stash="0"
+  fi
+  git stash show stash@{$_stash} ${_p}
+}
+function gsf() {
+  local _stat= _grep _path _commitid _option
+  if [[ $# -eq 2 ]]; then
+    _grep="$1"
+    if [[ $2 = '--stat' ]]; then
+      _stat="$2"
+    else
+      _path="$2"
+    fi
+  elif [[ $# -eq 1 ]]; then
+    _grep="$1"
+  elif [[ $# -eq 0 ]]; then
+    _commitid='HEAD'
+    _stat='--stat'
+  else
+    echo 'error'
+    return 2
+  fi
+  if [[ -z $_commitid ]]; then
+    if [[ $(git cat-file -t $_grep) = 'commit' ]]; then
+      _commitid=$_grep
+    else
+      _commitid=$(get_commitid_by_msg "$(git log --oneline --grep "$_grep")")
+    fi
+  fi
+  if [[ -n $_path ]]; then
+    git show ${_commitid}:${_path}
+  elif [[ -n $_stat ]]; then
+    git show ${_commitid} ${_stat}
+  else
+    _option=$(get_select_option "$(git diff-tree --no-commit-id --name-only -r $_commitid)")
+    git show ${_commitid}:${_option}
+  fi
 }
 alias gst='git status'
 alias gsti='git status --ignored'
 function gsw() {
   # exists in current dir
+  local file
   if [[ -e ${@: -1} ]]; then
     file=${@: -1}
   else
@@ -271,10 +338,10 @@ function gsw() {
   fi
   git update-index --skip-worktree "${@: 1:$(($#-1))}" $file
   glsw
-  unset file
 }
 function gnsw() {
   # exists in current dir
+  local file
   if [[ -e ${@: -1} ]]; then
     file=${@: -1}
   else
@@ -282,12 +349,12 @@ function gnsw() {
   fi
   git update-index --no-skip-worktree "${@: 1:$(($#-1))}" $file
   glsw
-  unset file
 }
 function glsw() {
   git ls-files -v | grep -iP '^S' | grep -iP "${1-}"
 }
 function gvm() {
+  local _files _regex _ofiles
   _files="$(git ls-files -m)"
   if [[ -n $_files ]]; then
     if [[ $# -gt 1 ]]; then
@@ -296,7 +363,7 @@ function gvm() {
     elif [[ $# -gt 0 ]]; then
       _ofiles=$(echo "$_files" | grep "$1")
     else
-      git ls-files -m
+      _ofiles=$(git ls-files -m)
     fi
     if [[ -n $_ofiles ]]; then
       vim -p $_ofiles
@@ -329,13 +396,13 @@ function gad() {
   git_last_unset
 }
 function grtad() {
+  local url url_in_remote
   url=$2
   url_in_remote=$(git remote get-url $2 2>/dev/null)
   [ -n "${url_in_remote}" ] && url=$url_in_remote
   git remote add $1 $url 2>/dev/null
   git remote set-url all --add $url 2>/dev/null || \
     git remote add all $url
-  unset url url_in_remote
 }
 function grh() {
   git_last $@
@@ -343,6 +410,7 @@ function grh() {
   git_last_unset
 }
 function gsbcf() {
+  local prefix remote branch
   prefix=$1
   remote=$2
   branch=$3
@@ -354,13 +422,13 @@ function gsbcf() {
   git config remote.${remote}.prefix ${prefix}
   git config remote.${remote}.branch ${branch}
   git config --get-regexp remote.${remote}
-  unset prefix remote branch
 }
 function gsbps() {
   pull_push='push'
   gsbpl $1
 }
 function gsbpl() {
+  local prefix remote branch pull_push gdr squash_and_msg
   pull_push=${pull_push:-pull}
   remote=$1
 
@@ -382,10 +450,10 @@ function gsbpl() {
   fi
   git subtree "${pull_push}" --prefix="${prefix}" "${remote}" "${branch}" ${squash_and_msg:-} "${@:2}"
   if test "$?" = 0 ; then cd -; &>/dev/null; fi
-  unset prefix remote branch pull_push gdr squash_and_msg
 }
 alias gdfd='gdfl diff'
 function gdfl() {
+  local command args
   command='log'
   args='--stat'
   [ "$1" = 'diff' ] && { command='diff'; shift; }
@@ -393,7 +461,6 @@ function gdfl() {
   current_branch=$(git rev-parse --abbrev-ref HEAD)
   upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream})
   git ${command} ${args} $upstream..$current_branch
-  unset command args
 }
 
 #git alias autocomplete
@@ -463,19 +530,19 @@ function composer_china() {
 }
 
 function su_without_password() {
-if [ -z "${1+x}" ]
-then
-  echo '/etc/pam.d/su'
-  echo '$1 target_user $2 from_user'
-fi
+  local target_user from_user
+  if [ -z "${1+x}" ]
+  then
+    echo '/etc/pam.d/su'
+    echo '$1 target_user $2 from_user'
+  fi
   target_user=$1
   from_user=$2
   read -d '' OUT <<EOT
 auth       [success=ignore default=1] pam_succeed_if.so user = $target_user
 auth       sufficient   pam_succeed_if.so use_uid user = $from_user
 EOT
-echo "$OUT"
-unset target_user from_user
+  echo "$OUT"
 }
 
 alias gets='get_snippets'
@@ -484,6 +551,7 @@ function update_complete_for_snippets() {
 }
 update_complete_for_snippets
 function get_snippets() {
+  local _list _matched_file _is_only_one_matched
   if [ -z "${1+x}" ]
   then
     _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
@@ -491,22 +559,19 @@ function get_snippets() {
     update_complete_for_snippets
   else
     if [[ ! -f ${snippets_dir}/$1 ]]; then
-      _matched_file="$(realpath $(find ${snippets_dir} \( -type f -o -type l \) -a -name *$1*) 2>/dev/null | xargs -n1 | uniq)"
-      _matched_count="$(echo "$_matched_file" | sed '/^$/d' | wc -l)"
-      if [[ $_matched_count -eq 1 ]]; then
+      _matched_file="$(realpath $(find ${snippets_dir} \( -type f -o -type l \) -a -name *$1*) | xargs -n1 | uniq)"
+      _is_only_one_matched="$(echo "$_matched_file" | wc -l)"
+      if [[ $_is_only_one_matched -eq 1 ]]; then
         cat $_matched_file
-      elif [[ $_matched_count -gt 1 ]]; then
+      else
         _list=$(find ${snippets_dir} ! -path ${snippets_dir} -printf '%y %P\n' | sort -k '2')
         echo "$_list" | less --pattern="$1"
         return 2
-      else
-        gets
       fi
     else
       cat ${snippets_dir}/$1
     fi
   fi
-  unset _list _matched_file _matched_count
 }
 
 alias edits='edit_snippets'
@@ -549,21 +614,22 @@ function glsa() {
   git ls-files -o
 }
 function glso() {
+  local _opts
   _opts=${*---exclude-standard}
   git ls-files -o ${_opts}
-  unset _opts
 }
 function glsm() {
   git ls-files -m
 }
 function glsot() {
+  local _files
   _files=${*-$(glso)}
   if [[ -n $_files ]]; then
     tail -n +1 -- $_files | less ${_pattern---pattern='==>.*<=='}
   fi
-  unset _files _pattern
 }
 function gls() {
+  local USAGE pre_opts debug key level
   USAGE=$(cat << EOT
 USAGE:
   -r   recurse   recursive
@@ -620,9 +686,9 @@ EOT
     cat | cut -d'/' -f "${level}" | sort | uniq
   fi
   # echo $command
-  unset USAGE pre_opts debug key level
 }
 function mktouch() {
+  local f
   if [ $# -lt 1 ]; then
     echo "Missing argument";
     return 1;
@@ -632,7 +698,6 @@ function mktouch() {
     mkdir -p -- "$(dirname -- "$f")"
     touch -- "$( echo $f | tr -s / | sed 's/\/$//' )"
   done
-  unset f
 }
 function whereip() {
   if test $# -eq 0; then
@@ -663,6 +728,7 @@ function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
 }
 function mkver() {
+  local _filename _extension _tmp_filename _add _real_tmp
   if [[ -e $1 ]]; then
     if [[ $1 =~ \. ]]; then
       _filename=${1%.*}
@@ -683,15 +749,15 @@ function mkver() {
   _tmp_filename="$_filename${_add}${_extension:+.$_extension}"
   _real_tmp=$(mktemp --tmpdir=$(pwd) -t "$_tmp_filename")
   cp $1 $_real_tmp
-  unset _filename _extension _tmp_filename _add _real_tmp
 }
 function mktmp() {
+  local name subfix
   name=${1-tmp}
   subfix=$(echo ${2-.txt} | sed -r 's/^[^\.]/.&/')
   mktemp --tmpdir=$(pwd) -t "${name}.XXXXXX${subfix}"
-  unset name subfix
 }
 function dfa() {
+  local info _alias
   info=$(declare -f "$1")
   _alias=$(alias "$1" 2>/dev/null)
   if [[ -n "$info" ]]; then
@@ -701,7 +767,6 @@ function dfa() {
   else
     echo 'definition not found'
   fi
-  unset info _alias
 }
 function ssp() {
   cd "${snippets_dir}/ssh_keys"
