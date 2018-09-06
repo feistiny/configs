@@ -138,7 +138,7 @@ function get_commitid_by_msg() {
     OLD_IFS=${IFS}
     OLD_PS3=${PS3}
     IFS=$'\n'
-    PS3="choose a commit to fix: "
+    PS3="choose a commit: "
     select commit in $(echo "$*"); do
       if [[ -n $commit ]]; then
         echo $commit | cut -d' ' -f1
@@ -176,6 +176,44 @@ function get_select_option() {
     PS3=${OLD_PS3}
   else
     echo 'optoins is none'
+    return 1
+  fi
+}
+function multi_select() {
+  local _line OLD_IFS options num choices prompt msg
+  options=($*)
+  _line=$(echo "$*" | sed '/^$/d' | wc -l)
+  if [[ $_line -eq 1 ]]; then
+    echo "$*"
+  elif [[ $_line -gt 1 ]]; then
+    OLD_IFS=${IFS}
+    IFS=$'\n'
+		echo "Avaliable options:" >&2
+		function __show_menu() {
+      printf "%3d%s) %s\n" 0 " " '!!!CHOOSE THIS WHEN DONE!!!' >&2
+      for i in "${!options[@]}"; do
+        printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}" >&2
+      done
+      if [[ -n $msg ]]; then
+        echo "$msg" >&2
+      fi
+		}
+    prompt="check an option (again to uncheck, choose DONE when done): "
+		while __show_menu && read -rp "$prompt" num ; do
+      [[ $num == 0 ]] && { break; }
+      [[ -z $num ]] && { continue; }
+			[[ "$num" != *[![:digit:]]* ]] &&
+			(( num > 0 && num <= ${#options[@]} )) ||
+			{ msg="Invalid option: $num"; continue; }
+			((num--)); msg="${options[num]} was ${choices[num]:+un}checked"
+			[[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
+		done
+		for i in ${!options[@]}; do
+			[[ "${choices[i]}" ]] && { printf "%s\n" "${options[i]}"; }
+		done
+    IFS=${OLD_IFS}
+  else
+    echo 'optoins is none' >&2
     return 1
   fi
 }
@@ -229,6 +267,24 @@ function gcls() {
 }
 alias gcle='git clean'
 alias gco='git checkout'
+function gcom() {
+  local _files _grep _prompt
+  _grep="$1"
+  [[ $_grep ]] || {
+    _prompt='grep a file name: '
+    echo 'checkout multi files from HEAD'
+    echo -n "$_prompt"
+    while read -p '' _grep
+    do
+      [[ $_grep ]] && break || { echo -n "$_prompt"; continue; }
+    done
+  }
+  if [[ $_grep ]]; then
+    # grep file of the HEAD to checkout
+    _files=$(multi_select "$(git diff HEAD --name-only | grep "$_grep")")
+    gco "$_files"
+  fi
+}
 alias gdf="git diff --color $(git diff --ws-error-highlight=new,old &>/dev/null && echo --ws-error-highlight=new,old)"
 alias gdfc='gdff --cached'
 function gdff() {
@@ -373,7 +429,7 @@ function gvm() {
       _ofiles=$(git ls-files -m)
     fi
     if [[ -n $_ofiles ]]; then
-      vim -p $_ofiles
+      vu -p $_ofiles
     fi
   fi
 }
@@ -882,10 +938,14 @@ if [[ "$-" =~ i ]]; then
 fi
 
 if [[ -x "${shell_dir}/plugins/.bin/sempl" ]]; then
-  export PATH="${shell_dir}/plugins/.bin:${PATH}"
+  if [[ -z $(which sempl) ]]; then
+    export PATH="${shell_dir}/plugins/.bin:${PATH}"
+  fi
 fi
 if [[ -x "/usr/local/go/bin/go" ]]; then
-  export PATH="/usr/local/go/bin/:${PATH}"
+  if [[ -z $(which go) ]]; then
+    export PATH="${shell_dir}/plugins/.bin:${PATH}"
+  fi
 fi
 
 alias addswap='stpl swapfile_mk'

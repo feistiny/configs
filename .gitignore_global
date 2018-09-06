@@ -1,0 +1,6 @@
+=====lzf individal ignore=====
+.ctagsignore
+.editorconfig
+*.tags
+Ultisnips
+=====lzf individal ignore=====

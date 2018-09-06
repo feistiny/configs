@@ -5,7 +5,3 @@ git config ${g:+--global} core.excludesfile '${path-~/configs/.gitignore_global}
 
 git config ${g:+--global} push.default current
 git config ${g:+--global} color.status auto
-
-git config ${g:+--global} merge.tool fugitive
-git config ${g:+--global} merge.conflictstyle merge
-git config ${g:+--global} mergetool.cmd vu "+Gdiff" $MERGE
