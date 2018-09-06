@@ -1,5 +1,5 @@
+#!/bin/bash
 stty -ixon
-#!/bin/basn
 export shell_dir="$HOME/configs"
 export plugins_dir="$HOME/configs/plugins"
 export ansible_dir="$HOME/configs/ansible"
@@ -45,8 +45,7 @@ function lesp() {
 alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
-alias mkctags="echo 123;rm ${f-.tags} 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags \
-  && ls -lh ${f-.tags}"
+alias mkctags="rm ${f-.tags} 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh ${f-.tags}"
 function pcsd() {
   local _dir
   _dir="${*:-.}"

@@ -1,0 +1,1 @@
+git ls-files | xargs ls -l | sort -nrk5 | head -n 30

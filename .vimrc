@@ -242,6 +242,18 @@ set cursorline
 highlight CursorLine term=bold cterm=bold guibg=Grey40
 set cursorcolumn
 highlight CursorColumn term=bold cterm=bold guibg=Grey40
+set cursorline
+set cursorcolumn
+fu! ToggleCurline ()
+  if &cursorline && &cursorcolumn
+    set nocursorline
+    set nocursorcolumn
+  else
+    set cursorline
+    set cursorcolumn
+  endif
+endfunction
+nnoremap <silent><leader>cl :call ToggleCurline()<CR>
 
 """根据文件类型做不同设置<<<
 " let g:user_emmet_leader_key = '<tab>'
@@ -533,15 +545,15 @@ let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
-set tags=read.tags
+set tags=.read.tags,.tags
 let g:easytags_dynamic_files = 1
 let g:easytags_on_cursorhold = 1
 let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
-au InsertEnter * :set tags=write.tags
-au InsertLeave * :set tags=read.tags
+au InsertEnter * :set tags=.write.tags
+au InsertLeave * :set tags=.read.tags,.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -572,7 +584,7 @@ nnoremap <C-S> :w<CR>
 inoremap <C-S> <ESC>:w<CR>
 nnoremap <leader>; mpA;<esc>`p
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
-nnoremap <leader>sv :source ~/configs/.vimrc<CR> "重新加载.vimrc
+nnoremap <leader>sv :source ~/configs/.vimrc<CR><Left> "重新加载.vimrc
 nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
 nnoremap <leader>lt :se list!<CR>
 nnoremap <leader>lv :vsp #<CR>
@@ -581,8 +593,10 @@ nnoremap <leader>ls :sp #<CR>
 nnoremap <leader>th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
-vnoremap // y/<C-R>"<CR>N "向后搜索当前的选择
-vnoremap ?? y?<C-R>"<CR>N "向前搜索当前的选择
+vnoremap / y/<C-R>"<CR>N
+vnoremap ? y?<C-R>"<CR>N
+vnoremap <leader>/ y/<C-R>"<CR>Ncgn
+vnoremap <leader>? y?<C-R>"<CR>NcgN
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
