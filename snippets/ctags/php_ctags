@@ -1,1 +1,1 @@
-ctags -a --tag-relative=yes --fields=+l --sort=yes -h .php -R --languages=php --php-kinds=cfi ${excludes-} --regex-php='/^[ \t]*trait[ \t]+([a-z0_9_]+)/\1/t,traits/i' -f ${f-.tags}
+ctags --tag-relative=yes --fields=+l --sort=yes -h .php --languages=php --php-kinds=cfi ${exclude_dirs-} --regex-php='/^[ \t]*trait[ \t]+([a-z0_9_]+)/\1/t,traits/i' -R -f ${f--} ${include_dirs-*}

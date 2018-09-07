@@ -4,6 +4,7 @@ export shell_dir="$HOME/configs"
 export plugins_dir="$HOME/configs/plugins"
 export ansible_dir="$HOME/configs/ansible"
 export snippets_dir="${shell_dir}/snippets"
+export fish_dir="${shell_dir}/fish"
 
 # git clone in the root(~) dir #
 
@@ -45,7 +46,7 @@ function lesp() {
 alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
-alias mkctags="rm ${f-.tags} 2>/dev/null; bash ${snippets_dir}/ctags/generate_ctags && ls -lh ${f-.tags}"
+source "${fish_dir}/mkctags.sh"
 function pcsd() {
   local _dir
   _dir="${*:-.}"

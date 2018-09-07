@@ -545,7 +545,7 @@ let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
-set tags=.read.tags,.tags
+set tags=.read.tags
 let g:easytags_dynamic_files = 1
 let g:easytags_on_cursorhold = 1
 let g:easytags_updatetime_min = 4000
@@ -553,7 +553,7 @@ let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
 au InsertEnter * :set tags=.write.tags
-au InsertLeave * :set tags=.read.tags,.tags
+au InsertLeave * :set tags=.read.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}

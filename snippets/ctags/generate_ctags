@@ -1,26 +1,17 @@
-#!/bin/bash
-_cdir=$(pwd)
-_cfp="${_cdir}/.ctagsignore"
-if [[ ! -e "$_cfp" ]]; then
-  echo $_cfp not found
-  exit 1
-fi
-_idir=$(grep -v '^#' $_cfp | \
-  grep -v '^!' | xargs
-)
-_excf=$(grep -v '^#' $_cfp | \
-  grep '^!' | sed 's/^!/--exclude=/' | xargs
-)
-export excludes="$_excf"
-export f="${_cdir}/${f-.tags}"
-shopt -s expand_aliases
-source ${shell_dir}/aliases.sh
-for dir in $_idir ; do
-  if [[ ! -e "$dir" ]]; then
-    continue
+_cfp="${_cfp-.read.ctags}"
+_f="${_f-.read.tags}"
+for i in $(cat $_cfp 2>/dev/null | grep -v '^#' | xargs) ; do
+  if [[ $i =~ ^- ]]; then
+    i=${i:1}
+    if [[ -e $i ]]; then
+      exclude_dirs="${exclude_dirs-} --exclude=$i"
+    fi
   else
-    cd $dir
-    stpl "ctags/${l-php_ctags}" | bash
-    cd $_cdir
+    if [[ -e $i ]]; then
+      include_dirs="${include_dirs-} $i"
+    fi
   fi
 done
+f=$_f exclude_dirs=$exclude_dirs include_dirs=$include_dirs \
+  sempl -o -f "${snippets_dir}/ctags/${l-php_ctags}" | bash
+unset _cfp include_dirs exclude_dirs
