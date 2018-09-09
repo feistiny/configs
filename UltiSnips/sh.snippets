@@ -1,3 +1,6 @@
 snippet "\$(:?[-+])" "bash default value" ir
 ${$1`!p snip.rv = match.group(1)`${2:${VISUAL}}}
 endsnippet
+snippet e2 "echo >&2" i
+echo '$1' >&2;$0
+endsnippet

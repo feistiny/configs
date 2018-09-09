@@ -8,7 +8,7 @@ return PhpCsFixer\Config::create()
     ->setRules([
         // '@Symfony' => true,
         'concat_space' => [
-            'spacing' => 'one',
+            'spacing' => 'none',
         ],
         'single_blank_line_before_namespace' => true,
         'blank_line_after_namespace' => true,

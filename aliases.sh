@@ -899,7 +899,6 @@ function gref() {
   if ! [[ $_kw =~ ^[A-Za-z0-9]+$ ]]; then
     _pre="${_pre}P"
   fi
-  _pre="$_pre --color=always -R"
   grep $_pre ${_opts} "$_kw" | less
   unset _pre _kw _opts
 }
@@ -930,6 +929,48 @@ function po() {
   sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
   d
   unset _whoami
+}
+function mp() {
+  local __strip_components _path HELP OPTS
+  local USAGE=$(cat <<USAGE
+copy multi files striping the leading path
+USAGE
+)
+  OPTS="$(getopt -o s:p: --long help,strip-components:path: -n 'mp' -- "$@")" ||
+    { echo "Failed parsing options." >&2 ; return 1; }
+  eval set -- "$OPTS"
+  while true; do
+    case "$1" in
+      -s | --strip-components )
+        if ! [[ $2 =~ [0-9] ]]; then
+          echo '--strip-components must be a number.' >&2
+          return 2
+        else
+          __strip_components=$2; shift 2
+        fi
+        ;;
+      -p | --path )
+        if [ ! -e $2 ]; then
+          echo "path $2 is not found." >&2
+          return 3
+        fi
+        _path="$2"
+        shift 2
+        ;;
+      -h | --help ) HELP=true; shift ;;
+      -- ) shift; break ;;
+      * ) break ;;
+    esac
+  done
+  [[ -e "$_path" ]] || { echo 'path not set.' >&2; return 4; }
+  [[ "$HELP" ]] &&
+    { echo $USAGE; return 0; }
+  if [[ "$1" ]]; then
+    _files="$(multi_select "$(find ${_path+"$_path"} -iname "*$1*" -printf '%p\n')")"
+    if [[ "$_files" ]]; then
+      tar -cpf - $_files 2>/dev/null | tar -xpf - ${__strip_components+--strip-components=$__strip_components} -C . 2>/dev/null
+    fi
+  fi
 }
 
 eval "source ${snippets_dir}/exports"

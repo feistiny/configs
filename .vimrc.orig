@@ -676,7 +676,10 @@ set statusline+=%=%l/%L
 
 """项目文件快捷打开,模糊匹配<<<
 " file finder mapping
+<<<<<<< Updated upstream
+=======
 " let g:ctrlp_show_hidden = 1
+>>>>>>> Stashed changes
 let g:ctrlp_map = "<leader>e"
 " tags (symbols) in current file finder mapping
 nnoremap <leader>b :CtrlPBuffer<CR>
