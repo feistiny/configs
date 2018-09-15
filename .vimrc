@@ -158,8 +158,8 @@ nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>"
 let g:ycm_key_list_stop_completion = ['<C-l>']
 let g:ycm_cache_omnifunc = 0
 let g:ycm_semantic_triggers = {}
-" let g:ycm_semantic_triggers.php =
-                        " \ ['->', '::', '(', 'use ', 'namespace ', '\']
+let g:ycm_semantic_triggers.php =
+                        \ ['->', '::', '(', 'use ', 'namespace ', '\']
 let g:ycm_auto_trigger = 1
 let g:ycm_min_num_of_chars_for_completion=5
 let g:ycm_min_num_identifier_candidate_chars = 5

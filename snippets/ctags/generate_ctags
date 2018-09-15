@@ -1,17 +1,17 @@
-_cfp="${_cfp-.read.ctags}"
-_f="${_f-.read.tags}"
-for i in $(cat $_cfp 2>/dev/null | grep -v '^#' | xargs) ; do
-  if [[ $i =~ ^- ]]; then
-    i=${i:1}
-    if [[ -e $i ]]; then
-      exclude_dirs="${exclude_dirs-} --exclude=$i"
+if [[ -e $_cfp ]]; then
+  for i in $(cat $_cfp 2>/dev/null | grep -v '^#' | xargs) ; do
+    if [[ $i =~ ^- ]]; then
+      i=${i:1}
+      if [[ -e $i ]]; then
+        exclude_dirs="${exclude_dirs-} --exclude=$i"
+      fi
+    else
+      if [[ -e $i ]]; then
+        include_dirs="${include_dirs-} $(realpath $i)"
+      fi
     fi
-  else
-    if [[ -e $i ]]; then
-      include_dirs="${include_dirs-} $(realpath $i)"
-    fi
-  fi
-done
-f=$_f exclude_dirs=$exclude_dirs include_dirs=$include_dirs \
-  sempl -o -f "${snippets_dir}/ctags/${l-php_ctags}" | bash
+  done
+fi
+f=$_f exclude_dirs=${exclude_dirs-} include_dirs=${include_dirs-$(realpath .)} \
+  sempl -o -f "${snippets_dir}/ctags/${l-php_ctags}" | bash "$([[ $- =~ x ]] && echo '-x')"
 unset _cfp include_dirs exclude_dirs

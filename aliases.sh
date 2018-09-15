@@ -302,8 +302,10 @@ alias gl='git log --oneline'
 alias glgs='git log -S'
 alias glsp='git log -p -S'
 function glp() {
+  local _stat
+  [[ $* =~ '--stat' ]] && { _stat='--stat'; }
   git_last $@
-  git log --oneline -p ${_rest:=-1} $_last
+  git log --oneline ${_stat:--p} ${_rest:=-1} $_last
   git_last_unset
 }
 function gld() {
