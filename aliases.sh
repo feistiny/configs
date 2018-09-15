@@ -7,7 +7,6 @@ export snippets_dir="${shell_dir}/snippets"
 export fish_dir="${shell_dir}/fish"
 
 # git clone in the root(~) dir #
-
 # ls aliases #
 alias l='ls -al'
 alias lh='ls -alh'
@@ -111,15 +110,18 @@ alias .....="cd ../../../.."
 # laravel artisan #
 alias cmp='composer'
 alias cmpdp="cmp dumpautoload"
-php_artisan='php artisan'
-alias art=${php_artisan}
-alias art.cont="${php_artisan} make:controller"
-alias art.model="${php_artisan} make:model"
-alias art.mig="${php_artisan} make:migration"
-alias art.mid="${php_artisan} make:middleware"
-alias artm="${php_artisan} migrate"
-alias artms="${php_artisan} migrate:status"
-alias artmr="${php_artisan} migrate:rollback"
+alias art="php artisan"
+alias art.cont="php artisan make:controller"
+alias art.model="php artisan make:model"
+alias art.mig="php artisan make:migration"
+alias art.mid="php artisan make:middleware"
+alias art.fact="php artisan make:factory"
+alias artm="php artisan migrate"
+alias artms="php artisan migrate:status"
+alias artmr="php artisan migrate:rollback"
+function artds() {
+  php artisan db:seed --class=$1
+}
 alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git #
@@ -436,17 +438,19 @@ function gvm() {
 alias gsm='git submodule'
 alias gsmu='gsm update --init --recursive'
 function git_last() {
+  local _last_is_commit
   if [[ $# -gt 1 ]] && ! [[ ${@: -1} =~ ^- ]]; then
-    _last="*${@: -1}*"
+    _last_is_commit="${@: -1}"
     _rest="${@: 1:$(($#-1))}"
   elif [[ $# -gt 0 ]] && ! [[ ${@: -1} =~ ^- ]]; then
-    _last="*${@: -1}*"
+    _last_is_commit="${@: -1}"
   elif [[ ${@: -1} =~ ^- ]]; then
     _last="."
     _rest="$@"
   else
     _last="."
   fi
+  [[ "$_last_is_commit" ]] && _last="$([[ $(git cat-file -t $_last_is_commit) = 'commit' ]] && echo "$_last_is_commit" || echo "*$_last_is_commit*")"
   _rest=${_rest-}
 }
 function git_last_unset() {

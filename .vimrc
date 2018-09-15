@@ -48,7 +48,7 @@ if filereadable(vim_plug_path)
 
   " Plug 'mkusher/padawan.vim'
   Plug 'Valloric/YouCompleteMe'
-  Plug 'alvan/vim-php-manual'
+  " Plug 'alvan/vim-php-manual'
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
@@ -62,7 +62,7 @@ if filereadable(vim_plug_path)
   Plug 'stephpy/vim-php-cs-fixer'
 
   Plug 'xolox/vim-misc'
-  " Plug 'xolox/vim-easytags'
+  Plug 'xolox/vim-easytags'
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
@@ -136,10 +136,13 @@ call pathogen#helptags()
 syntax on "显示语法错误
 filetype plugin indent on
 
-let g:vdebug_options = {}
+if !exists('g:vdebug_options')
+  let g:vdebug_options = {}
+endif
+let g:vdebug_options["ide_key"] = 'vim'
+let g:vdebug_options["break_on_open"] = 0
+let g:vdebug_options["server"] = '127.0.0.1'
 let g:vdebug_options["port"] = 9000
-
-let g:ycm_collect_identifiers_from_tags_files = 1
 
 let g:windowswap_map_keys = 0 "prevent default bindings
 
@@ -155,9 +158,13 @@ nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>"
 let g:ycm_key_list_stop_completion = ['<C-l>']
 let g:ycm_cache_omnifunc = 0
 let g:ycm_semantic_triggers = {}
-let g:ycm_semantic_triggers.php =
-                        \ ['->', '::', '(', 'use ', 'namespace ', '\']
+" let g:ycm_semantic_triggers.php =
+                        " \ ['->', '::', '(', 'use ', 'namespace ', '\']
 let g:ycm_auto_trigger = 1
+let g:ycm_min_num_of_chars_for_completion=5
+let g:ycm_min_num_identifier_candidate_chars = 5
+let g:ycm_max_num_identifier_candidates = 10
+let g:ycm_max_num_candidates = 20
 let g:ycm_key_list_select_completion=[]
 let g:ycm_key_list_previous_completion=[]
 let g:ycm_collect_identifiers_from_tags_files = 1
@@ -242,8 +249,8 @@ set cursorline
 highlight CursorLine term=bold cterm=bold guibg=Grey40
 set cursorcolumn
 highlight CursorColumn term=bold cterm=bold guibg=Grey40
-set cursorline
-set cursorcolumn
+set nocursorline
+set nocursorcolumn
 fu! ToggleCurline ()
   if &cursorline && &cursorcolumn
     set nocursorline
@@ -283,6 +290,8 @@ nnoremap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
 """根据文件类型做不同设置
 
 nnoremap <leader>fl :set fdm=indent \| set foldlevel=01
+nnoremap N Nzz
+nnoremap n nzz
 
 """ html标签首尾跳转<<<
 runtime macros/matchit.vim
@@ -295,7 +304,7 @@ set hlsearch incsearch "高亮搜索
 set number "显示行号
 " set relativenumber
 set nowrap "不换行
-set scrolloff=0 "离屏幕边缘几行开始滚屏
+set scrolloff=1 "离屏幕边缘几行开始滚屏
 
 """关闭当前标签左/右的所有标签
 function! TabCloseRight(bang)
@@ -411,7 +420,7 @@ command! -nargs=+ CopyTwoWindowsVerticalSplit call MoveCurrentWindowToTarget('vs
 nnoremap <leader>ywv :CopyTwoWindowsVerticalSplit 
 """
 
-let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor"
+let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor,*.log"
 
 """python相关配置
 let g:syntastic_python_flake8_args = '--ignore=E501,E401' ",F821' \"忽略pep8每行超过79个字符的错误提示
@@ -524,11 +533,8 @@ augroup END
 
 let g:php_namespace_sort_after_insert = 1
 function! IPhpInsertUse()
-  exe 'mkview'
   call PhpInsertUse()
   call feedkeys('a',  'n')
-  echom '123'
-  exe 'loadview'
 endfunction
 function! IPhpExpandClass()
   call PhpExpandClass()
@@ -545,15 +551,17 @@ let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
-set tags=.read.tags
+" set tags=.read.tags
+set tags=~/.vimtags;
+let g:easytags_auto_highlight = 0
 let g:easytags_dynamic_files = 1
 let g:easytags_on_cursorhold = 1
 let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
-let g:easytags_file = '.tags'
-au InsertEnter * :set tags=.write.tags
-au InsertLeave * :set tags=.read.tags
+let g:easytags_file = '~/.vimtags'
+au InsertEnter * :set tags=~/.vimtags
+" au InsertLeave * :set tags=.read.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -597,7 +605,7 @@ vnoremap / y/<C-R>"<CR>N
 vnoremap ? y?<C-R>"<CR>N
 vnoremap <leader>/ y/<C-R>"<CR>Ncgn
 vnoremap <leader>? y?<C-R>"<CR>NcgN
-vnoremap <leader>, y:.s/<C-R>"/
+vnoremap <leader>, y:.,$s/<C-R>"/
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
@@ -676,7 +684,20 @@ set statusline+=%=%l/%L
 
 """项目文件快捷打开,模糊匹配<<<
 " file finder mapping
-" let g:ctrlp_show_hidden = 1
+" let g:ctrlp_by_filename = 1
+let g:ctrlp_switch_buffer = 't'
+let g:ctrlp_mruf_case_sensitive = 1
+let g:ctrlp_show_hidden = 0
+fu! ToggleCtrlpShowHiddenFiles ()
+  if g:ctrlp_show_hidden
+    let g:ctrlp_show_hidden = 0
+  else
+    let g:ctrlp_show_hidden = 1
+  endif
+  execute 'CtrlPClearCache'
+endfunction
+nnoremap <silent><leader>ch :call ToggleCtrlpShowHiddenFiles()<CR>
+nnoremap <silent><leader>qe :EnMasse<CR>
 let g:ctrlp_map = "<leader>e"
 " tags (symbols) in current file finder mapping
 nnoremap <leader>b :CtrlPBuffer<CR>
@@ -705,7 +726,7 @@ nnoremap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
 nnoremap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>
 let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor)$',
+      \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor/(encore)@!.+)$',
       \ 'file': '\.pyc$\|\.pyo|\.meta$',
       \}
 """项目文件快捷打开,模糊匹配
@@ -802,11 +823,11 @@ endfunction
 
 nnoremap <Leader>r :call Run()<CR>
 func! Run()
-  let type = b:current_syntax
+  let type = &filetype
   echom type
   if type == "c" || type == "cpp"
     exec "!./%<"
-  elseif type == "bash"
+  elseif match(type, 'bash|sh')
     exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
   elseif type == "python"
     exec "!clear;$(which python) % | less"

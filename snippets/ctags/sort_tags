@@ -1,0 +1,1 @@
+echo "$(head -n 6 ~/.vimtags && tail -n +7 ~/.vimtags | sort | uniq)" > ~/.vimtags

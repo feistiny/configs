@@ -28,7 +28,7 @@ return PhpCsFixer\Config::create()
         'switch_case_space' => true,
         'single_quote' => true,
         'binary_operator_spaces' => [
-            'default'   => 'align_single_space',
+            'default'   => 'align_single_space_minimal',
             'operators' => [
             ],
         ],

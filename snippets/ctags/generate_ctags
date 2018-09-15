@@ -8,7 +8,7 @@ for i in $(cat $_cfp 2>/dev/null | grep -v '^#' | xargs) ; do
     fi
   else
     if [[ -e $i ]]; then
-      include_dirs="${include_dirs-} $i"
+      include_dirs="${include_dirs-} $(realpath $i)"
     fi
   fi
 done
