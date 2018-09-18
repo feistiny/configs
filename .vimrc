@@ -48,7 +48,7 @@ if filereadable(vim_plug_path)
 
   " Plug 'mkusher/padawan.vim'
   Plug 'Valloric/YouCompleteMe'
-  " Plug 'alvan/vim-php-manual'
+  Plug 'alvan/vim-php-manual'
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
@@ -58,6 +58,7 @@ if filereadable(vim_plug_path)
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
+  Plug 'swekaj/php-foldexpr.vim'
 
   Plug 'stephpy/vim-php-cs-fixer'
 
@@ -71,7 +72,7 @@ if filereadable(vim_plug_path)
   Plug 'Shougo/vimproc.vim'
   Plug 'Shougo/unite.vim'
 
-  Plug 'arnaud-lb/vim-php-namespace'
+  Plug 'feistiny/vim-php-namespace'
 
   " git上的插件地址
   Plug 'scrooloose/nerdcommenter' " 代码注释插件
@@ -140,7 +141,7 @@ if !exists('g:vdebug_options')
   let g:vdebug_options = {}
 endif
 let g:vdebug_options["ide_key"] = 'vim'
-let g:vdebug_options["break_on_open"] = 0
+let g:vdebug_options["break_on_open"] = 1
 let g:vdebug_options["server"] = '127.0.0.1'
 let g:vdebug_options["port"] = 9000
 
@@ -297,6 +298,10 @@ nnoremap n nzz
 runtime macros/matchit.vim
 let b:match_words='\<begin\>:\<end\>'
 """ html标签首尾跳转
+
+let b:phpfold_text_right_lines=1
+let b:phpfold_doc_with_funcs=1
+let b:phpfold_group_iftry=1
 
 set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
@@ -542,9 +547,9 @@ function! IPhpExpandClass()
 endfunction
 aug php_namespace_mapping
   au!
-  autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
-  autocmd FileType php noremap <Leader>x :call PhpExpandClass()<CR>
-  autocmd FileType php noremap <Leader>s :call PhpSortUse()<CR>
+  autocmd FileType php noremap <leader>u :source ~/configs/.vimrc \| call PhpInsertUse()<CR>
+  autocmd FileType php noremap <leader>x :call PhpExpandClass()<CR>
+  autocmd FileType php noremap <leader>s :call PhpSortUse()<CR>
 aug END
 
 let &termencoding=&encoding
@@ -553,6 +558,7 @@ set fileencodings=utf-8,gbk,ucs-bom,cp936
 " todo, set tags up search to .git root dir
 " set tags=.read.tags
 set tags=~/.vimtags;
+" let g:easytags_cmd = 'ctags --options=~/configs/.ctags'
 let g:easytags_auto_highlight = 0
 let g:easytags_dynamic_files = 1
 let g:easytags_on_cursorhold = 1
@@ -614,7 +620,7 @@ vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c'.<c-r>".'<esc>
 vnoremap pd2 c".<c-r>"."<esc>
 vnoremap if yoif (<c-r>") {}<esc>
-" vnoremap cL yO{php liu(<c-r>",on);}<esc>
+vnoremap vd yoecho '<c-r>"' <c-r>"<esc>
 " 快捷liu调试函数
 " 查看所选单词的帮助
 vnoremap <leader>hh y:h <c-r>"<cr>
@@ -726,7 +732,7 @@ nnoremap <leader>cw :let g:ctrlp_working_path_mode='ra'<cr>
 nnoremap <leader>c0 :let g:ctrlp_working_path_mode='0'<cr>
 let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor/(encore)@!.+)$',
+      \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules|vendor/(encore|laravel)@!.+)$',
       \ 'file': '\.pyc$\|\.pyo|\.meta$',
       \}
 """项目文件快捷打开,模糊匹配

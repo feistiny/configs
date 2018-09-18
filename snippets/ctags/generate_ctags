@@ -12,6 +12,11 @@ if [[ -e $_cfp ]]; then
     fi
   done
 fi
-f=$_f exclude_dirs=${exclude_dirs-} include_dirs=${include_dirs-$(realpath .)} \
-  sempl -o -f "${snippets_dir}/ctags/${l-php_ctags}" | bash "$([[ $- =~ x ]] && echo '-x')"
+if [[ $- =~ x ]]; then
+  f=$_f exclude_dirs=${exclude_dirs-} include_dirs=${include_dirs-$(realpath .)} \
+    sempl -o -f "${snippets_dir}/ctags/${l-php_ctags}" | bash -x
+else
+  f=$_f exclude_dirs=${exclude_dirs-} include_dirs=${include_dirs-$(realpath .)} \
+    sempl -o -f "${snippets_dir}/ctags/${l-php_ctags}" | bash
+fi
 unset _cfp include_dirs exclude_dirs

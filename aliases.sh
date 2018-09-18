@@ -126,7 +126,7 @@ alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git #
 alias gbr='git branch'
-alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei167@126.com"'
+alias gceu='gcf user.name "lzf" && gcf user.email "liuzhanfei166@126.com"'
 alias gcf='git config'
 alias gcfg='git config --global'
 alias gcp='git cherry-pick'
