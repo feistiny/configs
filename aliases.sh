@@ -17,7 +17,20 @@ alias clr='clear'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
-alias vu="vim -u ${shell_dir}/.vimrc"
+function vu() {
+  local _vu="vim -u ${shell_dir}/.vimrc"
+  if [[ "$1" ]]; then
+    if [[ -e $1 ]]; then
+      $_vu "$1"
+    elif [[ $# -gt 1 ]]; then
+      $_vu $*
+    else
+      $_vu -p $(multi_select "$(git ls-files | grep $1)")
+    fi
+  else
+    $_vu
+  fi
+}
 alias his="history | tail -100"
 alias ext="unset HISTFILE && exit"
 
@@ -192,7 +205,6 @@ function multi_select() {
     IFS=$'\n'
 		echo "Avaliable options:" >&2
 		function __show_menu() {
-      printf "%3d%s) %s\n" 0 " " '!!!CHOOSE THIS WHEN DONE!!!' >&2
       for i in "${!options[@]}"; do
         printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}" >&2
       done
@@ -200,9 +212,8 @@ function multi_select() {
         echo "$msg" >&2
       fi
 		}
-    prompt="check an option (again to uncheck, choose DONE when done): "
-		while __show_menu && read -rp "$prompt" num ; do
-      [[ $num == 0 ]] && { break; }
+    prompt="check an option (again to uncheck, ENTER when done): "
+		while __show_menu && read -rp "$prompt" num && [[ "$num" ]]; do
       [[ -z $num ]] && { continue; }
 			[[ "$num" != *[![:digit:]]* ]] &&
 			(( num > 0 && num <= ${#options[@]} )) ||
@@ -270,7 +281,11 @@ function gcls() {
 alias gcle='git clean'
 alias gco='git checkout'
 function gcom() {
-  local _files _grep _prompt
+  local _files _grep _prompt _patch
+  if [[ $* =~ $(echo '(\s+-p|-p\b)') ]]; then
+    _patch='-p'
+    set -- $(echo $* | sed -r 's/(^|\s)-p\b//')
+  fi
   _grep="$1"
   [[ $_grep ]] || {
     _prompt='grep a file name: '
@@ -284,7 +299,7 @@ function gcom() {
   if [[ $_grep ]]; then
     # grep file of the HEAD to checkout
     _files=$(multi_select "$(git diff HEAD --name-only | grep "$_grep")")
-    gco "$_files"
+    gco ${_patch-} "$_files"
   fi
 }
 alias gdf="git diff --color $(git diff --ws-error-highlight=new,old &>/dev/null && echo --ws-error-highlight=new,old)"
@@ -422,15 +437,15 @@ function glsw() {
 }
 function gvm() {
   local _files _regex _ofiles
-  _files="$(git ls-files -m)"
+  _files="$(echo "$(git ls-files -m && git diff --cached --name-only --diff-filter=AM)" | sort | uniq)"
   if [[ -n $_files ]]; then
     if [[ $# -gt 1 ]]; then
       _regex="$(echo $* | sed 's/ /|/g')"
-      _ofiles=$(echo "$_files" | grep -P "$_regex")
+      _ofiles="$(echo "$_files" | grep -P "$_regex")"
     elif [[ $# -gt 0 ]]; then
-      _ofiles=$(echo "$_files" | grep "$1")
+      _ofiles="$(echo "$_files" | grep "$1")"
     else
-      _ofiles=$(git ls-files -m)
+      _ofiles="$(git ls-files -m && git diff --cached --name-only --diff-filter=AM)"
     fi
     if [[ -n $_ofiles ]]; then
       vu -p $_ofiles
@@ -593,10 +608,6 @@ function grepkill() {
   read -p '确定杀死这些进程？'
   ps -ef | grep -iP "$(echo $* | sed '{s/\s+/\s/;s/^\s*//;s/\s*$//;}' | sed 's/\s/\|/g')" | grep -v grep | \
     awk '{print $2}' | xargs -i kill -9 {}
-}
-
-function composer_china() {
-  composer config -g repo.packagist composer https://packagist.phpcomposer.com
 }
 
 function su_without_password() {
@@ -925,6 +936,13 @@ init_dirstack
 function pu() {
   _whoami=$(whoami)
   pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
+  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
+  d
+  unset _whoami
+}
+function pd() {
+  _whoami=$(whoami)
+  cd "$*"
   sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
   d
   unset _whoami

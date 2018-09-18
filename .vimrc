@@ -53,12 +53,15 @@ if filereadable(vim_plug_path)
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
   Plug 'vim-vdebug/vdebug'
+
+  Plug 'tobyS/vmustache'
+  Plug 'tobyS/pdv'
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
-  Plug 'swekaj/php-foldexpr.vim'
+  Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
 
   Plug 'stephpy/vim-php-cs-fixer'
 
@@ -216,6 +219,12 @@ let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by defaul
 let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
 let g:php_cs_fixer_verbose = 0                    " Return the output of command if 1, else an inline information.
 
+let g:NERDSpaceDelims=1
+let g:NERDDefaultAlign = 'left'
+let g:NERDCustomDelimiters={ 'php' : { 'leftAlt': '/**','rightAlt': '*/', 'left' : '//'} }
+
+let g:pdv_template_dir = $HOME ."/.vim/plugged/pdv/templates_snip"
+nnoremap <buffer> <C-p> :call pdv#DocumentWithSnip()<CR>
 
 " F1-10 keys strange behavious, https://superuser.com/questions/258986/vim-strange-behaviour-f1-10
 " Condition should identify terminal in question so "
@@ -299,9 +308,22 @@ runtime macros/matchit.vim
 let b:match_words='\<begin\>:\<end\>'
 """ html标签首尾跳转
 
-let b:phpfold_text_right_lines=1
-let b:phpfold_doc_with_funcs=1
-let b:phpfold_group_iftry=1
+fun! PhpFoldSetVariables()
+  set foldlevel=1
+  let b:phpfold_heredocs = 1
+  let b:phpfold_text_right_lines=1
+  let b:phpfold_doc_with_funcs=1
+  let b:phpfold_group_iftry=1
+  let b:phpfold_use_level=2
+endf
+aug AUGPhpFoldSetVariables
+  au!
+  autocmd FileType html,css,vue,php :call PhpFoldSetVariables()
+aug END
+" augroup php_folding
+  " au!
+  " au FileType php setlocal foldlevel=1
+" augroup END
 
 set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
@@ -468,7 +490,7 @@ nnoremap <leader>lb :buffers<CR>:b<Space>
 
 nnoremap <leader>af :call AutoFormatCode()<CR>
 func! AutoFormatCode()
-  let type = b:current_syntax
+  let type = &filetype
   echom type
   if type == "php"
     exec "call PhpCsFixerFixFile()"
@@ -547,7 +569,7 @@ function! IPhpExpandClass()
 endfunction
 aug php_namespace_mapping
   au!
-  autocmd FileType php noremap <leader>u :source ~/configs/.vimrc \| call PhpInsertUse()<CR>
+  autocmd FileType php noremap <leader>u :call PhpInsertUse()<CR>
   autocmd FileType php noremap <leader>x :call PhpExpandClass()<CR>
   autocmd FileType php noremap <leader>s :call PhpSortUse()<CR>
 aug END
@@ -593,9 +615,7 @@ nnoremap <leader>qp :cp<CR>
 nnoremap <leader>qc :ccl<CR>
 nnoremap <leader>qo :copen<CR>
 nnoremap <leader>qt :cc
-nnoremap <C-p> <C-w><C-p>
-nnoremap <C-S> :w<CR>
-inoremap <C-S> <ESC>:w<CR>
+" nnoremap <C-p> <C-w><C-p>
 nnoremap <leader>; mpA;<esc>`p
 nnoremap <leader>dv :vsplit ~/configs/.vimrc<cr> "编辑.vimrc
 nnoremap <leader>sv :source ~/configs/.vimrc<CR><Left> "重新加载.vimrc
@@ -603,13 +623,13 @@ nnoremap <leader>lw :se wrap!<CR><Left> "切换是否换行
 nnoremap <leader>lt :se list!<CR>
 nnoremap <leader>lv :vsp #<CR>
 nnoremap <leader>ls :sp #<CR>
-" nnoremap <leader>bt :MBEToggle<CR>
+nnoremap <leader>bh :h <c-r>=expand("<cword>")<CR><CR>
 nnoremap <leader>th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
-vnoremap / y/<C-R>"<CR>N
+vnoremap / y/<c-r>=escape(@", '\/')<CR><CR>N
 vnoremap ? y?<C-R>"<CR>N
-vnoremap <leader>/ y/<C-R>"<CR>Ncgn
+vnoremap <leader>/ y?<C-R>"<CR>Ncgn
 vnoremap <leader>? y?<C-R>"<CR>NcgN
 vnoremap <leader>, y:.,$s/<C-R>"/
 " 快捷liu调试函数<<<
@@ -655,6 +675,14 @@ function! PasteForStatusline()
     return ""
   endif
 endfunction
+function! AutoCsFixForStatusline()
+  let status = get(b:, 'is_php_autofix_open', 0)
+  if status == 1
+    return "[fix]\ "
+  else
+    return ""
+  endif
+endfunction
 """检测粘贴模式函数
 function! StatusLineFileName()
   let pre = ''
@@ -681,6 +709,7 @@ function! CurDir()
   return curdir
 endfunction
 set statusline=%{PasteForStatusline()}
+set statusline+=%{AutoCsFixForStatusline()}
 set statusline+=[w%{winnr()}]\ 
 set statusline+=[b%n]\ 
 set statusline+=%{StatusLineFileName()}\ 
@@ -846,20 +875,28 @@ func! Run()
   endif
 endfunc
 
-nnoremap <leader>pcs :call SwitchAutoPHPCsFixer()<cr>
+nnoremap <C-S> :w<CR>
+inoremap <C-S> <ESC>:w<CR>
+nnoremap <leader>cf :call SwitchAutoPHPCsFixer()<cr>
 fun! SwitchAutoPHPCsFixer()
-  let b:open = get(b:, 'open', 0)
-  if b:open == 1
+  if &filetype != 'php'
+    return
+  endif
+  let b:is_php_autofix_open = get(b:, 'is_php_autofix_open', 0)
+  if b:is_php_autofix_open == 1
     exe "au! autoPhpCsFxier BufWritePost *.php"
-    let b:open = 0
-  elseif b:open == 0
+    let b:is_php_autofix_open = 0
+    nnoremap <C-S> :w<CR>
+    inoremap <C-S> <ESC>:w<CR>
+  elseif b:is_php_autofix_open == 0
     aug autoPhpCsFxier
       au!
       " todo, when auto fix, php will lose syntax highlighting
       au BufWritePost *.php silent! call PhpCsFixerFixFile()
-      au BufWritePost *.php :e!
     aug END
-    let b:open = 1
+    let b:is_php_autofix_open = 1
+    nnoremap <C-S> :w \| e!<CR>
+    inoremap <C-S> <ESC>:w \| e!<CR>
   endif
 endf
 
