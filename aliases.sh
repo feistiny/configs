@@ -97,14 +97,32 @@ function stpl() {
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
 function tml() {
-  big=$(tmls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
-  if [[ -n $big ]]; then
-    \tmux -f ${shell_dir}/.tmux.conf attach -t ${1-${big}}
+  local _tmux=\tmux" -f ${shell_dir}/.tmux.conf"
+  if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
+    big=$($_tmux -S ${snippets_dir}/.ignore_files/tmux.sock ls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+    $_tmux -S ${snippets_dir}/.ignore_files/tmux.sock attach -t $big
+  elif [[ -e $1 ]]; then
+    $_tmux attach -t $1
+  elif [[ "$1" ]] && [[ -n $(tmls) ]]; then
+    $_tmux attach -t $1
   else
-    tmls
+    big=$(tmls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+    $_tmux attach -t $big
   fi
 }
-alias tmll='\tmux'" -f ${shell_dir}/.tmux.conf"
+function tmll() {
+  local _tmux=\tmux" -f ${shell_dir}/.tmux.conf -S ${snippets_dir}/.ignore_files/tmux.sock"
+  if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
+    if [[ $# -gt 0 ]]; then
+      $_tmux $*
+    else
+      big=$($_tmux ls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+      $_tmux attach -t $big
+    fi
+  else
+    $_tmux
+  fi
+}
 alias tmls='\tmux ls'
 function tmks() {
   local i
