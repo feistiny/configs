@@ -1,0 +1,1 @@
+composer config repo.packagist composer https://packagist.laravel-china.org
