@@ -34,7 +34,7 @@ function vu() {
 alias his="history | tail -100"
 alias ext="unset HISTFILE && exit"
 
-alias ag="ansible-galaxy -i ${ansible_dir}/hosts"
+alias ag="ansible-galaxy"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
 function getSnippetsDirs() {

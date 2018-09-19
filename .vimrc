@@ -279,10 +279,10 @@ let g:user_emmet_install_global = 0
 aug AliasFiletype
   au!
   autocmd BufNewFile,BufRead *.{tpl,htm,html,vue} set filetype=html.javascript.css
-  autocmd BufNewFile,BufRead *.js set filetype=javascript
-  autocmd BufNewFile,BufRead *.php set filetype=php
-  autocmd BufNewFile,BufRead *.py set filetype=python
-  autocmd BufNewFile,BufRead *.{yml,conf} set filetype=yaml
+  " autocmd BufNewFile,BufRead *.js set filetype=javascript
+  " autocmd BufNewFile,BufRead *.php set filetype=php
+  " autocmd BufNewFile,BufRead *.py set filetype=python
+  autocmd BufNewFile,BufRead *.{conf} set filetype=yaml
 aug END
 aug EnableEmmet
   au!
@@ -877,7 +877,7 @@ endfunc
 
 nnoremap <C-S> :w<CR>
 inoremap <C-S> <ESC>:w<CR>
-nnoremap <leader>cf :call SwitchAutoPHPCsFixer()<cr>
+nnoremap <silent><leader>cf :call SwitchAutoPHPCsFixer()<cr>
 fun! SwitchAutoPHPCsFixer()
   if &filetype != 'php'
     return
@@ -895,8 +895,8 @@ fun! SwitchAutoPHPCsFixer()
       au BufWritePost *.php silent! call PhpCsFixerFixFile()
     aug END
     let b:is_php_autofix_open = 1
-    nnoremap <C-S> :w \| e!<CR>
-    inoremap <C-S> <ESC>:w \| e!<CR>
+    nnoremap <C-S> :mkview \| w \| e! \| loadview<CR>
+    inoremap <C-S> <ESC>:mkview \| w \| e! \| loadview<CR>
   endif
 endf
 
