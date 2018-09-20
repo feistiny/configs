@@ -1,5 +1,5 @@
 #!/bin/bash
-stty -ixon
+[[ $- =~ i ]] && stty -ixon
 export shell_dir="$HOME/configs"
 export plugins_dir="$HOME/configs/plugins"
 export ansible_dir="$HOME/configs/ansible"
@@ -99,10 +99,12 @@ alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
 function tml() {
   local _tmux=\tmux" -f ${shell_dir}/.tmux.conf"
   if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
-    big=$($_tmux -S ${snippets_dir}/.ignore_files/tmux.sock ls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+    $_tmux 2>/dev/null
+    if ! [[ $? -eq 0 ]]; then
+      rm ${snippets_dir}/.ignore_files/tmux.sock
+    fi
+    big=$($_tmux -S ${snippets_dir}/.ignore_files/tmux.sock ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
     $_tmux -S ${snippets_dir}/.ignore_files/tmux.sock attach -t $big
-  elif [[ -e $1 ]]; then
-    $_tmux attach -t $1
   elif [[ "$1" ]] && [[ -n $(tmls) ]]; then
     $_tmux attach -t $1
   else
@@ -113,17 +115,31 @@ function tml() {
 function tmll() {
   local _tmux=\tmux" -f ${shell_dir}/.tmux.conf -S ${snippets_dir}/.ignore_files/tmux.sock"
   if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
+    $_tmux 2>/dev/null
+    if ! [[ $? -eq 0 ]]; then
+      rm ${snippets_dir}/.ignore_files/tmux.sock
+    fi
     if [[ $# -gt 0 ]]; then
       $_tmux $*
     else
-      big=$($_tmux ls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+      big=$($_tmux ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
       $_tmux attach -t $big
     fi
   else
     $_tmux
   fi
 }
-alias tmls='\tmux ls'
+function tmls() {
+  if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
+    $_tmux 2>/dev/null
+    if ! [[ $? -eq 0 ]]; then
+      rm ${snippets_dir}/.ignore_files/tmux.sock
+      \tmux ls
+    else
+      \tmux -S ${snippets_dir}/.ignore_files/tmux.sock ls
+    fi
+  fi
+}
 function tmks() {
   local i
   for i in "$@"
@@ -142,11 +158,20 @@ alias .....="cd ../../../.."
 alias cmp='composer'
 alias cmpdp="cmp dumpautoload"
 alias art="php artisan"
-alias art.cont="php artisan make:controller"
-alias art.model="php artisan make:model"
-alias art.mig="php artisan make:migration"
-alias art.mid="php artisan make:middleware"
-alias art.fact="php artisan make:factory"
+__art()
+{
+	local cur prev opts
+
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+	opts="make:auth make:command make:controller make:event make:exception make:factory make:job make:listener make:mail make:middleware make:migration make:model make:notification make:policy make:provider make:request make:resource make:rule make:seeder make:test"
+
+  _get_comp_words_by_ref -n : cur
+	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  __ltrim_colon_completions "$cur"
+}
+complete -F __art art
 alias artm="php artisan migrate"
 alias artms="php artisan migrate:status"
 alias artmr="php artisan migrate:rollback"
@@ -431,6 +456,10 @@ alias gsti='git status --ignored'
 function gsw() {
   # exists in current dir
   local file
+  if [[ $# -eq 0 ]]; then
+    git ls-files -v | grep ^S
+    return
+  fi
   if [[ -e ${@: -1} ]]; then
     file=${@: -1}
   else
@@ -442,6 +471,10 @@ function gsw() {
 function gnsw() {
   # exists in current dir
   local file
+  if [[ $# -eq 0 ]]; then
+    git ls-files -v | grep ^S
+    return
+  fi
   if [[ -e ${@: -1} ]]; then
     file=${@: -1}
   else
@@ -855,14 +888,30 @@ function mktmp() {
   subfix=$(echo ${2-.txt} | sed -r 's/^[^\.]/.&/')
   mktemp --tmpdir=$(pwd) -t "${name}.XXXXXX${subfix}"
 }
+__dfa()
+{
+	local cur prev opts funs aliases
+
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+  funs="$(declare -F | awk '{print $3}' | xargs)"
+  aliases="$(alias | awk '/^alias/{print $2}' | cut -d'=' -f1)"
+  opts="${aliases-} ${funs-}"
+
+  _get_comp_words_by_ref -n : cur
+	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  __ltrim_colon_completions "$cur"
+}
+complete -F __dfa dfa
 function dfa() {
   local info _alias
   info=$(declare -f "$1")
   _alias=$(alias "$1" 2>/dev/null)
-  if [[ -n "$info" ]]; then
-    echo "$info"
-  elif [[ -n "$_alias" ]]; then
+  if [[ -n "$_alias" ]]; then
     echo "$_alias"
+  elif [[ -n "$info" ]]; then
+    echo "$info"
   else
     echo 'definition not found'
   fi
@@ -944,16 +993,16 @@ function init_dirstack() {
   _dirstack="$(cat ${snippets_dir}/.ignore_files/dirstack 2>/dev/null)"
   if [[ -n $_dirstack ]]; then
     for _d in $(echo "$_dirstack" | xargs -n1 | tac); do
-      pushd $_d 1>/dev/null
+      pushd $_d &>/dev/null
     done
-    popd -0 1>/dev/null
+    popd -0 &>/dev/null
   fi
   unset _dirstack _d
 }
 init_dirstack
 function pu() {
   _whoami=$(whoami)
-  pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
+  pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
   sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
   d
   unset _whoami
@@ -967,7 +1016,7 @@ function pd() {
 }
 function po() {
   _whoami=$(whoami)
-  popd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') 1>/dev/null
+  popd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
   sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
   d
   unset _whoami

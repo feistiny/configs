@@ -272,6 +272,9 @@ fu! ToggleCurline ()
 endfunction
 nnoremap <silent><leader>cl :call ToggleCurline()<CR>
 
+let g:pdv_template_dir = $HOME ."/.vim/plugged/pdv/templates_snip"
+nnoremap <buffer> <C-p> :call pdv#DocumentWithSnip()<CR>
+
 """根据文件类型做不同设置<<<
 " let g:user_emmet_leader_key = '<tab>'
 " let g:user_emmet_expandabbr_key = ','
@@ -308,18 +311,7 @@ runtime macros/matchit.vim
 let b:match_words='\<begin\>:\<end\>'
 """ html标签首尾跳转
 
-fun! PhpFoldSetVariables()
-  set foldlevel=1
-  let b:phpfold_heredocs = 1
-  let b:phpfold_text_right_lines=1
-  let b:phpfold_doc_with_funcs=1
-  let b:phpfold_group_iftry=1
-  let b:phpfold_use_level=2
-endf
-aug AUGPhpFoldSetVariables
-  au!
-  autocmd FileType html,css,vue,php :call PhpFoldSetVariables()
-aug END
+let g:phpfold_open=0
 " augroup php_folding
   " au!
   " au FileType php setlocal foldlevel=1
@@ -577,19 +569,16 @@ aug END
 let &termencoding=&encoding
 let @j='Jx'
 set fileencodings=utf-8,gbk,ucs-bom,cp936
-" todo, set tags up search to .git root dir
-" set tags=.read.tags
-set tags=~/.vimtags;
-" let g:easytags_cmd = 'ctags --options=~/configs/.ctags'
+" set cpoptions+=d
+set tags=./.tags
 let g:easytags_auto_highlight = 0
 let g:easytags_dynamic_files = 1
 let g:easytags_on_cursorhold = 1
 let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
-let g:easytags_file = '~/.vimtags'
-au InsertEnter * :set tags=~/.vimtags
-" au InsertLeave * :set tags=.read.tags
+let g:easytags_file = './.tags'
+au InsertEnter * :set tags=./.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}

@@ -1,4 +1,4 @@
-function mkcr() {
+function mkc() {
   local _x _cfp _f
   if [[ $- =~ x ]]; then
     _x='-x'
