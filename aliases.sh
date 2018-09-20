@@ -165,7 +165,20 @@ __art()
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
   # prev="${COMP_WORDS[COMP_CWORD-1]}"
-	opts="make:auth make:command make:controller make:event make:exception make:factory make:job make:listener make:mail make:middleware make:migration make:model make:notification make:policy make:provider make:request make:resource make:rule make:seeder make:test"
+  if [[ -e artisan ]]; then
+    opts="$(php artisan | grep -P ':\w' | awk '{print $1}' | xargs)"
+  else
+    opts="api:generate api:update app:name
+    auth:clear-resets cache:clear cache:forget cache:table config:cache config:clear
+    make:auth make:command make:controller make:event make:exception make:factory make:job make:listener make:mail make:middleware
+    make:migration make:model make:notification make:policy make:provider make:request make:resource make:rule make:seeder make:test
+    migrate:fresh migrate:install migrate:refresh migrate:reset migrate:rollback migrate:status
+    notifications:table package:discover
+    queue:failed queue:failed-table queue:flush queue:forget queue:listen queue:restart queue:retry queue:table queue:work
+    route:cache route:clear route:list
+    db:seed event:generate key:generate
+    schedule:run session:table storage:link vendor:publish view:clear"
+  fi
 
   _get_comp_words_by_ref -n : cur
 	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
