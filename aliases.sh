@@ -181,10 +181,10 @@ alias cmpdp="cmp dumpautoload"
 alias art="php artisan"
 __art()
 {
-	local cur prev opts
+  local cur prev opts
 
-	COMPREPLY=()
-	cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
   # prev="${COMP_WORDS[COMP_CWORD-1]}"
   if [[ -e artisan ]]; then
     opts="$(php artisan | grep -P ':\w' | awk '{print $1}' | xargs)"
@@ -202,7 +202,7 @@ __art()
   fi
 
   _get_comp_words_by_ref -n : cur
-	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
   __ltrim_colon_completions "$cur"
 }
 complete -F __art art
@@ -280,27 +280,27 @@ function multi_select() {
   elif [[ $_line -gt 1 ]]; then
     OLD_IFS=${IFS}
     IFS=$'\n'
-		echo "Avaliable options:" >&2
-		function __show_menu() {
+    echo "Avaliable options:" >&2
+    function __show_menu() {
       for i in "${!options[@]}"; do
         printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}" >&2
       done
       if [[ -n $msg ]]; then
         echo "$msg" >&2
       fi
-		}
+    }
     prompt="check an option (again to uncheck, ENTER when done): "
-		while __show_menu && read -rp "$prompt" num && [[ "$num" ]]; do
+    while __show_menu && read -rp "$prompt" num && [[ "$num" ]]; do
       [[ -z $num ]] && { continue; }
-			[[ "$num" != *[![:digit:]]* ]] &&
-			(( num > 0 && num <= ${#options[@]} )) ||
-			{ msg="Invalid option: $num"; continue; }
-			((num--)); msg="${options[num]} was ${choices[num]:+un}checked"
-			[[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
-		done
-		for i in ${!options[@]}; do
-			[[ "${choices[i]}" ]] && { printf "%s\n" "${options[i]}"; }
-		done
+      [[ "$num" != *[![:digit:]]* ]] &&
+      (( num > 0 && num <= ${#options[@]} )) ||
+      { msg="Invalid option: $num"; continue; }
+      ((num--)); msg="${options[num]} was ${choices[num]:+un}checked"
+      [[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
+    done
+    for i in ${!options[@]}; do
+      [[ "${choices[i]}" ]] && { printf "%s\n" "${options[i]}"; }
+    done
     IFS=${OLD_IFS}
   else
     echo 'optoins is none' >&2
@@ -924,17 +924,17 @@ function mktmp() {
 }
 __dfa()
 {
-	local cur prev opts funs aliases
+  local cur prev opts funs aliases
 
-	COMPREPLY=()
-	cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
   # prev="${COMP_WORDS[COMP_CWORD-1]}"
   funs="$(declare -F | awk '{print $3}' | xargs)"
   aliases="$(alias | awk '/^alias/{print $2}' | cut -d'=' -f1)"
   opts="${aliases-} ${funs-}"
 
   _get_comp_words_by_ref -n : cur
-	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
   __ltrim_colon_completions "$cur"
 }
 complete -F __dfa dfa
