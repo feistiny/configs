@@ -31,6 +31,27 @@ function vu() {
     $_vu
   fi
 }
+__vt()
+{
+  local cur prev opts
+
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+  if [[ -e .tags ]]; then
+    opts="$(cat .tags | grep -v '^!' | awk '{print $1}' | sort | uniq | xargs)"
+  else
+    return
+  fi
+
+  _get_comp_words_by_ref -n : cur
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  __ltrim_colon_completions "$cur"
+}
+complete -F __vt -o default vt
+function vt() {
+  vu -t $1
+}
 alias his="history | tail -100"
 alias ext="unset HISTFILE && exit"
 
