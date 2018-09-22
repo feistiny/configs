@@ -3,12 +3,14 @@ shopt -s expand_aliases
 
 git config ${g+--global} core.autocrlf input
 git config ${g+--global} core.filemode false
-git config ${g+--global} core.editor vim
+git config ${g+--global} core.editor "vim -u ${shell_dir}/.vimrc"
 git config ${g+--global} core.excludesfile ${path-~/configs/.gitignore_global}
 
 git config ${g+--global} push.default current
 git config ${g+--global} color.status auto
 
-cat ${snippets_dir-}/git/config_mergetool >> .git/config &>/dev/null
+if [[ -z "$(git config --get merge.tool 2>/dev/null)" ]]; then
+  cat ${snippets_dir-}/git/config_mergetool >> .git/config
+fi
 gceu
 gsw ${snippets_dir-}/.ignore_files/dirstack &>/dev/null
