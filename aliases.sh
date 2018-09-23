@@ -118,57 +118,52 @@ function stpl() {
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
 function tml() {
-  local _tmux=\tmux" -f ${shell_dir}/.tmux.conf"
+  local _tmux=\tmux" -f ${shell_dir}/.tmux.conf -S ${snippets_dir}/.ignore_files/tmux.sock"
   if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
-    $_tmux 2>/dev/null
+    $_tmux ls &>/dev/null
     if ! [[ $? -eq 0 ]]; then
       rm ${snippets_dir}/.ignore_files/tmux.sock
+    else
+      big=$($_tmux ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+      $_tmux attach -t $big
     fi
-    big=$($_tmux -S ${snippets_dir}/.ignore_files/tmux.sock ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
-    $_tmux -S ${snippets_dir}/.ignore_files/tmux.sock attach -t $big
   elif [[ "$1" ]] && [[ -n $(tmls) ]]; then
     $_tmux attach -t $1
-  else
-    big=$(tmls | grep -v 'attached' | tail -1 | cut -d' ' -f1)
-    $_tmux attach -t $big
   fi
 }
 function tmll() {
   local _tmux=\tmux" -f ${shell_dir}/.tmux.conf -S ${snippets_dir}/.ignore_files/tmux.sock"
   if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
-    $_tmux 2>/dev/null
+    $_tmux ls 2>/dev/null
     if ! [[ $? -eq 0 ]]; then
       rm ${snippets_dir}/.ignore_files/tmux.sock
     fi
     if [[ $# -gt 0 ]]; then
       $_tmux $*
     else
-      big=$($_tmux ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
-      $_tmux attach -t $big
+      $_tmux
     fi
   else
     $_tmux
   fi
 }
 function tmls() {
+  local _tmux=\tmux" -f ${shell_dir}/.tmux.conf -S ${snippets_dir}/.ignore_files/tmux.sock"
   if [[ -e ${snippets_dir}/.ignore_files/tmux.sock ]]; then
-    $_tmux 2>/dev/null
+    $_tmux ls 2>/dev/null
     if ! [[ $? -eq 0 ]]; then
       rm ${snippets_dir}/.ignore_files/tmux.sock
-      \tmux ls
-    else
-      \tmux -S ${snippets_dir}/.ignore_files/tmux.sock ls
     fi
   fi
 }
 function tmks() {
+  local _tmux=\tmux" -S ${snippets_dir}/.ignore_files/tmux.sock"
   local i
   for i in "$@"
   do
-    \tmux kill-session -t $i
+    $_tmux kill-session -t $i
   done
 }
-alias tmkr='\tmux kill-server'
 
 alias ..="cd .."
 alias ...="cd ../.."
