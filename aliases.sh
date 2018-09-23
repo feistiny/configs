@@ -419,6 +419,12 @@ function gpl() {
 }
 alias gplr='gpl --rebase'
 alias gps='git push'
+function gpsa() {
+  local _branch
+  for _branch in $(git remote) ; do
+    gps $_branch
+  done
+}
 alias grmc='git rm --cached'
 alias grm='git rm'
 alias grs='git reset --soft'
