@@ -53,7 +53,7 @@ function vt() {
   vu -t $1
 }
 alias his="history | tail -100"
-alias ext="unset HISTFILE && exit"
+alias ext="unset HISTFILE && logout"
 
 alias ag="ansible-galaxy"
 alias ap="ansible-playbook -i ${ansible_dir}/hosts"

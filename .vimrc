@@ -311,7 +311,7 @@ runtime macros/matchit.vim
 let b:match_words='\<begin\>:\<end\>'
 """ html标签首尾跳转
 
-let g:phpfold_open=0
+" let g:phpfold_open=0
 " augroup php_folding
   " au!
   " au FileType php setlocal foldlevel=1
@@ -578,7 +578,8 @@ let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
-au InsertEnter * :set tags=.tags
+au InsertEnter * :set tags=
+au InsertLeave * :set tags=.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -618,7 +619,7 @@ nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap / y/<c-r>=escape(@", '\/')<CR><CR>N
 vnoremap ? y?<C-R>"<CR>N
-vnoremap <leader>/ y?<C-R>"<CR>Ncgn
+vnoremap <leader>/ y/<C-R>=escape(@", '\/')<CR><CR>Ncgn
 vnoremap <leader>? y?<C-R>"<CR>NcgN
 vnoremap <leader>, y:.,$s/<C-R>"/
 " 快捷liu调试函数<<<
@@ -649,7 +650,7 @@ nnoremap w- :resize -5<CR>
 nnoremap w, :vertical resize -5<CR>
 nnoremap w. :vertical resize +5<CR>
 "nmap <S-W> <C-W><C-W>
-nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
+" nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
 """分割窗口相关操作
 
 """状态栏配置<<<
