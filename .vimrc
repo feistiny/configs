@@ -440,6 +440,17 @@ nnoremap <leader>ywv :CopyTwoWindowsVerticalSplit
 """
 
 let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor,*.log"
+nnoremap <silent><leader>sg :call SwitchEasyGrepExclude()<cr>
+fun! SwitchEasyGrepExclude()
+  let g:is_easygrep_excludes = get(g:, 'is_easygrep_excludes', 1)
+  if g:is_easygrep_excludes == 1
+    let g:EasyGrepFilesToExclude=""
+    let g:is_easygrep_excludes = 0
+  elseif g:is_easygrep_excludes == 0
+    let g:EasyGrepFilesToExclude=".svn,.git,node_modules,vendor,*.log"
+    let g:is_easygrep_excludes = 1
+  endif
+endf
 
 """python相关配置
 let g:syntastic_python_flake8_args = '--ignore=E501,E401' ",F821' \"忽略pep8每行超过79个字符的错误提示
@@ -665,6 +676,13 @@ function! PasteForStatusline()
     return ""
   endif
 endfunction
+function! EasyGrepExcludeStatusForStatusline()
+  if get(g:, 'is_easygrep_excludes', 1) == 0
+    return "[g]\ "
+  else
+    return ""
+  endif
+endfunction
 function! AutoCsFixForStatusline()
   let status = get(b:, 'is_php_autofix_open', 0)
   if status == 1
@@ -703,7 +721,7 @@ set statusline+=%{AutoCsFixForStatusline()}
 set statusline+=[w%{winnr()}]\ 
 set statusline+=[b%n]\ 
 set statusline+=%{StatusLineFileName()}\ 
-set statusline+=%=
+set statusline+=%=%{EasyGrepExcludeStatusForStatusline()}
 set statusline+=%=%l/%L
 """状态栏配置
 
