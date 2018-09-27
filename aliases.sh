@@ -17,6 +17,7 @@ alias clr='clear'
 alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
+alias sudo='sudo ' #https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo#22043
 function vu() {
   local _vu="vim -u ${shell_dir}/.vimrc"
   if [[ "$1" ]]; then
@@ -1035,24 +1036,35 @@ function init_dirstack() {
   unset _dirstack _d
 }
 init_dirstack
+function pp() {
+  local _dirs _dir _whoami
+  if [[ -n $1 ]]; then
+    _dirs=$(dirs -v)
+    _dir="$(echo "$_dirs" | grep -P "^\s*${1}\s" | awk '{print $2}')"
+    _whoami=$(whoami)
+    cd "$(echo "$_dir" | sed "s/^~/\/home\/$_whoami/g")"
+  else
+    cd -
+  fi
+}
 function pu() {
   _whoami=$(whoami)
   pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
-  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
+  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/^~/\/home\/$_whoami/g")
   d
   unset _whoami
 }
 function pd() {
   _whoami=$(whoami)
   cd "$*"
-  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
+  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/^~/\/home\/$_whoami/g")
   d
   unset _whoami
 }
 function po() {
   _whoami=$(whoami)
   popd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
-  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/~/\/$_whoami/g")
+  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/^~/\/home\/$_whoami/g")
   d
   unset _whoami
 }
