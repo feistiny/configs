@@ -1,0 +1,4 @@
+# tinx instead of tinker
+composer require --dev ajthinking/tinx:^2.1
+php artisan vendor:publish --provider=Ajthinking\\Tinx\\TinxServiceProvider --force
+# composer require doctrine/dbal

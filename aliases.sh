@@ -177,15 +177,16 @@ alias cmpdp="cmp dumpautoload"
 alias art="php artisan"
 __art()
 {
-  local cur prev opts
+  local cur prev opts _opts_base="list migrate"
 
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
   # prev="${COMP_WORDS[COMP_CWORD-1]}"
   if [[ -e artisan ]]; then
-    opts="$(php artisan | grep -P ':\w' | awk '{print $1}' | xargs)"
+    opts="$_opts_base $(php artisan | grep -P ':\w' | awk '{print $1}' | xargs)"
   else
-    opts="api:generate api:update app:name
+    opts="$_opts_base
+    api:generate api:update app:name
     auth:clear-resets cache:clear cache:forget cache:table config:cache config:clear
     make:auth make:command make:controller make:event make:exception make:factory make:job make:listener make:mail make:middleware
     make:migration make:model make:notification make:policy make:provider make:request make:resource make:rule make:seeder make:test
