@@ -124,6 +124,8 @@ function tml() {
     $_tmux ls &>/dev/null
     if ! [[ $? -eq 0 ]]; then
       rm ${snippets_dir}/.ignore_files/tmux.sock
+    elif [[ "$1" ]]; then
+      $_tmux attach -t $1
     else
       big=$($_tmux ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
       $_tmux attach -t $big
