@@ -631,7 +631,7 @@ nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap / y/<c-r>=escape(@", '\/')<CR><CR>N
 vnoremap ? y?<C-R>"<CR>N
 vnoremap <leader>/ y/<C-R>=escape(@", '\/')<CR><CR>Ncgn
-vnoremap <leader>? y?<C-R>"<CR>NcgN
+vnoremap <leader>? y?<C-R>=escape(@", '\/')<CR><CR>NcgN
 vnoremap <leader>, y:.,$s/<C-R>"/
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
