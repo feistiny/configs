@@ -1039,35 +1039,36 @@ function init_dirstack() {
   unset _dirstack _d
 }
 init_dirstack
+function convert_root_realpath() {
+  echo "$1" | sed -r "s@(^\s*|\s+)~@\1$(realpath ~)@g"
+}
 function pp() {
-  local _dirs _dir _whoami
+  local _dirs _dir
   if [[ -n $1 ]]; then
     _dirs=$(dirs -v)
     _dir="$(echo "$_dirs" | grep -P "^\s*${1}\s" | awk '{print $2}')"
-    _whoami=$(whoami)
-    cd "$(echo "$_dir" | sed "s/^~/\/home\/$_whoami/g")"
+    cd "$(convert_root_realpath "$_dir")"
   else
     cd -
   fi
 }
 function pu() {
-  _whoami=$(whoami)
   pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
-  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/^~/\/home\/$_whoami/g")
+  sets .ignore_files/dirstack $(convert_root_realpath ${DIRSTACK[@]})
   d
   unset _whoami
 }
 function pd() {
   _whoami=$(whoami)
   cd "$*"
-  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/^~/\/home\/$_whoami/g")
+  sets .ignore_files/dirstack $(convert_root_realpath ${DIRSTACK[@]})
   d
   unset _whoami
 }
 function po() {
   _whoami=$(whoami)
   popd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
-  sets .ignore_files/dirstack $(echo ${DIRSTACK[@]} | sed "s/^~/\/home\/$_whoami/g")
+  sets .ignore_files/dirstack $(convert_root_realpath ${DIRSTACK[@]})
   d
   unset _whoami
 }
