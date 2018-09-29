@@ -1,0 +1,13 @@
+---
+# - name: test
+  # shell: echo {{var}}
+- name: install nginx
+  apt:
+    name: nginx
+    state: present
+- name: copy template
+  template:
+    src: default.j2
+    dest: "{{ nginx_default_vhost_path }}"
+  notify:
+    - restart nginx

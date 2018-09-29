@@ -1,0 +1,17 @@
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+  # listen 443 ssl default_server;
+  # listen [::]:443 ssl default_server;
+  root {{ root | default('/') }}/public;
+  index index.php index.html index.htm index.nginx-debian.html;
+  server_name {{ server_name | default('localhost') }};
+  location / {
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+  location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/run/php/php{{ php_version | default('7.0') }}-fpm.sock;
+    include fastcgi_params;
+  }
+}

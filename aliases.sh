@@ -57,7 +57,7 @@ alias his="history | tail -100"
 alias ext="unset HISTFILE && logout"
 
 alias ag="ansible-galaxy"
-alias ap="ansible-playbook -i ${ansible_dir}/hosts"
+alias ap="ANSIBLE_NOCOWS=1 ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
 function getSnippetsDirs() {
   local _dirs
