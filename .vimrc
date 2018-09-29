@@ -653,6 +653,7 @@ inoremap <C-K> <C-O>l
 let g:surround_indent = 0
 let g:EasyGrepCommand=1
 let g:EasyGrepPerlStyle=1
+let g:EasyGrepJumpToMatch=0
 " common config
 
 """分割窗口相关操作<<<
