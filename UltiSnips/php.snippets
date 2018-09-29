@@ -32,6 +32,12 @@ public function set$1Attribute()
 	return $3;
 }
 endsnippet
+snippet ps "scope function" b
+public function scope$1($query)
+{
+	return $query->${2:where}('$3', $0);
+}
+endsnippet
 snippet lf
 elseif ($1) {
 	$2

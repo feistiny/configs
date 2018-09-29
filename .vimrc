@@ -589,8 +589,8 @@ let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
-au InsertEnter * :set tags=
-au InsertLeave * :set tags=.tags
+" au InsertEnter * :set tags=
+" au InsertLeave * :set tags=.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -684,8 +684,7 @@ function! EasyGrepExcludeStatusForStatusline()
   endif
 endfunction
 function! AutoCsFixForStatusline()
-  let status = get(b:, 'is_php_autofix_open', 0)
-  if status == 1
+  if get(g:, 'is_php_autofix_open', 0) == 1
     return "[fix]\ "
   else
     return ""
@@ -890,19 +889,19 @@ fun! SwitchAutoPHPCsFixer()
   if &filetype != 'php'
     return
   endif
-  let b:is_php_autofix_open = get(b:, 'is_php_autofix_open', 0)
-  if b:is_php_autofix_open == 1
+  let g:is_php_autofix_open = get(g:, 'is_php_autofix_open', 0)
+  if g:is_php_autofix_open == 1
     exe "au! autoPhpCsFxier BufWritePost *.php"
-    let b:is_php_autofix_open = 0
+    let g:is_php_autofix_open = 0
     nnoremap <C-S> :w<CR>
     inoremap <C-S> <ESC>:w<CR>
-  elseif b:is_php_autofix_open == 0
+  elseif g:is_php_autofix_open == 0
     aug autoPhpCsFxier
       au!
       " todo, when auto fix, php will lose syntax highlighting
       au BufWritePost *.php silent! call PhpCsFixerFixFile()
     aug END
-    let b:is_php_autofix_open = 1
+    let g:is_php_autofix_open = 1
     nnoremap <C-S> :mkview \| w \| e! \| loadview<CR>
     inoremap <C-S> <ESC>:mkview \| w \| e! \| loadview<CR>
   endif
