@@ -1040,7 +1040,7 @@ function init_dirstack() {
 }
 init_dirstack
 function convert_root_realpath() {
-  echo "$1" | sed -r "s@(^\s*|\s+)~@\1$(realpath ~)@g"
+  echo "$*" | sed -r "s@(^\s*|\s+)~@\1$(realpath ~)@g"
 }
 function pp() {
   local _dirs _dir
@@ -1054,7 +1054,7 @@ function pp() {
 }
 function pu() {
   pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
-  sets .ignore_files/dirstack $(convert_root_realpath ${DIRSTACK[@]})
+  sets .ignore_files/dirstack "$(convert_root_realpath ${DIRSTACK[@]})"
   d
   unset _whoami
 }
