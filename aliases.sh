@@ -26,7 +26,7 @@ function vu() {
     elif [[ $# -gt 1 ]]; then
       $_vu $*
     else
-      $_vu -p $(multi_select "$(git ls-files | grep $1)")
+      $_vu -p $(multi_select "$(git ls-files 2>/dev/null | grep $1)" 2>/dev/null)
     fi
   else
     $_vu
@@ -81,7 +81,7 @@ alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 source "${fish_dir}/mkctags.sh"
-function pcsd() {
+function pcf() {
   local _dir
   _dir="${*:-.}"
   php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
