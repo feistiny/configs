@@ -1,0 +1,18 @@
+---
+- hosts: "{{ host | default('localhost') }}"
+  tasks:
+  - name: check whether root is defined
+    fail: msg="root is not defined"
+    when: root is not defined
+    tags:
+      - always
+
+- hosts: "{{ host | default('localhost') }}"
+  roles:
+    - role: nginx
+      tags: ['nginx','nginx-php','nginx-php-laravel']
+    - role: php
+      tags: ['php','nginx-php','nginx-php-laravel']
+    - role: laravel
+      tags: ['laravel','nginx-php-laravel']
+

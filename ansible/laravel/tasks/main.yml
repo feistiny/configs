@@ -1,0 +1,28 @@
+---
+- name: install git
+  apt:
+    name: git
+    state: present
+- name: check whether origin is defined
+  fail: msg="origin is not defined"
+  when: origin is not defined
+- name: git clone {{origin}}
+  git:
+    repo: "{{ origin }}"
+    dest: "{{ root }}"
+- name: composer install
+  composer:
+    command: install
+    working_dir: "{{ root }}"
+- name: chmod storage
+  file:
+    path: "{{ root }}/storage"
+    state: directory
+    mode: 0777
+- name: chown root to www-data
+  file:
+    path: "{{ root }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data

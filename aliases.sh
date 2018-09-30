@@ -57,7 +57,7 @@ alias his="history | tail -100"
 alias ext="unset HISTFILE && logout"
 
 alias ag="ansible-galaxy"
-alias ap="ansible-playbook -i ${ansible_dir}/hosts"
+alias ap="ANSIBLE_NOCOWS=1 ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
 function getSnippetsDirs() {
   local _dirs
@@ -1040,7 +1040,7 @@ function init_dirstack() {
 }
 init_dirstack
 function convert_root_realpath() {
-  echo "$1" | sed -r "s@(^\s*|\s+)~@\1$(realpath ~)@g"
+  echo "$*" | sed -r "s@(^\s*|\s+)~@\1$(realpath ~)@g"
 }
 function pp() {
   local _dirs _dir
@@ -1054,7 +1054,7 @@ function pp() {
 }
 function pu() {
   pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
-  sets .ignore_files/dirstack $(convert_root_realpath ${DIRSTACK[@]})
+  sets .ignore_files/dirstack "$(convert_root_realpath ${DIRSTACK[@]})"
   d
   unset _whoami
 }
