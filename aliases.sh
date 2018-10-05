@@ -422,12 +422,13 @@ function gpl() {
   fi
 }
 alias gplr='gpl --rebase'
-alias gps='git push'
-function gpsa() {
-  local _branch
-  for _branch in $(git remote) ; do
-    gps $_branch
-  done
+function gps() {
+  upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream} 2>/dev/null);
+  if [[ "$upstream" ]]; then
+    git push
+  else
+    git push --all
+  fi
 }
 alias grmc='git rm --cached'
 alias grm='git rm'
@@ -573,10 +574,17 @@ function grtad() {
   local url url_in_remote
   url=$2
   url_in_remote=$(git remote get-url $2 2>/dev/null)
-  [ -n "${url_in_remote}" ] && url=$url_in_remote
-  git remote add $1 $url 2>/dev/null
-  git remote set-url all --add $url 2>/dev/null || \
-    git remote add all $url
+  [[ ${url_in_remote} ]] && url=$url_in_remote
+  git remote add $1 $url 2>/dev/null \
+    || git remote set-url $1 $url
+  git remote set-url all --add $url 2>/dev/null \
+    || git remote add all $url
+}
+function grtrm() {
+  local url
+  url="$(git config --get remote.$1.url)"
+  git remote set-url --delete all $url \
+    && git remote remove $1
 }
 function grh() {
   git_last $@
