@@ -20,13 +20,19 @@ alias cla='clear; ls -a'
 alias sudo='sudo ' #https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo#22043
 function vu() {
   local _vu="vim -u ${shell_dir}/.vimrc"
+  local files_to_open
   if [[ "$1" ]]; then
     if [[ -e $1 ]]; then
       $_vu "$1"
     elif [[ $# -gt 1 ]]; then
       $_vu $*
     else
-      $_vu -p $(multi_select "$(git ls-files 2>/dev/null | grep $1)" 2>/dev/null)
+      files_to_open="$(multi_select "$(git ls-files 2>/dev/null | grep $1)" 2>/dev/null)"
+      if [[ $files_to_open ]]; then
+        $_vu -p $files_to_open
+      else
+        $_vu $*
+      fi
     fi
   else
     $_vu
