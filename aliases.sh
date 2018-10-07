@@ -424,10 +424,13 @@ function gpl() {
 alias gplr='gpl --rebase'
 function gps() {
   upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream} 2>/dev/null);
-  if [[ "$upstream" ]]; then
-    git push
+  if [[ $upstream ]]; then
+    git push $*
   else
-    git push --all
+    git ls-remote --exit-code all &>/dev/null
+    if [[ $? -eq 0 ]]; then
+      git push all --all $*
+    fi
   fi
 }
 alias grmc='git rm --cached'
