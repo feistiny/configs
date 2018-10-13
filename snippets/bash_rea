@@ -1,5 +1,40 @@
-if [[ -n ${norea-''} ]]; then
-  grep aliases.sh ~/.bashrc >/dev/null && { sed -i '/aliases.sh/csource ~/configs/aliases.sh ${showerr-2>/dev/null}' ~/.bashrc; } || { echo 'source ~/configs/aliases.sh ${showerr-2>/dev/null}' >> ~/.bashrc; }
-else
-  grep aliases.sh ~/.bashrc >/dev/null && { sed -i '/aliases.sh/calias rea="source ~/configs/aliases.sh 2>/dev/null"' ~/.bashrc; } || { echo 'alias rea="source ~/configs/aliases.sh 2>/dev/null"' >> ~/.bashrc; }
+# ensure file exists
+sed_file_path="$(realpath ~/.bashrc)"
+if ! [[ -e $sed_file_path ]] || [[ $(wc -l $sed_file_path | cut -d' ' -f1) -eq 0 ]]; then
+  touch $sed_file_path
+  just_append=1
 fi
+
+# what to insert
+rea_search='aliases.sh'
+if [[ "$norea" ]]; then
+  rea_replacement="source ~/configs/$rea_search ${showerr-2>/dev/null}"
+else
+  rea_replacement="alias rea='source ~/configs/$rea_search ${showerr-2>/dev/null}'"
+fi
+
+# insert position
+avaiable_insert_linenumber=($(sed -n -e '/^$/{N;/\n#/=}' $sed_file_path | xargs))
+if [[ ${#avaiable_insert_linenumber[@]} -gt 0 ]]; then
+  random_select_linenumber=${avaiable_insert_linenumber[$RANDOM % ${#avaiable_insert_linenumber[@]}]}
+else
+  just_append=1
+fi
+
+# delete old insert
+if [[ "$new" ]]; then
+  sed -i "/$rea_search/d" $sed_file_path
+fi
+
+# insert or replace
+if [[ $just_append ]]; then
+  grep $rea_search $sed_file_path &>/dev/null \
+    && { sed -i "/$rea_search/c$rea_replacement" $sed_file_path; } \
+    || { echo "$rea_replacement" >> $sed_file_path; }
+else
+  grep $rea_search $sed_file_path &>/dev/null \
+    && { sed -i "/$rea_search/c$rea_replacement" $sed_file_path; } \
+    || { sed -i "${random_select_linenumber}i$rea_replacement" $sed_file_path; }
+fi
+
+unset rea_replacement rea_search sed_file_path avaiable_insert_linenumber random_select_linenumber just_append

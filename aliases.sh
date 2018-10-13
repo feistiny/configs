@@ -20,13 +20,19 @@ alias cla='clear; ls -a'
 alias sudo='sudo ' #https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo#22043
 function vu() {
   local _vu="vim -u ${shell_dir}/.vimrc"
+  local files_to_open
   if [[ "$1" ]]; then
     if [[ -e $1 ]]; then
       $_vu "$1"
     elif [[ $# -gt 1 ]]; then
       $_vu $*
     else
-      $_vu -p $(multi_select "$(git ls-files | grep $1)")
+      files_to_open="$(multi_select "$(git ls-files 2>/dev/null | grep $1)" 2>/dev/null)"
+      if [[ $files_to_open ]]; then
+        $_vu -p $files_to_open
+      else
+        $_vu $*
+      fi
     fi
   else
     $_vu
@@ -82,7 +88,7 @@ alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
 source "${fish_dir}/mkctags.sh"
-function pcsd() {
+function pcf() {
   local _dir
   _dir="${*:-.}"
   php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
@@ -423,12 +429,16 @@ function gpl() {
   fi
 }
 alias gplr='gpl --rebase'
-alias gps='git push'
-function gpsa() {
-  local _branch
-  for _branch in $(git remote) ; do
-    gps $_branch
-  done
+function gps() {
+  upstream=$(git rev-parse --abbrev-ref ${current_branch}@{upstream} 2>/dev/null);
+  if [[ $upstream ]]; then
+    git push $*
+  else
+    git ls-remote --exit-code all &>/dev/null
+    if [[ $? -eq 0 ]]; then
+      git push all --all $*
+    fi
+  fi
 }
 alias grmc='git rm --cached'
 alias grm='git rm'
@@ -574,10 +584,17 @@ function grtad() {
   local url url_in_remote
   url=$2
   url_in_remote=$(git remote get-url $2 2>/dev/null)
-  [ -n "${url_in_remote}" ] && url=$url_in_remote
-  git remote add $1 $url 2>/dev/null
-  git remote set-url all --add $url 2>/dev/null || \
-    git remote add all $url
+  [[ ${url_in_remote} ]] && url=$url_in_remote
+  git remote add $1 $url 2>/dev/null \
+    || git remote set-url $1 $url
+  git remote set-url all --add $url 2>/dev/null \
+    || git remote add all $url
+}
+function grtrm() {
+  local url
+  url="$(git config --get remote.$1.url)"
+  git remote set-url --delete all $url \
+    && git remote remove $1
 }
 function grh() {
   git_last $@

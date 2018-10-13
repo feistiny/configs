@@ -285,6 +285,7 @@ aug AliasFiletype
   autocmd BufNewFile,BufRead *.{tpl,htm,html,vue} set filetype=html
   autocmd BufNewFile,BufRead *.{wxss} set filetype=css.wxss
   autocmd BufNewFile,BufRead *.{wxml} set filetype=html.wxml
+  autocmd BufNewFile,BufRead *.sh set filetype=sh
   " autocmd BufNewFile,BufRead *.js set filetype=javascript
   " autocmd BufNewFile,BufRead *.php set filetype=php
   " autocmd BufNewFile,BufRead *.py set filetype=python
@@ -633,8 +634,8 @@ nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap / y/<c-r>=escape(@", '\/')<CR><CR>N
 vnoremap ? y?<C-R>"<CR>N
-vnoremap <leader>/ y/<C-R>=escape(@", '\/')<CR><CR>Ncgn
-vnoremap <leader>? y?<C-R>=escape(@", '\/')<CR><CR>NcgN
+vnoremap <leader>/ y/<C-R>=escape(@", '\/~')<CR><CR>Ncgn
+vnoremap <leader>? y?<C-R>=escape(@", '\/~')<CR><CR>NcgN
 vnoremap <leader>, y:.,$s/<C-R>"/
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
