@@ -48,18 +48,19 @@ if filereadable(vim_plug_path)
 
   " Plug 'mkusher/padawan.vim'
   Plug 'Valloric/YouCompleteMe'
-  Plug 'alvan/vim-php-manual'
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
-  Plug 'vim-vdebug/vdebug'
+  " Plug 'vim-vdebug/vdebug'
+  Plug 'chemzqm/wxapp.vim'
+  Plug 'othree/xml.vim'
 
-  Plug 'tobyS/vmustache'
-  Plug 'tobyS/pdv'
+  " Plug 'tobyS/vmustache'
+  " Plug 'tobyS/pdv'
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
-  Plug 'Chiel92/vim-autoformat'
+  " Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
   Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
 
@@ -70,7 +71,7 @@ if filereadable(vim_plug_path)
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
-  Plug 'posva/vim-vue'
+  " Plug 'posva/vim-vue'
   Plug 'pangloss/vim-javascript'
   Plug 'Shougo/vimproc.vim'
   Plug 'Shougo/unite.vim'
@@ -192,7 +193,7 @@ endif
 
 let g:UltiSnipsEditSplit='tabdo'
 let g:UltiSnipsSnippetsDir='UltiSnips'
-let g:UltiSnipsSnippetDirectories=[getcwd().'/UltiSnips', $HOME."/configs/UltiSnips"]
+let g:UltiSnipsSnippetDirectories=[getcwd().'/UltiSnips', $HOME."/configs/UltiSnips", $HOME."/.vim/plugged/wxapp.vim/UltiSnips"]
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
@@ -281,7 +282,9 @@ nnoremap <buffer> <C-p> :call pdv#DocumentWithSnip()<CR>
 let g:user_emmet_install_global = 0
 aug AliasFiletype
   au!
-  autocmd BufNewFile,BufRead *.{tpl,htm,html,vue} set filetype=html.javascript.css
+  autocmd BufNewFile,BufRead *.{tpl,htm,html,vue} set filetype=html
+  autocmd BufNewFile,BufRead *.{wxss} set filetype=css.wxss
+  autocmd BufNewFile,BufRead *.{wxml} set filetype=html.wxml
   " autocmd BufNewFile,BufRead *.js set filetype=javascript
   " autocmd BufNewFile,BufRead *.php set filetype=php
   " autocmd BufNewFile,BufRead *.py set filetype=python
@@ -523,20 +526,20 @@ let g:php_manual_online_search_shortcut = ''
 " let g:ale_fixers = {
   " \'javascript': ['prettier','eslint'],
 " \}
-let g:ale_fixers = ['prettier','stylelint','eslint']
-let g:ale_completion_enabled = 1
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_save = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:ale_open_list = 1
-let g:ale_keep_list_window_open = 1
-let g:ale_list_window_size = 5
-nnoremap <leader>p :ALEFix<CR>
+" let g:ale_fixers = ['prettier','stylelint','eslint']
+" let g:ale_completion_enabled = 1
+" let g:ale_lint_on_text_changed = 'never'
+" let g:ale_lint_on_enter = 0
+" let g:ale_lint_on_save = 1
+" let g:ale_set_loclist = 0
+" let g:ale_set_quickfix = 1
+" let g:ale_open_list = 1
+" let g:ale_keep_list_window_open = 1
+" let g:ale_list_window_size = 5
+" nnoremap <leader>p :ALEFix<CR>
 " let g:ale_sign_column_always = 1
-nnoremap <silent> <leader>k <Plug>(ale_previous_wrap)
-nnoremap <silent> <leader>j <Plug>(ale_next_wrap)
+" nnoremap <silent> <leader>k <Plug>(ale_previous_wrap)
+" nnoremap <silent> <leader>j <Plug>(ale_next_wrap)
 
 
 let g:javascript_plugin_jsdoc = 1
@@ -949,4 +952,5 @@ aug FiletypeAutocmd
   au!
   autocmd FileType vim set list
   autocmd FileType * set formatoptions-=cro
+  autocmd FileType css,html set iskeyword+=-
 aug END

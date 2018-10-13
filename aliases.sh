@@ -63,6 +63,7 @@ function getSnippetsDirs() {
   local _dirs
   _dirs=(
   $HOME/.vim/plugged/vim-snippets \
+  $HOME/.vim/plugged/wxapp.vim/UltiSnips \
   ${shell_dir}/UltiSnips \
   $(pwd)/UltiSnips \
   )

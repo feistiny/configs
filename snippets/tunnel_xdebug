@@ -1,0 +1,1 @@
+ssh -fCNR ${remote_ip+${remote_ip}:}${remote_port-9000}:${local_ip-localhost}:${local_port-9000} ${proxy_user-root}@${proxy_ip-39.106.136.65}

@@ -1,6 +1,7 @@
 =====lzf individal ignore=====
 .ctagsignore
 .editorconfig
+.idea
 .tags
 .*.tags
 .*.ctags
