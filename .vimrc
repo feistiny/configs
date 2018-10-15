@@ -593,8 +593,8 @@ let g:easytags_updatetime_min = 4000
 let g:easytags_auto_update = 1
 let g:easytags_async = 1
 let g:easytags_file = '.tags'
-" au InsertEnter * :set tags=
-" au InsertLeave * :set tags=.tags
+au InsertEnter * :set tags=
+au InsertLeave * :set tags=.tags
 set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
@@ -868,13 +868,15 @@ function! CscopeToTmp(opt, ...)
   exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
 endfunction
 
-nnoremap <Leader>r :call Run()<CR>
+nnoremap <leader>rm :%s/\r$\n/\r/<CR>
+
+nnoremap <leader>r :call Run()<CR>
 func! Run()
   let type = &filetype
-  echom type
+  echo type
   if type == "c" || type == "cpp"
     exec "!./%<"
-  elseif match(type, 'bash|sh')
+  elseif type == 'bash' || type == 'sh'
     exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
   elseif type == "python"
     exec "!clear;$(which python) % | less"

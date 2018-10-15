@@ -96,7 +96,8 @@ function pcf() {
 alias aiy='apt install -y'
 alias adi='gets .gitignore.example >> .gitignore'
 
-set -o emacs
+# set -o emacs
+set -o vi
 if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
   bind "set show-mode-in-prompt on"
@@ -306,6 +307,38 @@ function multi_select() {
     done
     for i in ${!options[@]}; do
       [[ "${choices[i]}" ]] && { printf "%s\n" "${options[i]}"; }
+    done
+    IFS=${OLD_IFS}
+  else
+    echo 'optoins is none' >&2
+    return 1
+  fi
+}
+function single_select() {
+  local _line OLD_IFS options num choices prompt msg
+  options=($*)
+  _line=$(echo "$*" | sed '/^$/d' | wc -l)
+  if [[ $_line -eq 1 ]]; then
+    echo "$*"
+  elif [[ $_line -gt 1 ]]; then
+    OLD_IFS=${IFS}
+    IFS=$'\n'
+    echo "Avaliable options:" >&2
+    function __show_menu() {
+      for i in "${!options[@]}"; do
+        printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}" >&2
+      done
+      if [[ -n $msg ]]; then
+        echo "$msg" >&2
+      fi
+    }
+    prompt="check an option (again to uncheck, ENTER when done): "
+    while __show_menu && read -rp "$prompt" num; do
+      [[ -z $num ]] && { continue; }
+      [[ "$num" != *[![:digit:]]* ]] &&
+      (( num > 0 && num <= ${#options[@]} )) &&
+      { printf "%s" "${options[$num-1]}"; break; } ||
+      { msg="Invalid option: $num"; continue; }
     done
     IFS=${OLD_IFS}
   else
@@ -1061,19 +1094,28 @@ function convert_root_realpath() {
   echo "$*" | sed -r "s@(^\s*|\s+)~@\1$(realpath ~)@g"
 }
 function pp() {
-  local _dirs _dir
-  if [[ -n $1 ]]; then
-    _dirs=$(dirs -v)
-    _dir="$(echo "$_dirs" | grep -P "^\s*${1}\s" | awk '{print $2}')"
-    cd "$(convert_root_realpath "$_dir")"
-  else
-    cd -
+  local _num
+  if [[ "$OLDPWD" ]]; then
+    _num="$(dirs -v | awk -v oldpwd=$OLDPWD '{ cmd="realpath "$2; cmd | getline path; if(path==oldpwd){print $1}; close(cmd);}')"
+    if [[ "$_num" ]]; then
+      pu $_num
+    fi
   fi
 }
 function pu() {
-  pushd $(echo $* | sed -r 's/\b[0-9]+\b/+&/g') &>/dev/null
+  local num
+  if [ $1 -eq $1 ] 2>/dev/null; then
+    num=$1
+  else
+    if ! [[ -e $1 ]]; then
+      num="$(single_select "$(dirs -v | grep "$1")" | awk '{print $1}')"
+    fi
+  fi
+  if [[ $num ]]; then
+    num="$(echo $num | sed -r 's/\b[0-9]+\b/+&/g')"
+  fi
+  pushd ${num-$1} &>/dev/null
   sets .ignore_files/dirstack "$(convert_root_realpath ${DIRSTACK[@]})"
-  d
   unset _whoami
 }
 function pd() {

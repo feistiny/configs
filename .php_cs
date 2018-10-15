@@ -61,6 +61,7 @@ return PhpCsFixer\Config::create()
         'binary_operator_spaces' => [
             'default'   => 'align_single_space_minimal',
             'operators' => [
+                '=' => 'single_space',
             ],
         ],
     ])
