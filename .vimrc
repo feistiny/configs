@@ -51,7 +51,7 @@ if filereadable(vim_plug_path)
   Plug 'wesQ3/vim-windowswap'
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
-  " Plug 'vim-vdebug/vdebug'
+  Plug 'vim-vdebug/vdebug'
   Plug 'chemzqm/wxapp.vim'
   Plug 'othree/xml.vim'
 
@@ -644,6 +644,7 @@ vnoremap pc c"""<esc>PO"""
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c'.<c-r>".'<esc>
 vnoremap pd2 c".<c-r>"."<esc>
+vnoremap pd3 c"'".<c-r>"."'"<esc>
 vnoremap if yoif (<c-r>") {}<esc>
 vnoremap vd yoecho '<c-r>"' <c-r>"<esc>
 " 快捷liu调试函数
@@ -868,6 +869,7 @@ function! CscopeToTmp(opt, ...)
   exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
 endfunction
 
+nnoremap <leader>re :%retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
 
 nnoremap <leader>r :call Run()<CR>

@@ -1,13 +1,13 @@
 ---
 - hosts: "{{ host | default('localhost') }}"
+  vars:
+    root: '/var/www'
   tasks:
   - name: check whether root is defined
     fail: msg="root is not defined"
     when: root is not defined
     tags:
       - always
-
-- hosts: "{{ host | default('localhost') }}"
   roles:
     - role: nginx
       tags: ['nginx','nginx-php','nginx-php-laravel']

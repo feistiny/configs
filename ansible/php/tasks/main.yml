@@ -1,6 +1,9 @@
 ---
-# - name: test
+- name: install ppa
   # shell: echo {{php_version}}
+  script: "{{snippets_dir}}/php/ppa"
+  args:
+    creates: "/usr/bin/php{{php_version}}"
 - name: install php{{php_version}} and extensions
   apt:
     name:  "{{ item }}"
@@ -12,4 +15,6 @@
     - php{{php_version}}-xml
     - php{{php_version}}-zip
     - php{{php_version}}-fpm
+    - php{{php_version}}-mysql
+    - php{{php_version}}-intl
 

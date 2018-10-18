@@ -1,0 +1,9 @@
+---
+- hosts: "{{ host | default('localhost') }}"
+  remote_user: root
+  sudo: yes
+  tasks:
+  - name: echo sth
+    script: ../snippets/test
+    register: output
+  - debug: var=output.stdout_lines
