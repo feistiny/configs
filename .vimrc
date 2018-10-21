@@ -60,7 +60,7 @@ if filereadable(vim_plug_path)
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
-  " Plug 'Chiel92/vim-autoformat'
+  Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
   Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
 
@@ -297,7 +297,7 @@ aug EnableEmmet
 aug END
 aug FiletypeIndent
   au!
-  autocmd FileType html,php,javascript,python,htmldjango setlocal shiftwidth=4 tabstop=4 softtabstop=4
+  autocmd FileType html,php,javascript,python,htmldjango,c setlocal shiftwidth=4 tabstop=4 softtabstop=4
   autocmd FileType sh,zsh,yaml,markdown,json,snippets setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
   autocmd BufWritePost *.py setlocal et autoindent
   autocmd BufWritePost *.lisp setlocal et autoindent
@@ -875,9 +875,8 @@ nnoremap <leader>rm :%s/\r$\n/\r/<CR>
 nnoremap <leader>r :call Run()<CR>
 func! Run()
   let type = &filetype
-  echo type
   if type == "c" || type == "cpp"
-    exec "!./%<"
+    exec "!gcc % -o %:t:r && ./%:t:r"
   elseif type == 'bash' || type == 'sh'
     exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
   elseif type == "python"
