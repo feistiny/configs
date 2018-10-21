@@ -1212,6 +1212,11 @@ USAGE
     fi
   fi
 }
+# genereate password
+function gepwd() {
+  head -c 100 /dev/urandom | tr -dc a-z0-9A-Z | head -c ${1-8}
+  echo
+}
 
 eval "source ${snippets_dir}/exports"
 if [[ "$-" =~ i ]]; then
