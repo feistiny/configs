@@ -490,7 +490,7 @@ nnoremap tR :Tabcloseright<CR>
 " 关闭当前tab
 nnoremap tc :tabc<CR> :tabp<CR>
 " 移动当前tab到输入序号的位置
-nnoremap tm :tabm
+nnoremap tm :tabm 
 " 新标签
 nnoremap tw :tabnew
 nnoremap <leader>lb :buffers<CR>:b<Space>
@@ -634,9 +634,9 @@ nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap / y/<c-r>=escape(@", '\/')<CR><CR>N
 vnoremap ? y?<C-R>"<CR>N
-vnoremap <leader>/ y/<C-R>=escape(@", '\/~')<CR><CR>Ncgn
-vnoremap <leader>? y?<C-R>=escape(@", '\/~')<CR><CR>NcgN
-vnoremap <leader>, y:.,$s/<C-R>"/
+vnoremap <leader>/ y/<C-R>=escape(@", '\/~[]$')<CR><CR>Ncgn
+vnoremap <leader>? y?<C-R>=escape(@", '\/~[]$')<CR><CR>NcgN
+vnoremap <leader>, y:.s/<C-R>"/
 " 快捷liu调试函数<<<
 vnoremap gl yovar_dump(<c-r>");<esc>
 vnoremap gL yOvar_dump(<c-r>");<esc>
@@ -872,21 +872,39 @@ endfunction
 nnoremap <leader>re :%retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
 
+nnoremap <silent><leader>sr :let g:vim_run_mode=!get(g:, 'vim_run_mode', 0)<cr>
 nnoremap <leader>r :call Run()<CR>
 func! Run()
+  " vim_run_mode: 0-stdout 1-file
   let type = &filetype
-  if type == "c" || type == "cpp"
-    exec "!gcc % -o %:t:r && ./%:t:r"
-  elseif type == 'bash' || type == 'sh'
-    exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
-  elseif type == "python"
-    exec "!clear;$(which python) % | less"
-  elseif type == "php"
-    exec "!clear;$(which php) % | less"
-  elseif type == "javascript"
-    exec "!clear;node %"
-  elseif type == "lisp"
-    exec "!clear;clisp %"
+  if !get(g:, 'vim_run_mode', 0)
+    if type == "c" || type == "cpp"
+      exec "!gcc % -o %:t:r && ./%:t:r"
+    elseif type == 'bash' || type == 'sh'
+      exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
+    elseif type == "python"
+      exec "!clear;$(which python) % | less"
+    elseif type == "php"
+      exec "!clear;$(which php) % | less"
+    elseif type == "javascript"
+      exec "!clear;node %"
+    elseif type == "lisp"
+      exec "!clear;clisp %"
+    endif
+  else
+    if type == "c" || type == "cpp"
+      exec system('gcc '.expand('%').' -o '.expand('%:t:r').' && ./'.expand('%:t:r').' >> run.log && echo >> run.log')
+    elseif type == 'bash' || type == 'sh'
+      exec "!export exec_in_vim=1;clear;echo ;echo ;bash %;unset exec_in_vim"
+    elseif type == "python"
+      exec "!clear;$(which python) % | less"
+    elseif type == "php"
+      exec "!clear;$(which php) % | less"
+    elseif type == "javascript"
+      exec "!clear;node %"
+    elseif type == "lisp"
+      exec "!clear;clisp %"
+    endif
   endif
 endfunc
 
@@ -957,4 +975,5 @@ aug FiletypeAutocmd
   autocmd FileType vim set list
   autocmd FileType * set formatoptions-=cro
   autocmd FileType css,html set iskeyword+=-
+  autocmd FileType php set iskeyword-=$
 aug END

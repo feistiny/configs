@@ -91,7 +91,7 @@ source "${fish_dir}/mkctags.sh"
 function pcf() {
   local _dir
   _dir="${*:-.}"
-  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes $_dir
 }
 alias aiy='apt install -y'
 alias adi='gets .gitignore.example >> .gitignore'
@@ -186,7 +186,7 @@ function aam() {
 }
 __aam()
 {
-  local cur prev opts _git_root _opts_base="list migrate"
+  local cur prev opts _git_root
 
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
@@ -245,6 +245,29 @@ alias artmr="php artisan migrate:rollback"
 function artds() {
   php artisan db:seed --class=$1
 }
+__artds()
+{
+  local cur prev opts _git_root _dir
+
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _git_root=$(git rev-parse --show-toplevel)
+  if ! [[ "$_git_root" ]]; then
+    return
+  fi
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+  _dir="$_git_root/database/seeds/"
+  if [[ -d "$_dir" ]]; then
+    opts="$(ls $_dir/*.php | xargs -i basename {} | sed 's/\.php//g')"
+  else
+    return
+  fi
+
+  _get_comp_words_by_ref -n : cur
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  __ltrim_colon_completions "$cur"
+}
+complete -F __artds artds
 alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git #
@@ -1213,7 +1236,7 @@ USAGE
   fi
 }
 # genereate password
-function gepwd() {
+function getpwd() {
   head -c 100 /dev/urandom | tr -dc a-z0-9A-Z | head -c ${1-8}
   echo
 }
