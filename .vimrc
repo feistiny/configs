@@ -490,9 +490,11 @@ nnoremap tR :Tabcloseright<CR>
 " 关闭当前tab
 nnoremap tc :tabc<CR> :tabp<CR>
 " 移动当前tab到输入序号的位置
-nnoremap tm :tabm 
+nnoremap tm :tabm 0
 " 新标签
 nnoremap tw :tabnew
+nnoremap t- :-tabm<CR>
+nnoremap t= :+tabm<CR>
 nnoremap <leader>lb :buffers<CR>:b<Space>
 
 nnoremap <leader>af :call AutoFormatCode()<CR>
@@ -869,7 +871,7 @@ function! CscopeToTmp(opt, ...)
   exe '!find $(pwd -P) ' . _name . ' > /tmp/cscope.files ; cd /tmp ; cscope -b '
 endfunction
 
-nnoremap <leader>re :%retab<CR>
+nnoremap <leader>re :set expandtab \| %retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
 
 nnoremap <silent><leader>sr :let g:vim_run_mode=!get(g:, 'vim_run_mode', 0)<cr>
@@ -973,7 +975,7 @@ aug END
 aug FiletypeAutocmd
   au!
   autocmd FileType vim set list
-  autocmd FileType * set formatoptions-=cro
+  autocmd FileType * set formatoptions-=o formatoptions-=r formatoptions-=c
   autocmd FileType css,html set iskeyword+=-
   autocmd FileType php set iskeyword-=$
 aug END

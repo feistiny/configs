@@ -1,10 +1,14 @@
 =====lzf individal ignore=====
+# common
 .ctagsignore
 .editorconfig
 .idea
 .tags
-.*.tags
-.*.ctags
 Ultisnips
 .gitignore
+
+# art deploy all mysql tunnel
+*.env
+lzf_*.sh
 =====lzf individal ignore=====
+

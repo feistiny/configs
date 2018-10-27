@@ -471,7 +471,9 @@ function gcom() {
   if [[ $_grep ]]; then
     # grep file of the HEAD to checkout
     _files=$(multi_select "$(git diff HEAD --name-only | grep "$_grep")")
-    gco ${_patch-} "$_files"
+    if [[ "$_files" ]]; then
+      gco ${_patch-} $_files
+    fi
   fi
 }
 alias gdf="git diff --color $(git diff --ws-error-highlight=new,old &>/dev/null && echo --ws-error-highlight=new,old)"
@@ -511,7 +513,7 @@ alias gmt='git mergetool'
 function gpl() {
   current_branch=$(git rev-parse --abbrev-ref HEAD);
   remote=$(git config --get-regexp "branch\.$current_branch\.remote" | sed -e "s/^.* //")
-  if [[ -n $current_branch ]] && [[ -n $remote ]]; then
+  if [[ -n $current_branch ]] && [[ -n $remote ]] && [[ -z $* ]]; then
     git pull "$remote" "$current_branch"
   else
     git pull $*
@@ -526,6 +528,8 @@ function gps() {
     git ls-remote --exit-code all &>/dev/null
     if [[ $? -eq 0 ]]; then
       git push all --all $*
+    else
+      git push $*
     fi
   fi
 }
@@ -645,6 +649,7 @@ function gvm() {
 alias gsm='git submodule'
 alias gsmu='gsm update --init --recursive'
 function git_last() {
+  unset _last _rest
   local _last_is_commit
   if [[ $# -gt 1 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last_is_commit="${@: -1}"
