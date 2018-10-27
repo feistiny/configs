@@ -4,3 +4,6 @@
 [submodule "plugins/jj"]
 	path = plugins/jj
 	url = https://github.com/tidwall/jj.git
+[submodule "plugins/nginx-modsite"]
+	path = plugins/nginx-modsite
+	url = https://github.com/ajsalkeld/nginx-modsite

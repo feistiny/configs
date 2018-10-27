@@ -1005,6 +1005,7 @@ function rebins() {
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
   ln -sf "${plugins_dir}/sempl/crypttool" "${plugins_dir}/.bin/crypttool"
   cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj" 2>/dev/null
+  cp -a "${plugins_dir}/nginx-modsite/nginx-modsite" "${plugins_dir}/.bin/nginx-modsite" 2>/dev/null && chmod +x "${plugins_dir}/.bin/nginx-modsite"
 }
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
