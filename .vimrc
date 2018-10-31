@@ -910,6 +910,7 @@ func! Run()
   endif
 endfunc
 
+snoremap <C-S> <ESC>:w<CR>
 nnoremap <C-S> :w<CR>
 inoremap <C-S> <ESC>:w<CR>
 nnoremap <silent><leader>cf :call SwitchAutoPHPCsFixer()<cr>
@@ -923,6 +924,7 @@ fun! SwitchAutoPHPCsFixer()
     let g:is_php_autofix_open = 0
     nnoremap <C-S> :w<CR>
     inoremap <C-S> <ESC>:w<CR>
+    snoremap <C-S> <ESC>:w<CR>
   elseif g:is_php_autofix_open == 0
     aug autoPhpCsFxier
       au!
@@ -932,6 +934,7 @@ fun! SwitchAutoPHPCsFixer()
     let g:is_php_autofix_open = 1
     nnoremap <C-S> :mkview \| w \| e! \| loadview<CR>
     inoremap <C-S> <ESC>:mkview \| w \| e! \| loadview<CR>
+    snoremap <C-S> <ESC>:mkview \| w \| e! \| loadview<CR>
   endif
 endf
 
@@ -977,5 +980,5 @@ aug FiletypeAutocmd
   autocmd FileType vim set list
   autocmd FileType * set formatoptions-=o formatoptions-=r formatoptions-=c
   autocmd FileType css,html set iskeyword+=-
-  autocmd FileType php set iskeyword-=$
+  " autocmd FileType php set iskeyword-=$
 aug END

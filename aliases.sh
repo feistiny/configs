@@ -182,7 +182,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 function aam() {
-  art admin:make --model "App\\Admin\\Models\\$1" $2
+  art admin:make --model "App\\Admin\\Models\\$1" "${1}Controller"
 }
 __aam()
 {
@@ -242,6 +242,7 @@ complete -F __art art
 alias artm="php artisan migrate"
 alias artms="php artisan migrate:status"
 alias artmr="php artisan migrate:rollback"
+alias artml="php artisan make:migration --path database/migrations/local_recreate"
 function artds() {
   php artisan db:seed --class=$1
 }
@@ -397,16 +398,14 @@ function single_select() {
 }
 function gcif() {
   local _commit
-  if [[ -z $1 ]]; then
-    echo 'just type to grep msg'
-    return 2
+  if [[ "$1" ]]; then
+    if [[ $(git cat-file -t $1) = 'commit' ]]; then
+      _commit=$1
+    else
+      _commit=$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")
+    fi
   fi
-  if [[ $(git cat-file -t $1) = 'commit' ]]; then
-    _commit=$1
-  else
-    _commit=$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")
-  fi
-  git commit --fixup $_commit
+  git commit --fixup ${_commit-HEAD}
 }
 alias grb='git rebase'
 alias grbc='git rebase --continue'
@@ -526,7 +525,7 @@ function gps() {
     git push $*
   else
     git ls-remote --exit-code all &>/dev/null
-    if [[ $? -eq 0 ]]; then
+    if [[ $? -eq 0 ]] && [[ -z "$*" ]]; then
       git push all --all $*
     else
       git push $*
@@ -758,6 +757,7 @@ if [[ -f /usr/share/bash-completion/completions/git ]]; then
   done < <(cat <<EOF
 gbr:_git_branch
 gco:_git_checkout
+grs:_git_checkout
 gme:_git_checkout
 grb:_git_checkout
 gll:_git_checkout

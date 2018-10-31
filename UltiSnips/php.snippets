@@ -58,9 +58,12 @@ endsnippet
 snippet tr "trans('')" i
 trans('$1')
 endsnippet
-snippet tra "trans('all.')" i
-trans('all.$1')
+snippet ta "$this->attributes['']" i
+$this->attributes['${0:${VISUAL}}']
 endsnippet
 snippet -- "concat string" i
 .'-'.$0
+endsnippet
+snippet dd "dd sth" b
+dd(${0:1});
 endsnippet
