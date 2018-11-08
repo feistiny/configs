@@ -55,8 +55,8 @@ if filereadable(vim_plug_path)
   Plug 'chemzqm/wxapp.vim'
   Plug 'othree/xml.vim'
 
-  " Plug 'tobyS/vmustache'
-  " Plug 'tobyS/pdv'
+  Plug 'tobyS/vmustache'
+  Plug 'tobyS/pdv'
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
@@ -310,6 +310,7 @@ nnoremap <leader>d4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
 nnoremap <leader>fl :set fdm=indent \| set foldlevel=01
 nnoremap N Nzz
 nnoremap n nzz
+nnoremap zx zOzczO
 
 """ html标签首尾跳转<<<
 runtime macros/matchit.vim
@@ -637,8 +638,8 @@ nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
 vnoremap z/ y/<c-r>=escape(@", '\/')<CR><CR>N
 vnoremap z? y?<C-R>"<CR>N
-vnoremap <leader>/ y/<C-R>=escape(@", '\/~[]$')<CR><CR>Ncgn
-vnoremap <leader>? y?<C-R>=escape(@", '\/~[]$')<CR><CR>NcgN
+vnoremap <leader>/ y/<C-R>=escape(@", '\/~[]$.')<CR><CR>Ncgn
+vnoremap <leader>? y?<C-R>=escape(@", '\/~[]$.')<CR><CR>NcgN
 vnoremap <leader>, y:.s/<C-R>"/
 " 快捷liu调试函数<<<
 vmap gj yodd(<c-r>");<esc><C-S>

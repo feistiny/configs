@@ -580,37 +580,36 @@ function gss() {
   git stash show stash@{$_stash} ${_p}
 }
 function gsf() {
-  local _stat= _grep _path _commitid _option
-  if [[ $# -eq 2 ]]; then
+  local _stat_p= _grep _path _commitid _option
+  if [[ $# -ge 2 ]]; then
     _grep="$1"
-    if [[ $2 = '--stat' ]]; then
-      _stat="$2"
+    if [[ $2 =~ --stat|-p ]]; then
+      _stat_p="$2"
     else
       _path="$2"
     fi
+    shift 2
   elif [[ $# -eq 1 ]]; then
     _grep="$1"
+    shift
   elif [[ $# -eq 0 ]]; then
     _commitid='HEAD'
-    _stat='--stat'
-  else
-    echo 'error'
-    return 2
+    _stat_p='--stat'
   fi
   if [[ -z $_commitid ]]; then
     if [[ $(git cat-file -t $_grep) = 'commit' ]]; then
       _commitid=$_grep
     else
-      _commitid=$(get_commitid_by_msg "$(git log --oneline --grep "$_grep")")
+      _commitid=$(get_commitid_by_msg "$(git log --oneline | grep "$_grep")")
     fi
   fi
   if [[ -n $_path ]]; then
-    git show ${_commitid}:${_path}
-  elif [[ -n $_stat ]]; then
-    git show ${_commitid} ${_stat}
+    git show ${_commitid}:${_path} $*
+  elif [[ -n $_stat_p ]]; then
+    git show ${_commitid} ${_stat_p} $*
   else
     _option=$(get_select_option "$(git diff-tree --no-commit-id --name-only -r $_commitid)")
-    git show ${_commitid}:${_option}
+    git show ${_commitid}:${_option} $*
   fi
 }
 alias gst='git status'
