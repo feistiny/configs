@@ -21,7 +21,6 @@ if [[ ${#avaiable_insert_linenumber[@]} -gt 0 ]]; then
 else
   just_append=1
 fi
-echo $random_select_linenumber
 
 # delete old insert
 if [[ "$new" ]]; then

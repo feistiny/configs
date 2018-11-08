@@ -123,6 +123,12 @@ alias tpl='sempl -o -f'
 function stpl() {
   tpl "${@:1:$(($#-1))}" <(gets "${@: -1}")
 }
+function srt() {
+  . <(tpl "${@:1:$(($#-1))}" <(gets "${@: -1}"))
+}
+function srs() {
+  . <(gets "${@: -1}")
+}
 
 # reaload aliases.sh #
 alias rea="source ${shell_dir}/aliases.sh && echo 'reloaded'"
@@ -135,7 +141,7 @@ function tml() {
     elif [[ "$1" ]]; then
       $_tmux attach -t $1
     else
-      big=$($_tmux ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+      big=$($_tmux ls 2>/dev/null | tail -1 | cut -d' ' -f1)
       $_tmux attach -t $big
     fi
   elif [[ "$1" ]] && [[ -n $(tmls) ]]; then
@@ -209,6 +215,7 @@ complete -F __aam aam
 
 # laravel artisan #
 alias cmp='composer'
+alias cmc='composer config'
 alias cmpdp="cmp dumpautoload"
 alias art="php artisan"
 __art()
@@ -538,11 +545,24 @@ alias grs='git reset --soft'
 complete -W 'HEAD~' grs
 alias grt='git remote'
 alias grp='git rev-parse'
-alias gsa='git stash apply'
+function gsa() {
+  local _stash=${1-0}
+  git stash apply stash@{$_stash}
+}
+function gsp() {
+  local _stash=${1-0}
+  git stash pop stash@{$_stash}
+}
+function gsd() {
+  local _stash=${1-0}
+  git stash drop stash@{$_stash}
+}
 alias gsb='git subtree'
 alias gsh='git stash'
+function gshu() {
+  git stash && git stash save -u "$1" && git stash pop stash@{1}
+}
 alias gsl='git stash list'
-alias gsp='git stash pop'
 function gss() {
   if [[ $# -gt 1 ]] && [[ ${@: -1} =~ ^- ]]; then
     _p="${2:+-p}"
@@ -672,6 +692,14 @@ function gad() {
   git add $_rest "${_last}"
   gst
   git_last_unset
+}
+function gadc() {
+  gad $*
+  local _files="$(git diff --cached --name-only)"
+  if [[ "$_files" ]]; then
+    pcf $_files &>/dev/null
+    gad $_files &>/dev/null
+  fi
 }
 function grtad() {
   local url url_in_remote
@@ -830,7 +858,7 @@ EOT
 
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst
+  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst srt srs
 }
 update_complete_for_snippets
 function get_snippets() {
@@ -1176,12 +1204,16 @@ function pu() {
     if ! [[ -e $1 ]]; then
       _dir="$(single_select "$(dirs -v | awk '{print $2}' | grep -i "$1")")"
       _num="$(dirs -v | awk -v dir=$_dir '{ if($2==dir){print $1}; close(cmd);}')"
+    else
+      pushd $1 &>/dev/null
     fi
   fi
   if [[ $_num ]]; then
     _num="$(echo $_num | sed -r 's/\b[0-9]+\b/+&/g')"
+    pushd ${_num-$1} &>/dev/null
+  else
+    pushd &>/dev/null
   fi
-  pushd ${_num-$1} &>/dev/null
   sets .ignore_files/dirstack "$(convert_root_realpath ${DIRSTACK[@]})"
   unset _whoami
 }

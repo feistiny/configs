@@ -144,6 +144,7 @@ filetype plugin indent on
 if !exists('g:vdebug_options')
   let g:vdebug_options = {}
 endif
+let g:vdebug_options["watch_window_style"] = 'compact'
 let g:vdebug_options["ide_key"] = 'vim'
 let g:vdebug_options["break_on_open"] = 1
 let g:vdebug_options["server"] = '127.0.0.1'
@@ -324,10 +325,10 @@ let b:match_words='\<begin\>:\<end\>'
 set wildmenu " 状态栏上提示所有可用的命令
 set noswapfile "不产生备份文件
 set hlsearch incsearch "高亮搜索
-set number "显示行号
+" set number "显示行号
 " set relativenumber
 set nowrap "不换行
-set scrolloff=1 "离屏幕边缘几行开始滚屏
+" set scrolloff=1 "离屏幕边缘几行开始滚屏
 
 """关闭当前标签左/右的所有标签
 function! TabCloseRight(bang)
@@ -548,7 +549,7 @@ let g:php_manual_online_search_shortcut = ''
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
 let g:javascript_plugin_flow = 1
-set foldcolumn=1
+" set foldcolumn=1
 augroup javascript_folding
   au!
   au FileType javascript setlocal foldmethod=syntax
@@ -634,14 +635,14 @@ nnoremap <leader>bh :h <c-r>=expand("<cword>")<CR><CR>
 nnoremap <leader>th :set hlsearch!<CR> "切换高亮显示
 nnoremap g= gg=G''zz
 nnoremap <leader>c :CtrlPClearCache<cr>
-vnoremap / y/<c-r>=escape(@", '\/')<CR><CR>N
-vnoremap ? y?<C-R>"<CR>N
+vnoremap z/ y/<c-r>=escape(@", '\/')<CR><CR>N
+vnoremap z? y?<C-R>"<CR>N
 vnoremap <leader>/ y/<C-R>=escape(@", '\/~[]$')<CR><CR>Ncgn
 vnoremap <leader>? y?<C-R>=escape(@", '\/~[]$')<CR><CR>NcgN
 vnoremap <leader>, y:.s/<C-R>"/
 " 快捷liu调试函数<<<
-vnoremap gl yovar_dump(<c-r>");<esc>
-vnoremap gL yOvar_dump(<c-r>");<esc>
+vmap gj yodd(<c-r>");<esc><C-S>
+vmap gk yOdd(<c-r>");<esc><C-S>
 vnoremap pc c"""<esc>PO""" 
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c'.<c-r>".'<esc>
@@ -980,5 +981,5 @@ aug FiletypeAutocmd
   autocmd FileType vim set list
   autocmd FileType * set formatoptions-=o formatoptions-=r formatoptions-=c
   autocmd FileType css,html set iskeyword+=-
-  " autocmd FileType php set iskeyword-=$
+  autocmd FileType php set iskeyword-=-
 aug END
