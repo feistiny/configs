@@ -44,13 +44,13 @@ elseif ($1) {
 } 
 endsnippet
 snippet ind "info a array" b
-info('$1:', $2);
+info('$1:', $$1);
 endsnippet
 snippet .d "add a array" i
 .' $1',$2
 endsnippet
 snippet ins "info a string" b
-info('$1: '.$2);
+info('$1: '.$$1);
 endsnippet
 snippet .s "concat string with one space" i
 .' $1'.$2
@@ -66,4 +66,10 @@ snippet -- "concat string" i
 endsnippet
 snippet dd "dd sth" w
 dd(${0:1});
+endsnippet
+snippet ii "dd sth" b
+info(${0:1});
+endsnippet
+snippet w22 "dd sth" i
+where('$1', $$1)
 endsnippet
