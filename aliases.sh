@@ -115,7 +115,7 @@ if [[ -z "$exec_in_vim" ]]; then
   bind -m vi-insert '"\C-n": history-search-forward'
   bind -m emacs '"\C-p": history-search-backward'
   bind -m emacs '"\C-n": history-search-forward'
-  export VISUAL=vu
+  export VISUAL="vim -u ${shell_dir}/.vimrc"
 fi
 
 # templaet snippets
@@ -127,7 +127,7 @@ function srt() {
   . <(tpl "${@:1:$(($#-1))}" <(gets "${@: -1}"))
 }
 function srs() {
-  . <(gets "${@: -1}")
+  . ${snippets_dir}/$1 ${@:2}
 }
 
 # reaload aliases.sh #

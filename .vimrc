@@ -194,7 +194,7 @@ endif
 
 let g:UltiSnipsEditSplit='tabdo'
 let g:UltiSnipsSnippetsDir='UltiSnips'
-let g:UltiSnipsSnippetDirectories=[getcwd().'/UltiSnips', $HOME."/configs/UltiSnips", $HOME."/.vim/plugged/wxapp.vim/UltiSnips"]
+let g:UltiSnipsSnippetDirectories=[getcwd().'/UltiSnips', $HOME."/configs/UltiSnips", $HOME."/.vim/plugged/wxapp.vim/UltiSnips", $HOME."/.vim/plugged/vim-snippets/UltiSnips", $HOME."/.vim/plugged/vim-snippets"]
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
@@ -979,8 +979,8 @@ aug END
 
 aug FiletypeAutocmd
   au!
-  autocmd FileType vim set list
-  autocmd FileType * set formatoptions-=o formatoptions-=r formatoptions-=c
+  autocmd FileType vim set list iskeyword+=:
+  " autocmd FileType * set formatoptions-=o formatoptions-=r formatoptions-=c
   autocmd FileType css,html set iskeyword+=-
   autocmd FileType php set iskeyword-=-
 aug END
