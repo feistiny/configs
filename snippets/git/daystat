@@ -1,18 +1,24 @@
-#!/bin/bash
-
-ds() {
-  date --date="$1 days ago" +%Y-%m-%d
+function git_stat() {
+  local branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+  echo "yyyy-mm-dd +++++ -----"
+  # git --no-pager log --since="${1-10} days ago" --format='%at' --numstat $branch
+  git --no-pager log --since="${day-10} days ago" --format="%at" --numstat $branch | grep -v '^$' | \
+    awk '{
+  if ($0 ~ /^[0-9]+$/)
+  {
+    timestamp=$1
+    cmd="date -d @"timestamp" +%Y-%m-%d"
+    cmd | getline ymd
+    close(cmd)
+  } else {
+    add[ymd]+=$1;
+    del[ymd]+=$2;
+  }
+} END {
+  for (ymd in add)
+  {
+    printf "%s %5d %5d\n", ymd, add[ymd], del[ymd] | "sort -nr"
+  }
+}'
 }
-
-BRANCH=master # your branch here
-
-echo "Date,LinesAdded,LinesDeleted"
-for day in $(seq 1 10)
-do
-  lines=$(git --no-pager log --after=$(ds $day) --before=$(ds $(($day - 1))) --format=format: --numstat $BRANCH  | awk '/([0-9]+).*([0-9]+).*/{s+=$1; t+=$2} END {printf "+"; printf s;printf ",-"; printf t;}')
-  if [[ "$lines" != "+,-" ]]; then
-      echo "$(ds $day),$lines"
-  else
-      echo "$(ds $day),0,0"
-  fi
-done
+git_stat
