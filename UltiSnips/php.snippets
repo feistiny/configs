@@ -53,13 +53,10 @@ snippet ins "info a string" b
 info('$1: '.$$1);
 endsnippet
 snippet .s "concat string with one space" i
-.' $1'.$2
+.' $1: '.$$1$0
 endsnippet
 snippet tr "trans('')" i
 trans('$1')
-endsnippet
-snippet ta "$this->attributes['']" i
-$this->attributes['${0:${VISUAL}}']
 endsnippet
 snippet -- "concat string" i
 .'-'.$0
@@ -67,9 +64,12 @@ endsnippet
 snippet dd "dd sth" w
 dd(${0:1});
 endsnippet
-snippet ii "dd sth" b
+snippet ii "info sth" b
 info(${0:1});
 endsnippet
-snippet w22 "dd sth" i
-where('$1', $$1)
+snippet com22 "'$1', $$1" i
+'$1', $$1
+endsnippet
+snippet arr22 "'$1' => $$1" i
+'$1' => $$1
 endsnippet

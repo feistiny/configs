@@ -115,7 +115,7 @@ if [[ -z "$exec_in_vim" ]]; then
   bind -m vi-insert '"\C-n": history-search-forward'
   bind -m emacs '"\C-p": history-search-backward'
   bind -m emacs '"\C-n": history-search-forward'
-  export VISUAL=vu
+  export VISUAL="vim"
 fi
 
 # templaet snippets
@@ -1015,9 +1015,9 @@ function mktouch() {
 }
 function whereip() {
   if test $# -eq 0; then
-    curl -s ip.cn
+    curl -s https://ip.cn
   else
-    curl -s ip.cn/index.php?ip=$1
+    curl -s https://ip.cn/index.php?ip=$1
   fi
 }
 function getip() {

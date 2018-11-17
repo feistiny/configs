@@ -666,10 +666,10 @@ let g:EasyGrepJumpToMatch=0
 " common config
 
 """分割窗口相关操作<<<
-nnoremap w= :resize +5<CR>
-nnoremap w- :resize -5<CR>
-nnoremap w, :vertical resize -5<CR>
-nnoremap w. :vertical resize +5<CR>
+" nnoremap w= :resize +5<CR>
+" nnoremap w- :resize -5<CR>
+" nnoremap w, :vertical resize -5<CR>
+" nnoremap w. :vertical resize +5<CR>
 "nmap <S-W> <C-W><C-W>
 " nnoremap <Leader>pf :!clear;php --rf <C-R>=expand("<cword>")<CR><CR>
 """分割窗口相关操作
