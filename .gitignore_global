@@ -6,6 +6,7 @@
 .tags
 Ultisnips
 .gitignore
+.php_cs.cache
 
 # art deploy all mysql tunnel
 *.env

@@ -53,7 +53,7 @@ if filereadable(vim_plug_path)
   Plug 'Olical/vim-enmasse'
   " Plug 'vim-vdebug/vdebug'
   Plug 'chemzqm/wxapp.vim'
-  Plug 'othree/xml.vim'
+  " Plug 'othree/xml.vim'
 
   Plug 'tobyS/vmustache'
   Plug 'tobyS/pdv'
