@@ -456,6 +456,7 @@ function gclef() {
   if [[ "$_files" ]]; then
     rm $(multi_select "$(echo "$_files" | grep $1)")
   fi
+  gst
 }
 alias gco='git checkout'
 function gcom() {
@@ -680,7 +681,7 @@ function git_last() {
   else
     _last="."
   fi
-  [[ "$_last_is_commit" ]] && _last="$([[ $(git cat-file -t $_last_is_commit) = 'commit' ]] && echo "$_last_is_commit" || echo "*$_last_is_commit*")"
+  [[ "$_last_is_commit" ]] && _last="$([[ $(git cat-file -t $_last_is_commit 2>/dev/null) = 'commit' ]] && echo "$_last_is_commit" || echo "*$_last_is_commit*")"
   _rest=${_rest-}
 }
 function git_last_unset() {
@@ -720,6 +721,7 @@ function grh() {
   git_last $@
   git reset HEAD $_rest $_last
   git_last_unset
+  gst
 }
 function gsbcf() {
   local prefix remote branch
@@ -1203,8 +1205,6 @@ function pu() {
     if ! [[ -e $1 ]]; then
       _dir="$(single_select "$(dirs -v | awk '{print $2}' | grep -i "$1")")"
       _num="$(dirs -v | awk -v dir=$_dir '{ if($2==dir){print $1}; close(cmd);}')"
-    else
-      pushd $1 &>/dev/null
     fi
   fi
   if [[ $_num ]]; then
