@@ -1209,6 +1209,8 @@ function pu() {
     if ! [[ -e $1 ]]; then
       _dir="$(single_select "$(dirs -v | awk '{print $2}' | grep -i "$1" | grep -v "^$(pwd)$")")"
       _num="$(dirs -v | awk -v dir=$_dir '{ if($2==dir){print $1}; close(cmd);}')"
+    else
+      _num=$1
     fi
   fi
   if [[ $_num ]]; then
