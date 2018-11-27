@@ -1,5 +1,6 @@
 current_git_dir
 plugins/.bin
+sshpass
 ssh_keys
 ssh_keys_backup
 .ignore_files

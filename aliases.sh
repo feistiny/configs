@@ -121,13 +121,17 @@ fi
 # templaet snippets
 alias tpl='sempl -o -f'
 function stpl() {
-  tpl "${@:1:$(($#-1))}" <(gets "${@: -1}")
+  tpl "${@:2}" <(gets "$1")
 }
 function srt() {
-  . <(tpl "${@:1:$(($#-1))}" <(gets "${@: -1}"))
+  . <(tpl "${@:2}" <(gets "$1"))
 }
 function srs() {
   . ${snippets_dir}/$1 ${@:2}
+}
+function srd() {
+  read -s -p 'password:' password
+  . <(crypttool -p "$password" cat "${snippets_dir}/$1")
 }
 
 # reaload aliases.sh #
@@ -859,7 +863,7 @@ EOT
 
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst srt srs
+  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst srd srt srs
 }
 update_complete_for_snippets
 function get_snippets() {
@@ -1151,7 +1155,7 @@ function sss() {
   cd -
 }
 function sst() {
-  ssh "$(cat ${snippets_dir}/$1)"
+  ssh "${user-root}@$(cat ${snippets_dir}/$1)" -p ${port-22}
 }
 function join_by() {
   local IFS="$1"
