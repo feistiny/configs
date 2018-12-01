@@ -875,6 +875,7 @@ endfunction
 
 nnoremap <leader>re :set expandtab \| %retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
+nnoremap <leader>rd :g/\v^\s*$/d<CR>
 
 nnoremap <silent><leader>sr :let g:vim_run_mode=!get(g:, 'vim_run_mode', 0)<cr>
 nnoremap <leader>r :call Run()<CR>
@@ -977,10 +978,13 @@ aug JsBeautifyGroup
   autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
 aug END
 
+nnoremap <leader>ft :set ft=
 aug FiletypeAutocmd
   au!
   autocmd FileType vim set list iskeyword+=:
   " autocmd FileType * set formatoptions-=o formatoptions-=r formatoptions-=c
   autocmd FileType css,html set iskeyword+=-
+  autocmd FileType html set fdm=manual
+  autocmd FileType html nmap <leader>zf Vatzf
   autocmd FileType php set iskeyword-=-
 aug END
