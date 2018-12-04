@@ -213,7 +213,11 @@ let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " If you use php-cs-fixer version 2.x
 " let g:php_cs_fixer_rules = "@Symfony"          " options: --rules (default:@PSR2)
 "let g:php_cs_fixer_cache = ".php_cs.cache" " options: --cache-file
-let g:php_cs_fixer_config_file = '/root/configs/.php_cs' " options: --config
+if filereadable(getcwd().'/.php_cs')
+  let g:php_cs_fixer_config_file = getcwd().'/.php_cs' " options: --config
+else
+  let g:php_cs_fixer_config_file = '/root/configs/.php_cs' " options: --config
+endif
 " End of php-cs-fixer version 2 config params
 
 let g:php_cs_fixer_php_path = "php"               " Path to PHP
