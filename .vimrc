@@ -287,6 +287,7 @@ aug AliasFiletype
   autocmd BufNewFile,BufRead *.{wxss} set filetype=css.wxss
   autocmd BufNewFile,BufRead *.{wxml} set filetype=html.wxml
   autocmd BufNewFile,BufRead *.sh set filetype=sh
+  autocmd BufNewFile,BufRead *.blade.php set filetype=html.php
   " autocmd BufNewFile,BufRead *.js set filetype=javascript
   " autocmd BufNewFile,BufRead *.php set filetype=php
   " autocmd BufNewFile,BufRead *.py set filetype=python
@@ -875,6 +876,7 @@ endfunction
 
 nnoremap <leader>re :set expandtab \| %retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
+nnoremap <leader>rd :g/^\s*$/d<CR>
 
 nnoremap <silent><leader>sr :let g:vim_run_mode=!get(g:, 'vim_run_mode', 0)<cr>
 nnoremap <leader>r :call Run()<CR>
@@ -977,6 +979,7 @@ aug JsBeautifyGroup
   autocmd FileType css vnoremap <buffer> tf :call RangeCSSBeautify()<cr>
 aug END
 
+nnoremap <leader>ft :set ft=
 aug FiletypeAutocmd
   au!
   autocmd FileType vim set list iskeyword+=:
