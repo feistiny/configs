@@ -192,7 +192,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 function aam() {
-  art admin:make --model "App\\Admin\\Models\\$1" "${1}Controller"
+  art admin:make --model "App\\Admin\\Models\\$1" "${2-$1}Controller"
 }
 __aam()
 {

@@ -645,8 +645,6 @@ vnoremap <leader>, y:.s/<C-R>"/
 " 快捷liu调试函数<<<
 vmap gj yodd(<c-r>");<esc><C-S>
 vmap gk yOdd(<c-r>");<esc><C-S>
-vmap uj yodump(<c-r>");<esc><C-S>
-vmap uk yOdump(<c-r>");<esc><C-S>
 vnoremap pc c"""<esc>PO""" 
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c'.<c-r>".'<esc>
@@ -878,7 +876,11 @@ endfunction
 
 nnoremap <leader>re :set expandtab \| %retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
+<<<<<<< HEAD
+nnoremap <leader>rd :g/^\s*$/d<CR>
+=======
 nnoremap <leader>rd :g/\v^\s*$/d<CR>
+>>>>>>> eddd6c1f4c0cd3cedf8a17ffc9f5b6e38a40985e
 
 nnoremap <silent><leader>sr :let g:vim_run_mode=!get(g:, 'vim_run_mode', 0)<cr>
 nnoremap <leader>r :call Run()<CR>
