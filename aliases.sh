@@ -1216,7 +1216,7 @@ function pu() {
   if [[ $_num ]]; then
     _num="$(echo $_num | sed -r 's/\b[0-9]+\b/+&/g')"
     pushd ${_num-$1} &>/dev/null
-  else
+  elif [[ $# -eq 0 ]]; then
     pushd &>/dev/null
   fi
   sets .ignore_files/dirstack "$(convert_root_realpath ${DIRSTACK[@]})"

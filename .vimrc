@@ -644,6 +644,8 @@ vnoremap <leader>, y:.s/<C-R>"/
 " 快捷liu调试函数<<<
 vmap gj yodd(<c-r>");<esc><C-S>
 vmap gk yOdd(<c-r>");<esc><C-S>
+vmap uj yodump(<c-r>");<esc><C-S>
+vmap uk yOdump(<c-r>");<esc><C-S>
 vnoremap pc c"""<esc>PO""" 
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c'.<c-r>".'<esc>
