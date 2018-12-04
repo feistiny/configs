@@ -1,0 +1,33 @@
+# 检查是否安装
+set -e
+if ! [[ $(which pure-ftpd) ]]; then
+  apt install -y pure-ftpd
+fi
+
+# 配置用户为用户www-data
+user=${u-www-data}
+uid=$(cat /etc/passwd | grep "$user" | cut -d: -f3)
+if ! [[ $uid ]]; then
+  echo 'no uid found.' >&2;
+  return
+fi
+# 修改 /etc/pure-ftpd/conf/MinUID >= www-data的uid
+echo $uid > /etc/pure-ftpd/conf/MinUID
+
+# 添加用户
+n=${n-ftp}
+if [[ -z $d ]]; then
+  echo 'plz specify home dir.' >&2;
+  return
+fi
+pure-pw useradd "$n" -u www-data -d "$d"  && pure-pw mkdb
+
+# 软链
+if ! [[ -e /etc/pure-ftpd/auth/PureDB ]]; then
+  pushd /etc/pure-ftpd/auth &>/dev/null
+  ln -s ../conf/PureDB PureDB
+  popd &>/dev/null
+fi
+
+# 重启
+service pure-ftpd restart
