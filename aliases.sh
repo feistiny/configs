@@ -508,6 +508,9 @@ function glp() {
   git log --oneline ${_stat:--p} ${_rest:=-1} $_last
   git_last_unset
 }
+function glr() {
+  git log --oneline --left-right $*
+}
 function gld() {
   local diff_branch current_branch upstream
   diff_branch="$1"
@@ -789,6 +792,7 @@ if [[ -f /usr/share/bash-completion/completions/git ]]; then
     __git_complete ${line%%:*} ${line##*:}
   done < <(cat <<EOF
 gbr:_git_branch
+glr:_git_checkout
 gco:_git_checkout
 grs:_git_checkout
 gme:_git_checkout
