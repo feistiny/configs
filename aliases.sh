@@ -673,7 +673,9 @@ function gvm() {
   fi
 }
 alias gsm='git submodule'
-alias gsmu='gsm update --init --recursive'
+function gsmu() {
+  gsm update ${*---init --recursive}
+}
 function git_last() {
   unset _last _rest
   local _last_is_commit
@@ -1046,6 +1048,7 @@ function rebins() {
   fi
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
   ln -sf "${plugins_dir}/sempl/crypttool" "${plugins_dir}/.bin/crypttool"
+  ln -sf "${plugins_dir}/git-quick-stats/git-quick-stats" "${plugins_dir}/.bin/git-quick-stats"
   cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj" 2>/dev/null
   cp -a "${plugins_dir}/nginx-modsite/nginx-modsite" "${plugins_dir}/.bin/nginx-modsite" 2>/dev/null && chmod +x "${plugins_dir}/.bin/nginx-modsite"
 }
