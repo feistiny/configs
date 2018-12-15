@@ -96,6 +96,7 @@ function pcf() {
 alias aiy='apt install -y'
 alias adi='gets .gitignore.example >> .gitignore'
 
+umask 002
 # set -o emacs
 set -o vi
 if [[ -z "$exec_in_vim" ]]; then
@@ -1049,7 +1050,12 @@ function rebins() {
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
   ln -sf "${plugins_dir}/sempl/crypttool" "${plugins_dir}/.bin/crypttool"
   ln -sf "${plugins_dir}/git-quick-stats/git-quick-stats" "${plugins_dir}/.bin/git-quick-stats"
-  cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj" 2>/dev/null
+  [[ -e "${plugins_dir}/.bin/jj" ]] || {
+    if ! [[ -e "${plugins_dir}/jj/jj" ]]; then
+      pushd ${plugins_dir}/jj && make install && popd
+    fi
+    mv "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj"
+  }
   cp -a "${plugins_dir}/nginx-modsite/nginx-modsite" "${plugins_dir}/.bin/nginx-modsite" 2>/dev/null && chmod +x "${plugins_dir}/.bin/nginx-modsite"
 }
 function rebin() {
