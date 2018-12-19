@@ -722,10 +722,16 @@ function grtad() {
     || git remote add all $url
 }
 function grtrm() {
-  local url
-  url="$(git config --get remote.$1.url)"
-  git remote set-url --delete all $url \
-    && git remote remove $1
+  local _remote _url
+  git remote remove all &&
+  git remote remove $1 && {
+    for _remote in $(git remote) ; do
+      _url="$(git remote get-url $_remote)"
+      if [[ $_url ]]; then
+        grtad $_remote $_url
+      fi
+    done
+  }
 }
 function grh() {
   git_last $@
