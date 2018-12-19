@@ -499,6 +499,9 @@ function gdfcf() {
   gdf --cached "*${1}*"
 }
 alias gfe='git fetch'
+function gfet() {
+  git fetch --no-tags $1 +refs/tags/$2:refs/tags/$2
+}
 alias gl='git log --oneline'
 alias glgs='git log -S'
 alias glsp='git log -p -S'
