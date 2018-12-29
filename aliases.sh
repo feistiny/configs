@@ -18,6 +18,8 @@ alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias sudo='sudo ' #https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo#22043
+export XDG_CONFIG_HOME="${shell_dir}"
+alias nv="nvim -u ${shell_dir}/nvim/init.vim"
 function vu() {
   local _vu="vim -u ${shell_dir}/.vimrc"
   local files_to_open

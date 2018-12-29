@@ -42,6 +42,9 @@ if filereadable(vim_plug_path)
   " tpope/vim-unimpaired " 交换上下行
   " python-mode/python-mode " 写python必用插件
 
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
+  Plug 'wellle/targets.vim'
   " comment multi-languages
   " Plug 'tyru/caw.vim'
   " Plug 'Shougo/context_filetype.vim'
@@ -52,7 +55,7 @@ if filereadable(vim_plug_path)
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
   " Plug 'vim-vdebug/vdebug'
-  Plug 'chemzqm/wxapp.vim'
+  " Plug 'chemzqm/wxapp.vim'
   " Plug 'othree/xml.vim'
 
   Plug 'tobyS/vmustache'
@@ -62,7 +65,7 @@ if filereadable(vim_plug_path)
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
-  Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
+  " Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
 
   Plug 'stephpy/vim-php-cs-fixer'
 
@@ -89,7 +92,8 @@ if filereadable(vim_plug_path)
 
   Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
 
-  Plug 'dkprice/vim-easygrep' " 全局搜索
+  Plug 'mileszs/ack.vim'
+  " Plug 'dkprice/vim-easygrep' " 全局搜索
   Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
 
   Plug 'tpope/vim-repeat'
@@ -392,6 +396,10 @@ command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
 nnoremap <leader>sw :SwapTwoWindows 
 """
 
+""" fzf
+nnoremap <leader>fz :Files<CR>
+"""
+
 """ move(delete) window to the other
 fun! MoveCurrentWindowToTarget(split, copy, ...)
   let l:cur_winnr = winnr()
@@ -604,7 +612,9 @@ let g:easytags_async = 1
 let g:easytags_file = '.tags'
 au InsertEnter * :set tags=
 au InsertLeave * :set tags=.tags
-set term=xterm
+if has('term')
+  set term=xterm
+endif
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
 let g:snipMate.no_default_aliases=1
