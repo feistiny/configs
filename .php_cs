@@ -56,7 +56,7 @@ return PhpCsFixer\Config::create()
             'closure_function_spacing' => 'one',
         ],
         'multiline_whitespace_before_semicolons' => [
-            'strategy' => 'new_line_for_chained_calls',
+            // 'strategy' => 'new_line_for_chained_calls',
         ],
         'align_multiline_comment' => [
             'comment_type' => 'all_multiline',
@@ -64,7 +64,8 @@ return PhpCsFixer\Config::create()
         'binary_operator_spaces' => [
             'default'   => 'align_single_space_minimal',
             'operators' => [
-                '=' => 'single_space',
+                '='  => 'single_space',
+                '??' => 'single_space',
             ],
         ],
     ])
