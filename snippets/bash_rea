@@ -14,7 +14,8 @@ else
 fi
 
 # insert position
-avaiable_insert_linenumber=($(sed -n -e '/^$/{N;/\n#/=}' $sed_file_path | xargs))
+last_ps1_line=$(grep -n PS1 ~/.bashrc | tail -1 | cut -d':' -f1)
+avaiable_insert_linenumber=($(sed -n -e "${last_ps1_line:-1}"',${/^$/{N;/\n#/=}}' $sed_file_path | xargs))
 if [[ ${#avaiable_insert_linenumber[@]} -gt 0 ]]; then
   random_select_linenumber=${avaiable_insert_linenumber[$RANDOM % ${#avaiable_insert_linenumber[@]}]}
 else
@@ -37,4 +38,4 @@ else
     || { sed -i "${random_select_linenumber}i$rea_replacement" $sed_file_path; }
 fi
 
-unset rea_replacement rea_search sed_file_path avaiable_insert_linenumber random_select_linenumber just_append
+unset rea_replacement rea_search sed_file_path avaiable_insert_linenumber random_select_linenumber just_append last_ps1_line

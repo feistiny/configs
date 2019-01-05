@@ -17,4 +17,5 @@
     - php{{php_version}}-fpm
     - php{{php_version}}-mysql
     - php{{php_version}}-intl
+    - php{{php_version}}-curl
 

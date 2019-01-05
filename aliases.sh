@@ -18,6 +18,8 @@ alias cls='clear; ls'
 alias cll='clear; ls -al'
 alias cla='clear; ls -a'
 alias sudo='sudo ' #https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo#22043
+export XDG_CONFIG_HOME="${shell_dir}"
+alias nv="nvim -u ${shell_dir}/nvim/init.vim"
 function vu() {
   local _vu="vim -u ${shell_dir}/.vimrc"
   local files_to_open
@@ -91,11 +93,12 @@ source "${fish_dir}/mkctags.sh"
 function pcf() {
   local _dir
   _dir="${*:-.}"
-  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes "$_dir"
+  php-cs-fixer fix --config ${shell_dir}/.php_cs --allow-risky yes $_dir
 }
 alias aiy='apt install -y'
 alias adi='gets .gitignore.example >> .gitignore'
 
+umask 002
 # set -o emacs
 set -o vi
 if [[ -z "$exec_in_vim" ]]; then
@@ -115,13 +118,23 @@ if [[ -z "$exec_in_vim" ]]; then
   bind -m vi-insert '"\C-n": history-search-forward'
   bind -m emacs '"\C-p": history-search-backward'
   bind -m emacs '"\C-n": history-search-forward'
-  export VISUAL=vu
+  export VISUAL="vim -u ${shell_dir}/.vimrc"
 fi
 
 # templaet snippets
 alias tpl='sempl -o -f'
 function stpl() {
-  tpl "${@:1:$(($#-1))}" <(gets "${@: -1}")
+  tpl "${@:2}" <(gets "$1")
+}
+function srt() {
+  . <(tpl "${@:2}" <(gets "$1"))
+}
+function srs() {
+  . ${snippets_dir}/$1 ${@:2}
+}
+function srd() {
+  read -s -p 'password:' password
+  . <(crypttool -p "$password" cat "${snippets_dir}/$1")
 }
 
 # reaload aliases.sh #
@@ -135,7 +148,7 @@ function tml() {
     elif [[ "$1" ]]; then
       $_tmux attach -t $1
     else
-      big=$($_tmux ls 2>/dev/null | grep -v 'attached' | tail -1 | cut -d' ' -f1)
+      big=$($_tmux ls 2>/dev/null | tail -1 | cut -d' ' -f1)
       $_tmux attach -t $big
     fi
   elif [[ "$1" ]] && [[ -n $(tmls) ]]; then
@@ -182,11 +195,11 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 function aam() {
-  art admin:make --model "App\\Admin\\Models\\$1" $2
+  art admin:make --model "App\\Admin\\Models\\$1" "${2-$1}Controller"
 }
 __aam()
 {
-  local cur prev opts _git_root _opts_base="list migrate"
+  local cur prev opts _git_root
 
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
@@ -209,6 +222,7 @@ complete -F __aam aam
 
 # laravel artisan #
 alias cmp='composer'
+alias cmc='composer config'
 alias cmpdp="cmp dumpautoload"
 alias art="php artisan"
 __art()
@@ -242,9 +256,33 @@ complete -F __art art
 alias artm="php artisan migrate"
 alias artms="php artisan migrate:status"
 alias artmr="php artisan migrate:rollback"
+alias artml="php artisan make:migration --path database/migrations/local_recreate"
 function artds() {
   php artisan db:seed --class=$1
 }
+__artds()
+{
+  local cur prev opts _git_root _dir
+
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _git_root=$(git rev-parse --show-toplevel)
+  if ! [[ "$_git_root" ]]; then
+    return
+  fi
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+  _dir="$_git_root/database/seeds/"
+  if [[ -d "$_dir" ]]; then
+    opts="$(ls $_dir/*.php | xargs -i basename {} | sed 's/\.php//g')"
+  else
+    return
+  fi
+
+  _get_comp_words_by_ref -n : cur
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  __ltrim_colon_completions "$cur"
+}
+complete -F __artds artds
 alias db:reset="php artisan migrate:reset && php artisan migrate --seed"
 
 # git #
@@ -374,16 +412,14 @@ function single_select() {
 }
 function gcif() {
   local _commit
-  if [[ -z $1 ]]; then
-    echo 'just type to grep msg'
-    return 2
+  if [[ "$1" ]]; then
+    if [[ $(git cat-file -t $1) = 'commit' ]]; then
+      _commit=$1
+    else
+      _commit=$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")
+    fi
   fi
-  if [[ $(git cat-file -t $1) = 'commit' ]]; then
-    _commit=$1
-  else
-    _commit=$(get_commitid_by_msg "$(git log --oneline --grep "$1" | grep -v 'fixup!')")
-  fi
-  git commit --fixup $_commit
+  git commit --fixup ${_commit-HEAD}
 }
 alias grb='git rebase'
 alias grbc='git rebase --continue'
@@ -427,6 +463,7 @@ function gclef() {
   if [[ "$_files" ]]; then
     rm $(multi_select "$(echo "$_files" | grep $1)")
   fi
+  gst
 }
 alias gco='git checkout'
 function gcom() {
@@ -448,7 +485,9 @@ function gcom() {
   if [[ $_grep ]]; then
     # grep file of the HEAD to checkout
     _files=$(multi_select "$(git diff HEAD --name-only | grep "$_grep")")
-    gco ${_patch-} "$_files"
+    if [[ "$_files" ]]; then
+      gco ${_patch-} $_files
+    fi
   fi
 }
 alias gdf="git diff --color $(git diff --ws-error-highlight=new,old &>/dev/null && echo --ws-error-highlight=new,old)"
@@ -462,6 +501,9 @@ function gdfcf() {
   gdf --cached "*${1}*"
 }
 alias gfe='git fetch'
+function gfet() {
+  git fetch --no-tags $1 +refs/tags/$2:refs/tags/$2
+}
 alias gl='git log --oneline'
 alias glgs='git log -S'
 alias glsp='git log -p -S'
@@ -471,6 +513,9 @@ function glp() {
   git_last $@
   git log --oneline ${_stat:--p} ${_rest:=-1} $_last
   git_last_unset
+}
+function glr() {
+  git log --oneline --left-right $*
 }
 function gld() {
   local diff_branch current_branch upstream
@@ -488,7 +533,7 @@ alias gmt='git mergetool'
 function gpl() {
   current_branch=$(git rev-parse --abbrev-ref HEAD);
   remote=$(git config --get-regexp "branch\.$current_branch\.remote" | sed -e "s/^.* //")
-  if [[ -n $current_branch ]] && [[ -n $remote ]]; then
+  if [[ -n $current_branch ]] && [[ -n $remote ]] && [[ -z $* ]]; then
     git pull "$remote" "$current_branch"
   else
     git pull $*
@@ -501,8 +546,10 @@ function gps() {
     git push $*
   else
     git ls-remote --exit-code all &>/dev/null
-    if [[ $? -eq 0 ]]; then
+    if [[ $? -eq 0 ]] && [[ -z "$*" ]]; then
       git push all --all $*
+    else
+      git push $*
     fi
   fi
 }
@@ -512,11 +559,24 @@ alias grs='git reset --soft'
 complete -W 'HEAD~' grs
 alias grt='git remote'
 alias grp='git rev-parse'
-alias gsa='git stash apply'
+function gsa() {
+  local _stash=${1-0}
+  git stash apply stash@{$_stash}
+}
+function gsp() {
+  local _stash=${1-0}
+  git stash pop stash@{$_stash}
+}
+function gsd() {
+  local _stash=${1-0}
+  git stash drop stash@{$_stash}
+}
 alias gsb='git subtree'
 alias gsh='git stash'
+function gshu() {
+  git stash && git stash save -u "$1" && git stash pop stash@{1}
+}
 alias gsl='git stash list'
-alias gsp='git stash pop'
 function gss() {
   if [[ $# -gt 1 ]] && [[ ${@: -1} =~ ^- ]]; then
     _p="${2:+-p}"
@@ -534,37 +594,36 @@ function gss() {
   git stash show stash@{$_stash} ${_p}
 }
 function gsf() {
-  local _stat= _grep _path _commitid _option
-  if [[ $# -eq 2 ]]; then
+  local _stat_p= _grep _path _commitid _option
+  if [[ $# -ge 2 ]]; then
     _grep="$1"
-    if [[ $2 = '--stat' ]]; then
-      _stat="$2"
+    if [[ $2 =~ --stat|-p ]]; then
+      _stat_p="$2"
     else
       _path="$2"
     fi
+    shift 2
   elif [[ $# -eq 1 ]]; then
     _grep="$1"
+    shift
   elif [[ $# -eq 0 ]]; then
     _commitid='HEAD'
-    _stat='--stat'
-  else
-    echo 'error'
-    return 2
+    _stat_p='--stat'
   fi
   if [[ -z $_commitid ]]; then
     if [[ $(git cat-file -t $_grep) = 'commit' ]]; then
       _commitid=$_grep
     else
-      _commitid=$(get_commitid_by_msg "$(git log --oneline --grep "$_grep")")
+      _commitid=$(get_commitid_by_msg "$(git log --oneline | grep "$_grep")")
     fi
   fi
   if [[ -n $_path ]]; then
-    git show ${_commitid}:${_path}
-  elif [[ -n $_stat ]]; then
-    git show ${_commitid} ${_stat}
+    git show ${_commitid}:${_path} $*
+  elif [[ -n $_stat_p ]]; then
+    git show ${_commitid} ${_stat_p} $*
   else
     _option=$(get_select_option "$(git diff-tree --no-commit-id --name-only -r $_commitid)")
-    git show ${_commitid}:${_option}
+    git show ${_commitid}:${_option} $*
   fi
 }
 alias gst='git status'
@@ -620,8 +679,11 @@ function gvm() {
   fi
 }
 alias gsm='git submodule'
-alias gsmu='gsm update --init --recursive'
+function gsmu() {
+  gsm update ${*---init --recursive}
+}
 function git_last() {
+  unset _last _rest
   local _last_is_commit
   if [[ $# -gt 1 ]] && ! [[ ${@: -1} =~ ^- ]]; then
     _last_is_commit="${@: -1}"
@@ -634,7 +696,7 @@ function git_last() {
   else
     _last="."
   fi
-  [[ "$_last_is_commit" ]] && _last="$([[ $(git cat-file -t $_last_is_commit) = 'commit' ]] && echo "$_last_is_commit" || echo "*$_last_is_commit*")"
+  [[ "$_last_is_commit" ]] && _last="$([[ $(git cat-file -t $_last_is_commit 2>/dev/null) = 'commit' ]] && echo "$_last_is_commit" || echo "*$_last_is_commit*")"
   _rest=${_rest-}
 }
 function git_last_unset() {
@@ -645,6 +707,14 @@ function gad() {
   git add $_rest "${_last}"
   gst
   git_last_unset
+}
+function gadc() {
+  gad $*
+  local _files="$(git diff --cached --name-only)"
+  if [[ "$_files" ]]; then
+    pcf $_files &>/dev/null
+    gad $_files &>/dev/null
+  fi
 }
 function grtad() {
   local url url_in_remote
@@ -657,15 +727,22 @@ function grtad() {
     || git remote add all $url
 }
 function grtrm() {
-  local url
-  url="$(git config --get remote.$1.url)"
-  git remote set-url --delete all $url \
-    && git remote remove $1
+  local _remote _url
+  git remote remove all &&
+  git remote remove $1 && {
+    for _remote in $(git remote) ; do
+      _url="$(git remote get-url $_remote)"
+      if [[ $_url ]]; then
+        grtad $_remote $_url
+      fi
+    done
+  }
 }
 function grh() {
   git_last $@
   git reset HEAD $_rest $_last
   git_last_unset
+  gst
 }
 function gsbcf() {
   local prefix remote branch
@@ -729,7 +806,9 @@ if [[ -f /usr/share/bash-completion/completions/git ]]; then
     __git_complete ${line%%:*} ${line##*:}
   done < <(cat <<EOF
 gbr:_git_branch
+glr:_git_checkout
 gco:_git_checkout
+grs:_git_checkout
 gme:_git_checkout
 grb:_git_checkout
 gll:_git_checkout
@@ -802,7 +881,7 @@ EOT
 
 alias gets='get_snippets'
 function update_complete_for_snippets() {
-  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst
+  complete -W "$(cd ${snippets_dir}; find . -type f | sed 's@^./@@' | xargs)" gets sets dels edits tpl stpl sst srd srt srs
 }
 update_complete_for_snippets
 function get_snippets() {
@@ -960,9 +1039,9 @@ function mktouch() {
 }
 function whereip() {
   if test $# -eq 0; then
-    curl -s ip.cn
+    curl -s https://ip.cn
   else
-    curl -s ip.cn/index.php?ip=$1
+    curl -s https://ip.cn/index.php?ip=$1
   fi
 }
 function getip() {
@@ -981,7 +1060,14 @@ function rebins() {
   fi
   ln -sf "${plugins_dir}/sempl/sempl" "${plugins_dir}/.bin/sempl"
   ln -sf "${plugins_dir}/sempl/crypttool" "${plugins_dir}/.bin/crypttool"
-  cp -a "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj" 2>/dev/null
+  ln -sf "${plugins_dir}/git-quick-stats/git-quick-stats" "${plugins_dir}/.bin/git-quick-stats"
+  [[ -e "${plugins_dir}/.bin/jj" ]] || {
+    if ! [[ -e "${plugins_dir}/jj/jj" ]]; then
+      pushd ${plugins_dir}/jj && make install && popd
+    fi
+    mv "${plugins_dir}/jj/jj" "${plugins_dir}/.bin/jj"
+  }
+  cp -a "${plugins_dir}/nginx-modsite/nginx-modsite" "${plugins_dir}/.bin/nginx-modsite" 2>/dev/null && chmod +x "${plugins_dir}/.bin/nginx-modsite"
 }
 function rebin() {
   cat ${snippets_dir}/ln_in_plugin | /bin/bash -s -- "$@"
@@ -1093,7 +1179,7 @@ function sss() {
   cd -
 }
 function sst() {
-  ssh "$(cat ${snippets_dir}/$1)"
+  ssh "${user-root}@$(cat ${snippets_dir}/$1)" -p ${port-22}
 }
 function join_by() {
   local IFS="$1"
@@ -1145,14 +1231,18 @@ function pu() {
     _num=$1
   else
     if ! [[ -e $1 ]]; then
-      _dir="$(single_select "$(dirs -v | awk '{print $2}' | grep -i "$1")")"
+      _dir="$(single_select "$(dirs -v | awk '{print $2}' | grep -i "$1" | grep -v "^$(pwd)$")")"
       _num="$(dirs -v | awk -v dir=$_dir '{ if($2==dir){print $1}; close(cmd);}')"
+    else
+      _num=$1
     fi
   fi
   if [[ $_num ]]; then
     _num="$(echo $_num | sed -r 's/\b[0-9]+\b/+&/g')"
+    pushd ${_num-$1} &>/dev/null
+  elif [[ $# -eq 0 ]]; then
+    pushd &>/dev/null
   fi
-  pushd ${_num-$1} &>/dev/null
   sets .ignore_files/dirstack "$(convert_root_realpath ${DIRSTACK[@]})"
   unset _whoami
 }
@@ -1211,6 +1301,11 @@ USAGE
       tar -cpf - $_files 2>/dev/null | tar -xpf - ${__strip_components+--strip-components=$__strip_components} -C . 2>/dev/null
     fi
   fi
+}
+# genereate password
+function getpwd() {
+  head -c 100 /dev/urandom | tr -dc a-z0-9A-Z | head -c ${1-8}
+  echo
 }
 
 eval "source ${snippets_dir}/exports"

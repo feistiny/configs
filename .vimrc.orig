@@ -42,9 +42,6 @@ if filereadable(vim_plug_path)
   " tpope/vim-unimpaired " 交换上下行
   " python-mode/python-mode " 写python必用插件
 
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
-  Plug 'wellle/targets.vim'
   " comment multi-languages
   " Plug 'tyru/caw.vim'
   " Plug 'Shougo/context_filetype.vim'
@@ -55,7 +52,7 @@ if filereadable(vim_plug_path)
   Plug 'editorconfig/editorconfig-vim'
   Plug 'Olical/vim-enmasse'
   " Plug 'vim-vdebug/vdebug'
-  " Plug 'chemzqm/wxapp.vim'
+  Plug 'chemzqm/wxapp.vim'
   " Plug 'othree/xml.vim'
 
   Plug 'tobyS/vmustache'
@@ -65,7 +62,7 @@ if filereadable(vim_plug_path)
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'Chiel92/vim-autoformat'
   Plug 'steelsojka/deoplete-flow'
-  " Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
+  Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
 
   Plug 'stephpy/vim-php-cs-fixer'
 
@@ -92,8 +89,7 @@ if filereadable(vim_plug_path)
 
   Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
 
-  Plug 'mileszs/ack.vim'
-  " Plug 'dkprice/vim-easygrep' " 全局搜索
+  Plug 'dkprice/vim-easygrep' " 全局搜索
   Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
 
   Plug 'tpope/vim-repeat'
@@ -217,11 +213,7 @@ let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " If you use php-cs-fixer version 2.x
 " let g:php_cs_fixer_rules = "@Symfony"          " options: --rules (default:@PSR2)
 "let g:php_cs_fixer_cache = ".php_cs.cache" " options: --cache-file
-if filereadable(getcwd().'/.php_cs')
-  let g:php_cs_fixer_config_file = getcwd().'/.php_cs' " options: --config
-else
-  let g:php_cs_fixer_config_file = '/root/configs/.php_cs' " options: --config
-endif
+let g:php_cs_fixer_config_file = '/root/configs/.php_cs' " options: --config
 " End of php-cs-fixer version 2 config params
 
 let g:php_cs_fixer_php_path = "php"               " Path to PHP
@@ -394,10 +386,6 @@ fun! s:SwapCurrentWindowToTarget(...)
 endf
 command! -nargs=+ SwapTwoWindows call s:SwapCurrentWindowToTarget(<f-args>)
 nnoremap <leader>sw :SwapTwoWindows 
-"""
-
-""" fzf
-nnoremap <leader>fz :Files<CR>
 """
 
 """ move(delete) window to the other
@@ -612,9 +600,7 @@ let g:easytags_async = 1
 let g:easytags_file = '.tags'
 au InsertEnter * :set tags=
 au InsertLeave * :set tags=.tags
-if has('term')
-  set term=xterm
-endif
+set term=xterm
 " 代码块不使用默认别名, PHP默认是加载JS,HTML的, if的补全会提示PHP和JS的<<<
 let g:snipMate = {}
 let g:snipMate.no_default_aliases=1
@@ -659,8 +645,6 @@ vnoremap <leader>, y:.s/<C-R>"/
 " 快捷liu调试函数<<<
 vmap gj yodd(<c-r>");<esc><C-S>
 vmap gk yOdd(<c-r>");<esc><C-S>
-vmap uj yodump(<c-r>");<esc><C-S>
-vmap uk yOdump(<c-r>");<esc><C-S>
 vnoremap pc c"""<esc>PO""" 
 vnoremap pd c . <c-r>" . <esc>
 vnoremap pd1 c'.<c-r>".'<esc>
@@ -892,7 +876,11 @@ endfunction
 
 nnoremap <leader>re :set expandtab \| %retab<CR>
 nnoremap <leader>rm :%s/\r$\n/\r/<CR>
+<<<<<<< HEAD
+nnoremap <leader>rd :g/^\s*$/d<CR>
+=======
 nnoremap <leader>rd :g/\v^\s*$/d<CR>
+>>>>>>> eddd6c1f4c0cd3cedf8a17ffc9f5b6e38a40985e
 
 nnoremap <silent><leader>sr :let g:vim_run_mode=!get(g:, 'vim_run_mode', 0)<cr>
 nnoremap <leader>r :call Run()<CR>

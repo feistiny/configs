@@ -44,23 +44,38 @@ elseif ($1) {
 } 
 endsnippet
 snippet ind "info a array" b
-info('$1:', $2);
+info('$1:', $$1);
 endsnippet
 snippet .d "add a array" i
 .' $1',$2
 endsnippet
 snippet ins "info a string" b
-info('$1: '.$2);
+info('$1: '.$$1);
 endsnippet
 snippet .s "concat string with one space" i
-.' $1'.$2
+.' $1: '.$$1$0
 endsnippet
 snippet tr "trans('')" i
 trans('$1')
 endsnippet
-snippet tra "trans('all.')" i
-trans('all.$1')
-endsnippet
 snippet -- "concat string" i
-.'-'.$0
+.' -- '.$0
+endsnippet
+snippet dd "dd sth" w
+dd(${0:1});
+endsnippet
+snippet ii "info sth" b
+info(${0:1});
+endsnippet
+snippet com22 "'$1', $$1" i
+'$1', $$1
+endsnippet
+snippet arr22 "'$1' => $$1" i
+'$1' => $$1
+endsnippet
+snippet cad "dd sth" i
+config('admin.database.$1')
+endsnippet
+snippet ? "add php tag" b
+<?php ${0:${VISUAL}} ?>
 endsnippet

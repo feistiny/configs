@@ -4,3 +4,9 @@
 [submodule "plugins/jj"]
 	path = plugins/jj
 	url = https://github.com/tidwall/jj.git
+[submodule "plugins/nginx-modsite"]
+	path = plugins/nginx-modsite
+	url = https://github.com/ajsalkeld/nginx-modsite
+[submodule "plugins/git-quick-stats"]
+	path = plugins/git-quick-stats
+	url = https://github.com/arzzen/git-quick-stats.git

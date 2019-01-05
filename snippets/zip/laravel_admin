@@ -1,0 +1,9 @@
+zip -9r "../$(basename $(pwd)).zip" * \
+  -x ".tags" \
+  -x "*.log" \
+  -x ".git/*" \
+  -x "vendor/*" \
+  -x "public/vendor/*" \
+  -x "public/uploads/*" \
+  -x "public/packages/*" \
+  -x "storage/framework/views/*"
