@@ -67,6 +67,9 @@ alias ext="unset HISTFILE && logout"
 alias ag="ansible-galaxy"
 alias ap="ANSIBLE_NOCOWS=1 ansible-playbook -i ${ansible_dir}/hosts"
 alias ansible="ansible -i ${ansible_dir}/hosts"
+
+alias mysqldump_with_options="mysqldump --add-drop-table --complete-insert --single-transaction --set-gtid-purged=OFF --skip-comments"
+
 function getSnippetsDirs() {
   local _dirs
   _dirs=(
