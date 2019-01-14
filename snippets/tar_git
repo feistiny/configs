@@ -1,0 +1,1 @@
+tar zcvf scp_git_files.tar.gz `git ls-files -mo --exclude-standard`
