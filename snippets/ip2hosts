@@ -1,0 +1,7 @@
+pushd ${snippets_dir}/ip >/dev/null
+for i in * ; do
+  if [[ -z $(grep $i /etc/hosts) ]]; then
+    echo $(cat $i) $i >> /etc/hosts
+  fi
+done
+popd >/dev/null
