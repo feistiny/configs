@@ -107,9 +107,9 @@ set -o vi
 if [[ -z "$exec_in_vim" ]]; then
   # vi and emacs editing mode configs
   bind "set show-mode-in-prompt on"
-  bind 'set emacs-mode-string "â™‹ "'
-  bind 'set vi-ins-mode-string "â˜º "'
-  bind 'set vi-cmd-mode-string "í ½í±‰ "'
+  bind 'set emacs-mode-string " e "'
+  bind 'set vi-ins-mode-string " i "'
+  bind 'set vi-cmd-mode-string " c "'
   bind -m vi-insert  '"\C-\M-J": emacs-editing-mode'
   bind -m vi-command '"\C-\M-J": emacs-editing-mode'
   bind -m emacs      '"\C-\M-J": vi-editing-mode'
