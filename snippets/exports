@@ -4,7 +4,7 @@ export HISTCONTROL=ignoredups
 export HISTIGNORE="history:history :..*:l?:l??:rea:[ ]*:l:cd:pu:d:po:[gs]ets:edits:dels:gst:gpl:gps:tml*:fg:bg:pwd:?:??:"
 
 # less with color
-export LESS='-R'
+export LESS='-iMFXRj.5a#1'
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 export PS1="\u@\h\[\033[32m\]\w\[\033[33m\] \$(git rev-parse --abbrev-ref HEAD 2>/dev/null)\[\033[00m\]$ "
