@@ -1241,7 +1241,7 @@ function pu() {
     fi
   fi
   if [[ $_num ]]; then
-    _num="$(echo $_num | sed -r 's/\b[0-9]+\b/+&/g')"
+    _num="$(echo $_num | sed -r 's/^[0-9]+$/+&/g')"
     pushd ${_num-$1} &>/dev/null
   elif [[ $# -eq 0 ]]; then
     pushd &>/dev/null
