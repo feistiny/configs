@@ -1,0 +1,6 @@
+if ! [[ -f 'tempfile' ]]; then
+  sync
+  dd if=/dev/zero of=tempfile bs=1M count=1024
+  sync
+  rm tempfile
+fi

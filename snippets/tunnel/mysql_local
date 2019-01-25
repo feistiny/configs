@@ -1,1 +1,1 @@
-ssh -fNL ${lport-3306}:${rhost-127.0.0.1}:${rport-3306} ${proxy-.0.0.0.0}
+ssh -fNL ${lp-3308}:${rh-127.0.0.1}:${rp-3306} ${u-root}@${h-blog}
