@@ -197,32 +197,6 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-function aam() {
-  art admin:make --model "App\\Admin\\Models\\$1" "${2-$1}Controller"
-}
-__aam()
-{
-  local cur prev opts _git_root
-
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  _git_root=$(git rev-parse --show-toplevel)
-  if ! [[ "$_git_root" ]]; then
-    return
-  fi
-  # prev="${COMP_WORDS[COMP_CWORD-1]}"
-  if [[ -d "$_git_root/app/Admin/Models" ]]; then
-    opts="$(ls $_git_root/app/Admin/Models/*.php | xargs -i basename {} | sed 's/\.php//g')"
-  else
-    return
-  fi
-
-  _get_comp_words_by_ref -n : cur
-  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-  __ltrim_colon_completions "$cur"
-}
-complete -F __aam aam
-
 # laravel artisan #
 alias cmp='composer'
 alias cmc='composer config'
@@ -260,6 +234,32 @@ alias artm="php artisan migrate"
 alias artms="php artisan migrate:status"
 alias artmr="php artisan migrate:rollback"
 alias artml="php artisan make:migration --path database/migrations/local_recreate"
+
+function aam() {
+  art admin:make --model "App\\Admin\\Models\\$1" "${2-$1}Controller"
+}
+__aam()
+{
+  local cur prev opts _git_root
+
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _git_root=$(git rev-parse --show-toplevel)
+  if ! [[ "$_git_root" ]]; then
+    return
+  fi
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+  if [[ -d "$_git_root/app/Admin/Models" ]]; then
+    opts="$(ls $_git_root/app/Admin/Models/*.php | xargs -i basename {} | sed 's/\.php//g')"
+  else
+    return
+  fi
+
+  _get_comp_words_by_ref -n : cur
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  __ltrim_colon_completions "$cur"
+}
+complete -F __aam aam
 function artds() {
   php artisan db:seed --class=$1
 }
@@ -518,6 +518,10 @@ function glp() {
   git_last_unset
 }
 function glr() {
+  local all
+  all="$*"
+  all="${all/\ ...\ /...}"
+  all="${all/\ ..\ /..}"
   git log --oneline --left-right $*
 }
 function gld() {
@@ -719,6 +723,9 @@ function gadc() {
     gad $_files &>/dev/null
   fi
 }
+function pcfm() {
+  pcf `glsm`
+}
 function grtad() {
   local url url_in_remote
   url=$2
@@ -811,6 +818,7 @@ if [[ -f /usr/share/bash-completion/completions/git ]]; then
 gbr:_git_branch
 glr:_git_checkout
 gco:_git_checkout
+gcp:_git_checkout
 grs:_git_checkout
 gme:_git_checkout
 grb:_git_checkout
@@ -1309,6 +1317,14 @@ USAGE
 function getpwd() {
   head -c 100 /dev/urandom | tr -dc a-z0-9A-Z | head -c ${1-8}
   echo
+}
+function retry() {
+  sleep ${n-0} && eval "$@" && { echo 'success'; retry "$@"; } || { echo 'fail'; retry "$@"; }
+}
+function man(){
+	for arg in "$@"; do
+		vim -c 'execute "normal! :let no_man_maps = 1\<cr>:runtime ftplugin/man.vim\<cr>:Man '"${arg}"'\<cr>:wincmd o\<cr>"'
+	done
 }
 
 eval "source ${snippets_dir}/exports"

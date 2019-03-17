@@ -1,5 +1,7 @@
 [merge]
         tool = fugitive
         conflictstyle = merge
+[mergetool]
+        keepBackup = false
 [mergetool "fugitive"]
         cmd = vim -u "${shell_dir}/.vimrc" -c "Gvdiff" "$MERGED"
