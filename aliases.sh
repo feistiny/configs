@@ -522,7 +522,7 @@ function glr() {
   all="$*"
   all="${all/\ ...\ /...}"
   all="${all/\ ..\ /..}"
-  git log --oneline --left-right $*
+  git log --oneline --left-right $all
 }
 function gld() {
   local diff_branch current_branch upstream
