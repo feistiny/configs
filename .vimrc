@@ -912,6 +912,8 @@ func! Run()
       exec "!clear;node %"
     elseif type == "lisp"
       exec "!clear;clisp %"
+    else
+      exec "!clear;bash %"
     endif
   else
     if type == "c" || type == "cpp"
