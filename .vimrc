@@ -43,8 +43,16 @@ if filereadable(vim_plug_path)
   " python-mode/python-mode " 写python必用插件
 
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
-  Plug 'wellle/targets.vim'
+  " Plug 'junegunn/fzf.vim'
+  " Plug 'wellle/targets.vim'
+
+  " Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+  " Plug 'ncm2/ncm2'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'phpactor/ncm2-phpactor'
+
+  " Plug 'amiorin/vim-project'
+  
   " comment multi-languages
   " Plug 'tyru/caw.vim'
   " Plug 'Shougo/context_filetype.vim'
@@ -52,22 +60,22 @@ if filereadable(vim_plug_path)
   " Plug 'mkusher/padawan.vim'
   Plug 'Valloric/YouCompleteMe'
   Plug 'wesQ3/vim-windowswap'
-  Plug 'editorconfig/editorconfig-vim'
-  Plug 'Olical/vim-enmasse'
+  " Plug 'editorconfig/editorconfig-vim'
+  " Plug 'Olical/vim-enmasse'
   " Plug 'vim-vdebug/vdebug'
   " Plug 'chemzqm/wxapp.vim'
   " Plug 'othree/xml.vim'
 
-  Plug 'tobyS/vmustache'
-  Plug 'tobyS/pdv'
+  " Plug 'tobyS/vmustache'
+  " Plug 'tobyS/pdv'
   " Plug 'vim-scripts/phpfolding.vim' " terminal color issue; 0 folds created
 
   Plug 'christoomey/vim-tmux-navigator'
-  Plug 'Chiel92/vim-autoformat'
-  Plug 'steelsojka/deoplete-flow'
+  " Plug 'Chiel92/vim-autoformat'
+  " Plug 'steelsojka/deoplete-flow'
   " Plug 'feistiny/php-foldexpr.vim', { 'branch': 'dev'}
 
-  Plug 'stephpy/vim-php-cs-fixer'
+  " Plug 'stephpy/vim-php-cs-fixer'
 
   Plug 'xolox/vim-misc'
   Plug 'xolox/vim-easytags'
@@ -75,28 +83,28 @@ if filereadable(vim_plug_path)
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
   " Plug 'posva/vim-vue'
-  Plug 'pangloss/vim-javascript'
-  Plug 'Shougo/vimproc.vim'
-  Plug 'Shougo/unite.vim'
+  " Plug 'pangloss/vim-javascript'
+  " Plug 'Shougo/vimproc.vim'
+  " Plug 'Shougo/unite.vim'
 
-  Plug 'feistiny/vim-php-namespace'
+  " Plug 'feistiny/vim-php-namespace'
 
   " git上的插件地址
   Plug 'scrooloose/nerdcommenter' " 代码注释插件
   "Plug 'ervandew/supertab'
 
-  Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
+  " Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
 
-  Plug 'mattn/emmet-vim' " html,css的插件
-  Plug 'maksimr/vim-jsbeautify' " html,js,css美化
+  " Plug 'mattn/emmet-vim' " html,css的插件
+  " Plug 'maksimr/vim-jsbeautify' " html,js,css美化
 
   Plug 'https://github.com/tpope/vim-fugitive.git' " git插件
 
   Plug 'mileszs/ack.vim'
   " Plug 'dkprice/vim-easygrep' " 全局搜索
-  Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
+  " Plug 'othree/eregex.vim' " 上边的插件全局替换时的正则依赖
 
-  Plug 'tpope/vim-repeat'
+  " Plug 'tpope/vim-repeat'
 
   Plug 'scrooloose/nerdtree' " 文件目录树
 
@@ -107,32 +115,30 @@ if filereadable(vim_plug_path)
 
   " Plug 'fholgado/minibufexpl.vim' " buffer插件
 
-  Plug 'PotHix/Vimpress' " vim写wordpress博客
+  " Plug 'PotHix/Vimpress' " vim写wordpress博客
 
-  "snippets
-  Plug 'honza/vim-snippets'
-  Plug 'SirVer/ultisnips'
-
-  Plug 'plasticboy/vim-markdown' " markdown语法高亮
-  Plug 'mzlogin/vim-markdown-toc' " markdown生成文章目录
+  " Plug 'plasticboy/vim-markdown' " markdown语法高亮
+  " Plug 'mzlogin/vim-markdown-toc' " markdown生成文章目录
   " Plug 'isnowfy/python-vim-instant-markdown' " markdown实时预览
 
-  Plug 'terryma/vim-expand-region' " visual扩张到上一层
+  " Plug 'terryma/vim-expand-region' " visual扩张到上一层
 
   "snippets
   Plug 'honza/vim-snippets'
   Plug 'SirVer/ultisnips'
 
-  Plug 'vim-scripts/taglist.vim' " tag窗口,方便查看源码结构
+  " Plug 'majutsushi/tagbar'
+  " Plug 'vim-scripts/taglist.vim' " tag窗口,方便查看源码结构
   "Plug 'vim-scripts/taglist.vim'
   "Plug 'vim-php/phpctags'
   "Plug 'vim-php/tagbar-phpctags.vim'
 
-  Plug 'vim-scripts/dbext.vim' " vim里运行sql语句
+  " Plug 'vim-scripts/dbext.vim' " vim里运行sql语句
 
-  Plug 'triglav/vim-visual-increment' " 数字列增长
+  " Plug 'triglav/vim-visual-increment' " 数字列增长
 
-  Plug 'scrooloose/syntastic' " 语法错误检查
+  " Plug 'StanAngeloff/php.vim' " 语法错误检查
+  " Plug 'scrooloose/syntastic' " 语法错误检查
 
   Plug 'junegunn/vim-easy-align' " =号对齐
 
