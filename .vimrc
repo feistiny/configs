@@ -42,7 +42,7 @@ if filereadable(vim_plug_path)
   " tpope/vim-unimpaired " 交换上下行
   " python-mode/python-mode " 写python必用插件
 
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  " Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   " Plug 'junegunn/fzf.vim'
   " Plug 'wellle/targets.vim'
 
@@ -58,7 +58,7 @@ if filereadable(vim_plug_path)
   " Plug 'Shougo/context_filetype.vim'
 
   " Plug 'mkusher/padawan.vim'
-  Plug 'Valloric/YouCompleteMe'
+  " Plug 'Valloric/YouCompleteMe'
   Plug 'wesQ3/vim-windowswap'
   " Plug 'editorconfig/editorconfig-vim'
   " Plug 'Olical/vim-enmasse'
@@ -78,7 +78,7 @@ if filereadable(vim_plug_path)
   " Plug 'stephpy/vim-php-cs-fixer'
 
   Plug 'xolox/vim-misc'
-  Plug 'xolox/vim-easytags'
+  " Plug 'xolox/vim-easytags'
   " Plug 'prettier/vim-prettier', {
         " \ 'do': 'yarn install',
         " \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'vue', 'json', 'markdown'] }
@@ -87,13 +87,13 @@ if filereadable(vim_plug_path)
   " Plug 'Shougo/vimproc.vim'
   " Plug 'Shougo/unite.vim'
 
-  " Plug 'feistiny/vim-php-namespace'
+  Plug 'feistiny/vim-php-namespace'
 
   " git上的插件地址
   Plug 'scrooloose/nerdcommenter' " 代码注释插件
   "Plug 'ervandew/supertab'
 
-  " Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
+  Plug 'kien/ctrlp.vim' " Code and files fuzzy finder
 
   " Plug 'mattn/emmet-vim' " html,css的插件
   " Plug 'maksimr/vim-jsbeautify' " html,js,css美化
