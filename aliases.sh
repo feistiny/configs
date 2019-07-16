@@ -92,6 +92,10 @@ function lesp() {
 alias cpec="cp -i ${shell_dir}/.editorconfig ."
 alias mdv='mdv -t 729.8953'
 alias watch='watch --color'
+source $shell_dir/autocomplete/docker-machine-prompt.bash
+source $shell_dir/autocomplete/docker-machine-wrapper.bash
+source $shell_dir/autocomplete/docker-machine.bash
+source $shell_dir/autocomplete/docker
 source "${fish_dir}/mkctags.sh"
 function pcf() {
   local _dir
@@ -809,7 +813,7 @@ function gdfl() {
 }
 
 #git alias autocomplete
-if [[ -f /usr/share/bash-completion/completions/git ]]; then
+if [[ -f $shell_dir/autocomplete/git ]]; then
   . /usr/share/bash-completion/completions/git
   while read line
   do
@@ -844,6 +848,7 @@ alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi'
 alias dstp='docker stop $(docker ps -aq)'
 alias dtp='docker top'
+alias dip='docker inspect -f='"'"'{{.Name}} - {{.NetworkSettings.IPAddress}}'"'"' $(docker ps -a -q)'
 
 
 function dlog() {
@@ -978,63 +983,7 @@ function glsot() {
   fi
 }
 function gls() {
-  local USAGE pre_opts debug key level
-  USAGE=$(cat << EOT
-USAGE:
-  -r   recurse   recursive
-  -d             only directory
-  -t             both files and directory
-  -L   level     Descend only level directories deep.
-                 e.g.
-                 2 show repository equal 2 dir depth
-                 -2 show repository less than 2 dir depth
-EOT
-)
-  # USAGE="Usage: command -ihv args"
-  if test "$#" = 1 && [[ "$1" =~ (-h|--help) ]] ; then
-    echo "$USAGE"
-    return
-  fi
-  pre_opts=''
-  while [ $# -gt 0 ]
-  do
-  key="$1"
-  case $key in
-    -L)
-      # $2 not a number
-      if [ "$2" -eq "$2" ] 2>/dev/null
-      then
-        level=$2
-      else
-        echo 'level is not a valid number'
-        return
-      fi
-      shift
-      shift
-    ;;
-    -vv)
-      debug=1
-      shift
-    ;;
-    *)
-      pre_opts+="$key "
-      shift
-    ;;
-  esac
-  done
-  command="git ls-tree --name-only $pre_opts HEAD"
-  if [ -z "${debug+x}" ]
-  then
-    command+=' 2>/dev/null'
-  fi
-  eval "$command" |
-  if [ -z ${level+x} ]
-  then
-    cat
-  else
-    cat | cut -d'/' -f "${level}" | sort | uniq
-  fi
-  # echo $command
+  git ls-tree --name-only HEAD:${1-./}
 }
 function mktouch() {
   local f
