@@ -983,7 +983,14 @@ function glsot() {
   fi
 }
 function gls() {
-  git ls-tree --name-only HEAD:${1-./}
+  local _dir=${1-}
+  if [[ -n $_dir ]]; then
+    cd $_dir
+    git ls-tree --name-only HEAD
+    cd - &>>/dev/null
+  else
+    git ls-tree --name-only HEAD
+  fi
 }
 function mktouch() {
   local f

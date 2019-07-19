@@ -3,6 +3,7 @@ shopt -s expand_aliases
 
 git config ${g+--global} core.autocrlf input
 git config ${g+--global} core.filemode false
+git config ${g+--global} core.safecrlf false
 git config ${g+--global} core.editor "vim -u ${shell_dir}/.vimrc"
 git config ${g+--global} core.excludesfile ${path-~/configs/.gitignore_global}
 
